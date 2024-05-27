@@ -17,6 +17,11 @@ class Organisation extends Model implements HasCurrentTenantLabel
         return $this->hasMany(User::class);
     }
 
+    public function clients(): HasMany
+    {
+        return $this->hasMany(Client::class);
+    }
+
     public function getCurrentTenantLabel(): string
     {
         return "Trenutna kompanija";

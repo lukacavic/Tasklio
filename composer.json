@@ -7,9 +7,13 @@
     "require": {
         "php": "^8.2",
         "aymanalhattami/filament-context-menu": "^1.0",
+        "aymanalhattami/filament-page-with-sidebar": "^2.5",
         "filament/filament": "^3.2",
+        "filament/spatie-laravel-media-library-plugin": "^3.2",
+        "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "spatie/laravel-medialibrary": "^11.5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",

@@ -28,6 +28,8 @@ class UserResource extends Resource
 
     protected static ?string $navigationLabel = 'Djelatnici';
 
+    protected static ?string $navigationGroup = 'Šifrarnici';
+
     public static function canAccess(): bool
     {
         return auth()->user() && auth()->user()->administrator;
