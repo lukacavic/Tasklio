@@ -30,6 +30,9 @@ class AppPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->path('app')
             ->spa()
+            ->colors([
+                'primary' =>'#014786'
+            ])
             ->unsavedChangesAlerts()
             ->databaseTransactions()
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])

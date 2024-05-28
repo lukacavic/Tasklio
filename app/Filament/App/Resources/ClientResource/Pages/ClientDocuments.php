@@ -3,6 +3,7 @@
 namespace App\Filament\App\Resources\ClientResource\Pages;
 
 use App\Filament\App\Resources\ClientResource;
+use App\Filament\App\Resources\ProjectResource;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,7 +17,7 @@ class ClientDocuments extends ManageRelatedRecords
 
     protected static string $resource = ClientResource::class;
 
-    protected static string $relationship = 'media';
+    protected static string $relationship = 'documents';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -24,21 +25,22 @@ class ClientDocuments extends ManageRelatedRecords
 
     public static function getNavigationLabel(): string
     {
-        return 'Dokumenti';
+        return 'Media';
     }
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\TextInput::make('title')
+                    ->label('Naslov')
+                    ->required()
+                    ->maxLength(255),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
                     ->multiple()
-                    ->downloadable()
-                    ->columnSpanFull()
                     ->label('Privitci')
-                    ->collection('documents')
-                    ->visibility('public')
-            ]);
+                    ->downloadable()
+            ])->columns(1);
     }
 
     public function table(Table $table): Table
@@ -46,7 +48,12 @@ class ClientDocuments extends ManageRelatedRecords
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Naslov'),
+                Tables\Columns\TextColumn::make('user.fullName')
+                    ->label('Upisao'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Vrijeme kreiranja'),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -61,7 +68,6 @@ class ClientDocuments extends ManageRelatedRecords
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DissociateBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
