@@ -33,6 +33,9 @@ class AppPanelProvider extends PanelProvider
             ->colors([
                 'primary' =>'#014786'
             ])
+            ->plugin(
+                \Hasnayeen\Themes\ThemesPlugin::make()
+            )
             ->unsavedChangesAlerts()
             ->databaseTransactions()
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
@@ -63,6 +66,9 @@ class AppPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->tenantMiddleware([
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
             ])
             ->plugins([
                 FilamentEditProfilePlugin::make()

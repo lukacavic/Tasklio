@@ -10,6 +10,7 @@
         "aymanalhattami/filament-page-with-sidebar": "^2.5",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
+        "hasnayeen/themes": "^3.0",
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",

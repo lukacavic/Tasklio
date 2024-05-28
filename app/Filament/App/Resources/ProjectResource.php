@@ -24,9 +24,14 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
+
     protected static ?string $navigationLabel = 'Projekti';
+
     protected static ?string $navigationIcon = 'heroicon-o-command-line';
+
     protected static ?string $recordTitleAttribute = 'name';
+
+
     public static function form(Form $form): Form
     {
         return $form

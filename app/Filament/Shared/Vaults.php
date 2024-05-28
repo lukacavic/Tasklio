@@ -52,6 +52,9 @@ class Vaults
                 TextColumn::make('name')
                     ->label('Naslov'),
                 TextColumn::make('content')
+                    ->formatStateUsing(function($record) {
+                        return strip_tags($record->content);
+                    })
                     ->label('Sadržaj')
             ])
             ->filters([
