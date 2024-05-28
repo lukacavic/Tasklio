@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\ClientResource\Pages;
+namespace App\Filament\App\Resources\ClientResource\Pages;
 
-use App\Filament\Resources\ClientResource;
+use App\Filament\App\Resources\ClientResource;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Filament\Actions;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;

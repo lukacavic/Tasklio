@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\App\Resources;
 
 use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
@@ -113,12 +113,12 @@ class ClientResource extends Resource
                         return static::getUrl('edit', ['record' => $record->id]);
                     })
                     ->isActiveWhen(function () {
-                        return request()->routeIs(Pages\EditClient::getRouteName()) || request()->routeIs(Pages\EditClient::getRouteName());
+                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\EditClient::getRouteName()) || request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\EditClient::getRouteName());
                     }),
                 PageNavigationItem::make('Dokumenti')
                     ->icon('heroicon-o-paper-clip')
                     ->isActiveWhen(function () {
-                        return request()->routeIs(Pages\ClientDocuments::getRouteName());
+                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::getRouteName());
                     })
                     ->url(function () use ($record) {
                         return static::getUrl('documents', ['record' => $record->id]);
@@ -140,7 +140,7 @@ class ClientResource extends Resource
                         return $record->vaults->count();
                     })
                     ->isActiveWhen(function () {
-                        return request()->routeIs(Pages\ClientVault::getRouteName());
+                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\ClientVault::getRouteName());
                     })
                     ->url(function () use ($record) {
                         return static::getUrl('vaults', ['record' => $record->id]);
@@ -151,11 +151,11 @@ class ClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListClients::route('/'),
+            'index' => \App\Filament\App\Resources\ClientResource\Pages\ListClients::route('/'),
             // 'create' => Pages\CreateClient::route('/create'),
-            'edit' => Pages\EditClient::route('/{record}/edit'),
-            'documents' => Pages\ClientDocuments::route('/{record}/documents'),
-            'vaults' => Pages\ClientVault::route('/{record}/vaults'),
+            'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
+            'documents' => \App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
+            'vaults' => \App\Filament\App\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
             /*  'notes' => Pages\ClientNotes::route('/{record}/notes'),*/
         ];
     }

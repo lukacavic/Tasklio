@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\App\Resources\UserResource\Pages;
 
-use App\Filament\Resources\UserResource;
-use AymanAlhattami\FilamentContextMenu\Traits\PageHasContextMenu;
+use App\Filament\App\Resources\UserResource;
 use Filament\Actions;
-use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 
 class ListUsers extends ListRecords
