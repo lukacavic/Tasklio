@@ -26,6 +26,7 @@ class AppPanelProvider extends PanelProvider
     {
         return $panel
             ->id('app')
+            ->default()
             ->path('app')
             ->tenant(Organisation::class)
             ->tenantMenu(false)
