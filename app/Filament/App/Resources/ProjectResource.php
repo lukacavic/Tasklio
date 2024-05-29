@@ -84,6 +84,9 @@ class ProjectResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(function($record) {
+                return ProjectOverview::getUrl([$record->id]);
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Projekt')

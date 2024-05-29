@@ -12,6 +12,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
@@ -24,8 +25,11 @@ use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
@@ -117,6 +121,9 @@ class Tasks
                     ->label('Početak rada')
                     ->dateTime()
                     ->sortable(),
+
+                ViewColumn::make('custom')
+                    ->view('custom-stack'),
                 TextColumn::make('deadline_at')
                     ->label('Rok završetka')
                     ->dateTime()
@@ -137,15 +144,11 @@ class Tasks
             ->filters([
                 TrashedFilter::make()
             ])
-            ->headerActions([
-                CreateAction::make()
-                    ->label('Dodaj')
-                    ->icon('heroicon-o-plus'),
-            ])
+
             ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                ViewAction::make()->hiddenLabel(),
+                EditAction::make()->hiddenLabel(),
+                DeleteAction::make()->hiddenLabel(),
                 ForceDeleteAction::make(),
                 RestoreAction::make(),
             ])

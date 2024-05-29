@@ -46,6 +46,7 @@ class TaskResource extends Resource
     {
         return [
             'index' => TaskResource\Pages\ListTasks::route('/'),
+            'view' => TaskResource\Pages\ViewTask::route('/{record}'),
             //'create' => Pages\CreateTask::route('/create'),
             //'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
