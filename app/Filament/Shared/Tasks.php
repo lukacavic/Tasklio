@@ -81,6 +81,12 @@ class Tasks
     public static function getTable(Table $table): Table
     {
         return $table
+            ->headerActions([
+                CreateAction::make()
+                    ->slideOver()
+                    ->label('Novi zadatak')
+                    ->icon('heroicon-o-plus'),
+            ])
             ->recordTitleAttribute('name')
             ->emptyStateHeading('Trenutno nema upisanih zadataka')
             ->columns([
@@ -99,14 +105,10 @@ class Tasks
                     ->iconPosition(IconPosition::After)
                     ->label('Naziv')
                     ->searchable(),
-                ImageColumn::make('creator.avatar')
-                    ->circular()
-                    ->stacked()
+                TextColumn::make('creator.first_name')
                     ->label('Dodao')
                     ->sortable(),
-                ImageColumn::make('members.avatar')
-                    ->circular()
-                    ->stacked()
+                ImageColumn::make('members.first_name')
                     ->label('Djelatnici')
                     ->sortable(),
                 SelectColumn::make('status_id')

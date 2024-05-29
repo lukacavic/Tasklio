@@ -40,4 +40,11 @@ class ProjectTasks extends ManageRelatedRecords
     {
         return Tasks::getTable($table);
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+
+        ];
+    }
 }

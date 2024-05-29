@@ -27,16 +27,15 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->default()
+            ->topNavigation()
             ->databaseNotifications()
             ->path('app')
             ->spa()
             ->login()
+            ->font('Poppins')
             ->colors([
-                'primary' =>'#014786'
+                'primary' => Color::Orange
             ])
-            ->plugin(
-                \Hasnayeen\Themes\ThemesPlugin::make()
-            )
             ->unsavedChangesAlerts()
             ->databaseTransactions()
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
@@ -67,9 +66,6 @@ class AppPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ])
-            ->tenantMiddleware([
-                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
             ])
             ->plugins([
                 FilamentEditProfilePlugin::make()
