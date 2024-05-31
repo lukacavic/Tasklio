@@ -101,11 +101,11 @@ class Tasks
 
                         return null;
                     })
-                    ->iconColor(Color::Red)
+                    ->iconColor(Color::Orange)
                     ->iconPosition(IconPosition::After)
                     ->label('Naziv')
                     ->searchable(),
-                TextColumn::make('creator.first_name')
+                ImageColumn::make('creator.avatar')
                     ->label('Dodao')
                     ->sortable(),
                 ImageColumn::make('members.first_name')
@@ -119,13 +119,6 @@ class Tasks
                         3 => 'Završen'
                     ])
                     ->sortable(),
-                TextColumn::make('start_at')
-                    ->label('Početak rada')
-                    ->dateTime()
-                    ->sortable(),
-
-                ViewColumn::make('custom')
-                    ->view('custom-stack'),
                 TextColumn::make('deadline_at')
                     ->label('Rok završetka')
                     ->dateTime()

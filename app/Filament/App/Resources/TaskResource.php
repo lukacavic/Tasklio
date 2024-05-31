@@ -4,13 +4,8 @@ namespace App\Filament\App\Resources;
 
 use App\Filament\Shared\Tasks;
 use App\Models\Task;
-use App\Models\User;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Support\Colors\Color;
-use Filament\Support\Enums\IconPosition;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 class TaskResource extends Resource

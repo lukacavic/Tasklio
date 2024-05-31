@@ -4,6 +4,7 @@ namespace App\Filament\App\Resources\ProjectResource\Pages;
 
 use App\Filament\App\Resources\ProjectResource;
 use App\Models\Document;
+use Awcodes\Shout\Components\Shout;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -33,6 +34,9 @@ class ProjectDocuments extends ManageRelatedRecords
     {
         return $form
             ->schema([
+                Shout::make('so-important')
+                    ->type('warning')
+                    ->content('Max. veličina datoteke za učitavanje je: 5MB'),
                 Forms\Components\TextInput::make('title')
                     ->label('Naziv')
                     ->required()

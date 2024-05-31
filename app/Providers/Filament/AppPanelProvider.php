@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Models\Organisation;
+use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -74,7 +75,13 @@ class AppPanelProvider extends PanelProvider
                     ->setNavigationGroup('Group Profile')
                     ->setIcon('heroicon-o-user')
                     ->shouldRegisterNavigation(false)
-                    ->shouldShowBrowserSessionsForm()
+                    ->shouldShowBrowserSessionsForm(),
+                FilamentDeveloperLoginsPlugin::make()
+                    ->enabled(app()->environment('local'))
+                    ->users([
+                        'admin' => 'admin@org1.com',
+                        'User' => 'user@dutchcodingcompany.com',
+                    ])
             ]);
     }
 }
