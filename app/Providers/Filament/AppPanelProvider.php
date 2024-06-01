@@ -20,6 +20,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
 class AppPanelProvider extends PanelProvider
 {
@@ -81,7 +82,8 @@ class AppPanelProvider extends PanelProvider
                     ->users([
                         'admin' => 'admin@org1.com',
                         'User' => 'user@dutchcodingcompany.com',
-                    ])
+                    ]),
+                FilamentFullCalendarPlugin::make()
             ]);
     }
 }
