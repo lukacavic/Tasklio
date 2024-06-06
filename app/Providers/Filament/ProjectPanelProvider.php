@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Project\Pages\Dashboard;
+use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Models\Project;
 use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
@@ -47,6 +48,7 @@ class ProjectPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/Project/Pages'), for: 'App\\Filament\\Project\\Pages')
             ->pages([
                 Dashboard::class,
+                TasksKanbanBoard::class
             ])
             ->discoverWidgets(in: app_path('Filament/Project/Widgets'), for: 'App\\Filament\\Project\\Widgets')
             ->widgets([

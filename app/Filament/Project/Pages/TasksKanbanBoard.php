@@ -1,23 +1,25 @@
 <?php
 
-namespace App\Filament\App\Pages;
+namespace App\Filament\Project\Pages;
 
+use App\Filament\Project\Resources\TaskResource;
 use App\Models\Task;
-use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Pages\Actions\CreateAction;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 
 class TasksKanbanBoard extends KanbanBoard
 {
-    protected static ?string $title='Zadaci';
+    protected static ?string $slug = 'kanban';
+    protected static ?string $title = 'Zadaci';
     protected static string $model = Task::class;
     protected static string $recordTitleAttribute = 'title';
     protected static string $recordStatusAttribute = 'status_id';
     protected static string $headerView = 'tasks-kanban.kanban-header';
-   // protected static string $statusView = 'tasks-kanban.kanban-status';
     protected static string $recordView = 'tasks-kanban.kanban-record';
+    protected static bool $shouldRegisterNavigation = false;
+
     protected function statuses(): \Illuminate\Support\Collection
     {
         return collect([
@@ -26,9 +28,15 @@ class TasksKanbanBoard extends KanbanBoard
             ['id' => '3', 'title' => 'Završen'],
         ]);
     }
+
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('tasks')
+                ->hiddenLabel()
+                ->icon('heroicon-o-table-cells')
+                ->tooltip('Kanban prikaz')
+                ->url(fn (): string => TaskResource::getUrl()),
             \Filament\Actions\CreateAction::make()
                 ->model(Task::class)
                 ->form([
@@ -42,6 +50,7 @@ class TasksKanbanBoard extends KanbanBoard
                 })
         ];
     }
+
     protected function records(): \Illuminate\Support\Collection
     {
         return Task::all();

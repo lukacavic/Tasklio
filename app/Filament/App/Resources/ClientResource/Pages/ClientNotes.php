@@ -8,12 +8,17 @@ use App\Models\Document;
 use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
@@ -40,7 +45,7 @@ class ClientNotes extends ManageRelatedRecords
                 Forms\Components\ToggleButtons::make('priority')
                     ->boolean()->label('Bitna napomena')
                     ->inline()
-                ->default(false)->columns(1),
+                    ->default(false)->columns(1),
                 TinyEditor::make('content')
                     ->label('Sadržaj')
                     ->required(),
@@ -59,14 +64,14 @@ class ClientNotes extends ManageRelatedRecords
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->icon(function(Note $record) {
-                        if($record->media()->exists()) {
+                    ->icon(function (Note $record) {
+                        if ($record->media()->exists()) {
                             return 'heroicon-o-paper-clip';
                         }
 
                         return null;
                     })
-                    ->description(function(Model $record) {
+                    ->description(function (Model $record) {
                         return Str::limit(strip_tags($record->content), 40);
                     })
                     ->label('Naslov'),
@@ -80,9 +85,6 @@ class ClientNotes extends ManageRelatedRecords
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\Action::make('send')
-                    ->hiddenLabel()
-                    ->icon('heroicon-o-envelope'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->hiddenLabel(),

@@ -2,11 +2,13 @@
 
 namespace App\Filament\Project\Resources\TaskResource\Pages;
 
+use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\TaskResource;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
+use Filament\Tables\Actions\Action;
 
 class ListTasks extends ListRecords
 {
@@ -31,6 +33,11 @@ class ListTasks extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('kanban')
+                ->hiddenLabel()
+                ->icon('heroicon-o-rectangle-group')
+                ->tooltip('Kanban prikaz')
+                ->url(fn (): string => TasksKanbanBoard::getUrl()),
             Actions\CreateAction::make()
             ->label('Novi zadatak')
             ->icon('heroicon-o-plus-circle'),

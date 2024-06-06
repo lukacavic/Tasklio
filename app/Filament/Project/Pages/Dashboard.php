@@ -6,6 +6,8 @@ use App\Filament\App\Widgets\TasksByProjectChart;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
+    protected static ?string $slug = 'dashboard';
+
     protected function getHeaderWidgets(): array
     {
         return [];

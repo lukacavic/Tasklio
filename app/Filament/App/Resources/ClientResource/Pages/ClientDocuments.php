@@ -5,10 +5,15 @@ namespace App\Filament\App\Resources\ClientResource\Pages;
 use App\Filament\App\Resources\ClientResource;
 use App\Filament\App\Resources\ProjectResource;
 use App\Models\Document;
+use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -73,8 +78,39 @@ class ClientDocuments extends ManageRelatedRecords
                     ->hiddenLabel()
                     ->icon('heroicon-o-arrow-down-tray'),
                 Tables\Actions\Action::make('send')
+                    ->icon('heroicon-o-envelope')
+                    ->modalWidth(MaxWidth::Full)
+                    ->modalHeading('Slanje preko email-a')
                     ->hiddenLabel()
-                    ->icon('heroicon-o-envelope'),
+                    ->form([
+                        Forms\Components\TagsInput::make('receivers')
+                            ->label('Primatelji')
+                            ->columnSpanFull()
+                            ->required(),
+                        TextInput::make('subject')
+                            ->label('Naslov')
+                            ->required()
+                            ->formatStateUsing(function (Document $record) {
+                                return $record->title;
+                            })
+                            ->columnSpanFull(),
+                        RichEditor::make('message')
+                            ->required()
+                            ->label('Odgovor')
+                            ->maxLength(255)
+                            ->columnSpanFull(),
+                        Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
+                            ->multiple()
+                            ->label('Privitci')
+                            ->downloadable()
+                    ])
+                    ->requiresConfirmation()
+                    ->action(function (array $data) {
+                        Notification::make()
+                            ->title('Email uspješno poslan')
+                            ->success()
+                            ->send();
+                    }),
                 Tables\Actions\EditAction::make()
                     ->modalHeading('Izmjena dokumenta')
                     ->hiddenLabel(),

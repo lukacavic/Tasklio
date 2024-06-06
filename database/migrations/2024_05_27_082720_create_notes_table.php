@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
             $table->morphs('related');
+            $table->boolean('important')->default(false);
             $table->integer('user_id');
             $table->integer('organisation_id');
             $table->softDeletes();
