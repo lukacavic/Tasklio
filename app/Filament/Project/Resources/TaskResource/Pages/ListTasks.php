@@ -4,11 +4,13 @@ namespace App\Filament\Project\Resources\TaskResource\Pages;
 
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\TaskResource;
+use App\TaskStatus;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListTasks extends ListRecords
 {
@@ -16,16 +18,39 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-        $tabs = [
-            'my' => Tab::make('Moji zadaci')->badge($this->getModel()::count()),
-            'created' => Tab::make('Kreirani')->badge($this->getModel()::count()),
-            'in_progress' => Tab::make('U izradi')->badge($this->getModel()::count()),
-            'testing' => Tab::make('Testiranje')->badge($this->getModel()::count()),
-            'awaiting_feedback' => Tab::make('Čeka se odgovor')->badge($this->getModel()::count())
-                ->badge($this->getModel()::count()),
-            'completed' => Tab::make('Završeni')
-                ->badge($this->getModel()::count())
-        ];
+
+        foreach (TaskStatus::cases() as $taskStatus)
+            $tabs = [
+                'created' => Tab::make('Kreiran')
+                    ->modifyQueryUsing(function (Builder $query) {
+                        return $query->where('status_id', TaskStatus::Created);
+                    })
+                    ->badge($this->getModel()::where('status_id', TaskStatus::Created)->count()),
+
+                'in_progress' => Tab::make('U izradi')
+                    ->modifyQueryUsing(function (Builder $query) {
+                        return $query->where('status_id', TaskStatus::InProgress);
+                    })
+                    ->badge($this->getModel()::where('status_id', TaskStatus::InProgress)->count()),
+
+                'testing' => Tab::make('Testiranje')
+                    ->modifyQueryUsing(function (Builder $query) {
+                        return $query->where('status_id', TaskStatus::Testing);
+                    })
+                    ->badge($this->getModel()::where('status_id', TaskStatus::Testing)->count()),
+
+                'awaiting_feedback' => Tab::make('Čeka se komentar')
+                    ->modifyQueryUsing(function (Builder $query) {
+                        return $query->where('status_id', TaskStatus::AwaitingFeedback);
+                    })
+                    ->badge($this->getModel()::where('status_id', TaskStatus::AwaitingFeedback)->count()),
+
+                'completed' => Tab::make('Završeno')
+                    ->modifyQueryUsing(function (Builder $query) {
+                        return $query->where('status_id', TaskStatus::Completed);
+                    })
+                    ->badge($this->getModel()::where('status_id', TaskStatus::Completed)->count())
+            ];
 
         return $tabs;
     }
@@ -37,10 +62,10 @@ class ListTasks extends ListRecords
                 ->hiddenLabel()
                 ->icon('heroicon-o-rectangle-group')
                 ->tooltip('Kanban prikaz')
-                ->url(fn (): string => TasksKanbanBoard::getUrl()),
+                ->url(fn(): string => TasksKanbanBoard::getUrl()),
             Actions\CreateAction::make()
-            ->label('Novi zadatak')
-            ->icon('heroicon-o-plus-circle'),
+                ->label('Novi zadatak')
+                ->icon('heroicon-o-plus-circle'),
         ];
     }
 }
