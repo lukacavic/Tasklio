@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Filament\App\Pages\TasksKanbanBoard;
+use Filament\Models\Contracts\HasCurrentTenantLabel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Project extends Model
+class Project extends Model implements HasCurrentTenantLabel
 {
     use HasFactory, SoftDeletes;
 
@@ -36,9 +38,10 @@ class Project extends Model
         });
     }
 
+
     public function tasks(): MorphMany
     {
-        return $this->morphMany(Task::class, 'related');
+        return $this->morphMany(Document::class, 'related');
     }
 
     public function clients(): BelongsToMany
@@ -76,4 +79,8 @@ class Project extends Model
         return $this->morphMany(Note::class, 'related');
     }
 
+    public function getCurrentTenantLabel(): string
+    {
+        return 'TRENUTNI PROJEKT';
+    }
 }

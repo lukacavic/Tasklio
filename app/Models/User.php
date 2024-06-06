@@ -47,6 +47,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         return true;
     }
 
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'link_project_users');
+    }
+
     public function canAccessTenant(Model $tenant): bool
     {
         return $tenant->users->contains($this);
@@ -64,11 +69,19 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     public function getDefaultTenant(Panel $panel): ?Model
     {
+        if($panel->getId() == 'project') {
+            return $this->projects->first();
+        }
+
         return $this->organisation;
     }
 
     public function getTenants(Panel $panel): array|Collection
     {
+        if($panel->getId() == 'project') {
+            return $this->projects;
+        }
+
         return [];
     }
 }

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->morphs('related');
             $table->integer('user_id');
+            $table->integer('project_id')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();
             $table->timestamps();

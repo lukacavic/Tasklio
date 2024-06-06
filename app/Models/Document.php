@@ -13,6 +13,11 @@ class Document extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
 
+    public function project(): MorphTo
+    {
+        return $this->related();
+    }
+
     public function related(): MorphTo
     {
         return $this->morphTo();

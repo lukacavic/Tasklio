@@ -2,7 +2,9 @@
 
 namespace App\Providers\Filament;
 
-use App\Models\Organisation;
+use App\Filament\Project\Pages\Dashboard;
+use App\Models\Project;
+use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -19,42 +21,34 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
-use RickDBCN\FilamentEmail\FilamentEmail;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
-class AppPanelProvider extends PanelProvider
+class ProjectPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('app')
-            ->default()
+            ->id('project')
+            ->path('project')
             ->tenantMenu()
-            ->databaseNotifications()
-            ->path('app')
-            ->spa()
-            ->login()
             ->font('Poppins')
-            ->colors([
-                'primary' => Color::Orange
-            ])
-            ->passwordReset()
+            ->spa()
             ->authGuard('web')
-            ->unsavedChangesAlerts()
             ->databaseTransactions()
+            ->tenant(Project::class)
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
             ->globalSearchDebounce('750ms')
             ->globalSearchFieldKeyBindingSuffix()
-            ->tenant(Organisation::class)
-            ->tenantMenu(false)
-            ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
-            ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
-            ->pages([
-                //Pages\Dashboard::class,
+            ->colors([
+                'primary' => Color::Amber,
             ])
-            ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')
+            ->discoverResources(in: app_path('Filament/Project/Resources'), for: 'App\\Filament\\Project\\Resources')
+            ->discoverPages(in: app_path('Filament/Project/Pages'), for: 'App\\Filament\\Project\\Pages')
+            ->pages([
+                Dashboard::class,
+            ])
+            ->discoverWidgets(in: app_path('Filament/Project/Widgets'), for: 'App\\Filament\\Project\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
@@ -70,20 +64,13 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->authMiddleware([
-                Authenticate::class,
-            ])
             ->plugins([
-                FilamentEditProfilePlugin::make()
-                    ->setTitle('My Profile')
-                    ->setNavigationLabel('My Profile')
-                    ->setNavigationGroup('Group Profile')
-                    ->setIcon('heroicon-o-user')
-                    ->shouldRegisterNavigation(false)
-                    ->shouldShowBrowserSessionsForm(),
                 FilamentFullCalendarPlugin::make(),
                 FilamentApexChartsPlugin::make(),
-                FilamentEmail::make()
+                QuickCreatePlugin::make(),
+            ])
+            ->authMiddleware([
+                Authenticate::class,
             ]);
     }
 }
