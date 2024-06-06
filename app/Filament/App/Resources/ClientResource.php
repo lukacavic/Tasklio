@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
 
 class ClientResource extends Resource
 {
@@ -47,9 +48,8 @@ class ClientResource extends Resource
                 Forms\Components\TextInput::make('zip_code')
                     ->label('Poštanski broj')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('country')
-                    ->label('Država')
-                    ->maxLength(255),
+                Country::make('country')
+                ->label('Država'),
             ]);
     }
 
