@@ -66,6 +66,7 @@ class CalendarWidget extends FullCalendarWidget
                     ->label('Naziv')
                     ->required(),
                 ColorPicker::make('color')
+                    ->required()
                     ->label('Boja'),
             ]),
             Grid::make()

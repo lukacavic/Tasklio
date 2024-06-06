@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('user_id');
-            $table->morphs('related');
+            $table->integer('project_id')->nullable();
             $table->string('color')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();

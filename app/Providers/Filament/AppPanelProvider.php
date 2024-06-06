@@ -81,7 +81,8 @@ class AppPanelProvider extends PanelProvider
                     ->setIcon('heroicon-o-user')
                     ->shouldRegisterNavigation(false)
                     ->shouldShowBrowserSessionsForm(),
-                FilamentFullCalendarPlugin::make(),
+                FilamentFullCalendarPlugin::make()
+                ->selectable(true),
                 FilamentApexChartsPlugin::make(),
                 FilamentEmail::make()
             ]);
