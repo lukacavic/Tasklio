@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Models\Organisation;
+use Awcodes\FilamentGravatar\GravatarPlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -84,7 +85,7 @@ class AppPanelProvider extends PanelProvider
                 FilamentFullCalendarPlugin::make()
                 ->selectable(true),
                 FilamentApexChartsPlugin::make(),
-                FilamentEmail::make()
+                FilamentEmail::make(),
             ]);
     }
 }

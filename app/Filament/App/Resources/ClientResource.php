@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources;
 
+use App\Filament\App\Resources\ClientResource\Pages\ClientNotes;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
@@ -49,7 +50,7 @@ class ClientResource extends Resource
                     ->label('Poštanski broj')
                     ->maxLength(255),
                 Country::make('country')
-                ->label('Država'),
+                    ->label('Država'),
             ]);
     }
 
@@ -125,17 +126,17 @@ class ClientResource extends Resource
                     ->url(function () use ($record) {
                         return static::getUrl('documents', ['record' => $record->id]);
                     }),
-                /*       PageNavigationItem::make('Napomene')
-                          ->icon('heroicon-o-pencil-square')
-                          ->badge(function () use ($record) {
-                              return $record->notes->count();
-                          })
-                          ->isActiveWhen(function () {
-                              return request()->routeIs(Pages\ClientNotes::getRouteName());
-                          })
-                          ->url(function () use ($record) {
-                              return static::getUrl('notes', ['record' => $record->id]);
-                          }),*/
+                PageNavigationItem::make('Napomene')
+                    ->icon('heroicon-o-pencil')
+                    ->badge(function () use ($record) {
+                        return $record->notes->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(ClientNotes::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('notes', ['record' => $record->id]);
+                    }),
                 PageNavigationItem::make('Trezor')
                     ->icon('heroicon-o-lock-open')
                     ->badge(function () use ($record) {
@@ -158,7 +159,7 @@ class ClientResource extends Resource
             'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
             'documents' => \App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
             'vaults' => \App\Filament\App\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
-            /*  'notes' => Pages\ClientNotes::route('/{record}/notes'),*/
+              'notes' => ClientNotes::route('/{record}/notes'),
         ];
     }
 }

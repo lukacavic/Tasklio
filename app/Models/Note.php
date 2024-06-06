@@ -22,4 +22,9 @@ class Note extends BaseModel implements HasMedia
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function project(): MorphTo
+    {
+        return $this->related();
+    }
 }

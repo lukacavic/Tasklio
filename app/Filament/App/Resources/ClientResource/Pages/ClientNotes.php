@@ -3,31 +3,31 @@
 namespace App\Filament\App\Resources\ClientResource\Pages;
 
 use App\Filament\App\Resources\ClientResource;
-use App\Filament\App\Resources\ProjectResource;
+use App\Models\Client;
 use App\Models\Document;
+use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
-class ClientDocuments extends ManageRelatedRecords
+class ClientNotes extends ManageRelatedRecords
 {
     use HasPageSidebar;
 
     protected static string $resource = ClientResource::class;
 
-    protected static string $relationship = 'documents';
+    protected static string $relationship = 'notes';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-pencil';
 
-    protected static ?string $title = 'Dokumenti';
-
-    public static function getNavigationLabel(): string
-    {
-        return 'Media';
-    }
+    protected static ?string $title = 'Napomene';
 
     public function form(Form $form): Form
     {
@@ -37,6 +37,13 @@ class ClientDocuments extends ManageRelatedRecords
                     ->label('Naslov')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\ToggleButtons::make('priority')
+                    ->boolean()->label('Bitna napomena')
+                    ->inline()
+                ->default(false)->columns(1),
+                TinyEditor::make('content')
+                    ->label('Sadržaj')
+                    ->required(),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
                     ->multiple()
                     ->label('Privitci')
@@ -47,13 +54,20 @@ class ClientDocuments extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('Nema učitanih dokumenata')
-            ->emptyStateDescription('Učitajte novi dokument za projekt')
+            ->emptyStateHeading('Nema učitanih napomena')
+            ->emptyStateDescription('Učitajte novu za početak')
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->description(function (Document $record) {
-                        return 'Ukupno ' . $record->media()->count() . ' dokumenata';
+                    ->icon(function(Note $record) {
+                        if($record->media()->exists()) {
+                            return 'heroicon-o-paper-clip';
+                        }
+
+                        return null;
+                    })
+                    ->description(function(Model $record) {
+                        return Str::limit(strip_tags($record->content), 40);
                     })
                     ->label('Naslov'),
                 Tables\Columns\TextColumn::make('user.fullName')
@@ -63,21 +77,13 @@ class ClientDocuments extends ManageRelatedRecords
                     ->since(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()
-                    ->modalHeading('Učitaj dokument')
-                    ->label('Učitaj dokument')
-                    ->icon('heroicon-o-paper-clip'),
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\Action::make('download')
-                    ->hiddenLabel()
-                    ->icon('heroicon-o-arrow-down-tray'),
                 Tables\Actions\Action::make('send')
                     ->hiddenLabel()
                     ->icon('heroicon-o-envelope'),
-                Tables\Actions\EditAction::make()
-                    ->modalHeading('Izmjena dokumenta')
-                    ->hiddenLabel(),
+                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->hiddenLabel(),
                 Tables\Actions\ForceDeleteAction::make(),

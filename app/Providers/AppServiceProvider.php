@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +32,25 @@ class AppServiceProvider extends ServiceProvider
             $action->label('Dodaj');
             $action->slideOver();
             $action->color(Color::Green);
+        });
+
+        //Table actions
+        \Filament\Tables\Actions\EditAction::configureUsing(function (\Filament\Tables\Actions\EditAction $action) {
+            $action->icon('heroicon-o-pencil');
+            $action->hiddenLabel();
+            $action->slideOver();
+        });
+
+        \Filament\Tables\Actions\CreateAction::configureUsing(function (\Filament\Tables\Actions\CreateAction $action) {
+            $action->icon('heroicon-o-plus');
+            $action->color(Color::Green);
+            $action->label('Dodaj');
+            $action->slideOver();
+        });
+
+        \Filament\Tables\Actions\DeleteAction::configureUsing(function (\Filament\Tables\Actions\DeleteAction $action) {
+            $action->icon('heroicon-o-trash');
+            $action->hiddenLabel();
         });
     }
 }
