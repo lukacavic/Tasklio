@@ -33,7 +33,6 @@ class Task extends BaseModel
     {
         return $this->morphTo();
     }
-  
 
     public function creator(): BelongsTo
     {

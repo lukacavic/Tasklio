@@ -42,7 +42,7 @@ class Project extends Model implements HasCurrentTenantLabel
 
     public function tasks(): MorphMany
     {
-        return $this->morphMany(Document::class, 'related');
+        return $this->morphMany(Task::class, 'related');
     }
 
     public function clients(): BelongsToMany
