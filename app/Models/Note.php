@@ -13,10 +13,7 @@ class Note extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
 
-    public function related(): MorphTo
-    {
-        return $this->morphTo();
-    }
+
 
     public function user(): BelongsTo
     {
@@ -26,5 +23,10 @@ class Note extends BaseModel implements HasMedia
     public function project(): MorphTo
     {
         return $this->related();
+    }
+
+    public function related(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

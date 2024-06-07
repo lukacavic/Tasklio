@@ -17,6 +17,11 @@ class Organisation extends Model implements HasCurrentTenantLabel
         return $this->hasMany(User::class);
     }
 
+    public function leads(): HasMany
+    {
+        return $this->hasMany(Lead::class);
+    }
+
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);

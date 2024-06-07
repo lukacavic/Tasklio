@@ -4,6 +4,8 @@ namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
+use App\Models\Project;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -52,31 +54,45 @@ class LeadResource extends Resource
                     ->label('Grad'),
                 Forms\Components\TextInput::make('zip_code')
                     ->maxLength(255)->label('Poštanski broj'),
+
                 Forms\Components\TextInput::make('country')
                     ->label('Država')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)->label('Web stranica')
                     ->prefix('http://'),
+
                 Forms\Components\TextInput::make('mobile')
                     ->maxLength(255)->label('Mobitel'),
+
                 Forms\Components\TextInput::make('phone')
                     ->tel()->label('Telefon')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('email')
                     ->email()->label('Email')
                     ->maxLength(255),
+
                 Forms\Components\Select::make('status_id')
-                    ->required()
                     ->label('Status'),
+
                 Forms\Components\Select::make('source_id')
-                    ->required()
                     ->label('Izvor'),
+
                 Forms\Components\Select::make('assigned_user_id')
-                    ->required()
+                    ->options(User::get()->pluck('fullName', 'id'))
                     ->label('Djelatnik'),
+
+                Forms\Components\Select::make('project_id')
+                    ->label('Projekt')
+                    ->reactive()
+                    ->options(Project::get()->pluck('name', 'id'))
+                    ->native(false),
+
                 Forms\Components\DatePicker::make('last_contact_at')
                     ->label('Zadnji kontakt'),
+
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535)
                     ->columnSpanFull()->label('Opis'),
@@ -93,20 +109,26 @@ class LeadResource extends Resource
                         return $record->company;
                     })
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('mobile')
+
+                Tables\Columns\TextColumn::make('phone')
                     ->searchable()
-                    ->label('Mobitel'),
+                    ->label('Telefon'),
+
                 Tables\Columns\TextColumn::make('assignedUser.fullName')
                     ->label('Djelatnik')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('source.name')
                     ->label('Izvor')
                     ->badge()
                     ->searchable(),
+
                 SelectColumn::make('status.name')
                     ->label('Status'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->label('Vrijeme dodavanja')
@@ -117,10 +139,12 @@ class LeadResource extends Resource
                     ->label('Zadnji kontakt')
                     ->dateTime()
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
