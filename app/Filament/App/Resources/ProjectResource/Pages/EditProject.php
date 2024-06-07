@@ -9,8 +9,6 @@ use Filament\Resources\Pages\EditRecord;
 
 class EditProject extends EditRecord
 {
-    use HasPageSidebar;
-
     protected static string $resource = ProjectResource::class;
 
     protected function getHeaderActions(): array
