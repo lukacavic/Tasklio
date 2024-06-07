@@ -13,7 +13,9 @@ class ListLeads extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+            ->label('Dodaj')
+            ->modalHeading('Novi pot. klijent'),
         ];
     }
 }

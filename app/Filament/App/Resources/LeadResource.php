@@ -35,23 +35,29 @@ class LeadResource extends Resource
                     ->label('Ime')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('last_name')
                     ->required()
                     ->label('Prezime')
                     ->maxLength(255),
-                Forms\Components\TextInput::make('position')
-                    ->maxLength(255)
-                    ->label('Pozicija'),
+
                 Forms\Components\TextInput::make('company')
                     ->required()
                     ->label('Tvrtka')
                     ->maxLength(255),
+
+                Forms\Components\TextInput::make('position')
+                    ->maxLength(255)
+                    ->label('Pozicija'),
+
                 Forms\Components\TextInput::make('address')
                     ->maxLength(255)
                     ->label('Adresa'),
+
                 Forms\Components\TextInput::make('city')
                     ->maxLength(255)
                     ->label('Grad'),
+
                 Forms\Components\TextInput::make('zip_code')
                     ->maxLength(255)->label('Poštanski broj'),
 
@@ -74,21 +80,20 @@ class LeadResource extends Resource
                     ->email()->label('Email')
                     ->maxLength(255),
 
+                Forms\Components\Select::make('project_id')
+                    ->label('Projekt')
+                    ->reactive()
+                    ->required()
+                    ->options(Project::get()->pluck('name', 'id'))
+                    ->native(false),
+
                 Forms\Components\Select::make('status_id')
                     ->label('Status'),
-
-                Forms\Components\Select::make('source_id')
-                    ->label('Izvor'),
 
                 Forms\Components\Select::make('assigned_user_id')
                     ->options(User::get()->pluck('fullName', 'id'))
                     ->label('Djelatnik'),
 
-                Forms\Components\Select::make('project_id')
-                    ->label('Projekt')
-                    ->reactive()
-                    ->options(Project::get()->pluck('name', 'id'))
-                    ->native(false),
 
                 Forms\Components\DatePicker::make('last_contact_at')
                     ->label('Zadnji kontakt'),
