@@ -4,7 +4,6 @@ namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\ClientResource\Pages\ClientContacts;
 use App\Filament\App\Resources\ClientResource\Pages\ClientNotes;
-use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
 use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
@@ -62,6 +61,12 @@ class ClientResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Klijent')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('primaryContact.full_name')
+                    ->label('Primarni kontakt')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
                     ->label('Telefon')
                     ->searchable(),
@@ -89,6 +94,7 @@ class ClientResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

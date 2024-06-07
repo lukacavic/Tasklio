@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('country')->nullable();
+            $table->integer('primary_contact_id')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();
             $table->timestamps();

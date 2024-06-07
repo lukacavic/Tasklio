@@ -26,6 +26,7 @@ use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class ClientContacts extends ManageRelatedRecords
@@ -75,9 +76,13 @@ class ClientContacts extends ManageRelatedRecords
                     })
                     ->label('Ime i prezime'),
                 TextColumn::make('email')
-                    ->label('Email'),
+                    ->label('Email')
+                    ->copyable()
+                    ->copyMessage('Email adresa kopirana'),
                 TextColumn::make('phone')
                     ->label('Telefon'),
+                ToggleColumn::make('primary')
+                    ->label('Primarni kontakt'),
                 TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
                     ->since(),
