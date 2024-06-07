@@ -83,11 +83,15 @@ class ClientContacts extends ManageRelatedRecords
                     ->since(),
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->label('Dodaj')
+                    ->modalHeading('Novi kontakt'),
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->modalHeading('Izmjena kontakta'),
                 DeleteAction::make()
+                    ->modalHeading('Brisanje kontakta?')
                     ->hiddenLabel(),
                 ForceDeleteAction::make(),
                 RestoreAction::make(),

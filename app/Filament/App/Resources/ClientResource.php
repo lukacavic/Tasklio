@@ -121,6 +121,9 @@ class ClientResource extends Resource
                     }),
                 PageNavigationItem::make('Kontakti')
                     ->icon('heroicon-o-users')
+                    ->badge(function () use ($record) {
+                        return $record->contacts->count();
+                    })
                     ->isActiveWhen(function () {
                         return request()->routeIs(ClientContacts::getRouteName());
                     })
@@ -129,6 +132,9 @@ class ClientResource extends Resource
                     }),
                 PageNavigationItem::make('Dokumenti')
                     ->icon('heroicon-o-paper-clip')
+                    ->badge(function () use ($record) {
+                        return $record->media->count();
+                    })
                     ->isActiveWhen(function () {
                         return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::getRouteName());
                     })
