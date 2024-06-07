@@ -11,8 +11,11 @@ class ListClients extends ListRecords
     protected static string $resource = ClientResource::class;
 
     protected static ?string $title = 'Klijenti';
+
     protected function getHeaderActions(): array
     {
+
+
         return [
             Actions\CreateAction::make()
                 ->label('Novi klijent')

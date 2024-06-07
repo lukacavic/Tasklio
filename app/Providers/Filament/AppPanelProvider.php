@@ -37,6 +37,7 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->spa()
             ->login()
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->font('Poppins')
             ->colors([
                 'primary' => Color::Orange

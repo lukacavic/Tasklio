@@ -13,6 +13,7 @@
         "bezhansalleh/filament-panel-switch": "^1.0",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
+        "jaocero/activity-timeline": "^1.2",
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
@@ -23,6 +24,7 @@
         "pxlrbt/filament-excel": "^2.3",
         "rickdbcn/filament-email": "^1.4",
         "saade/filament-fullcalendar": "^3.0",
+        "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-medialibrary": "^11.5"
     },
     "require-dev": {
