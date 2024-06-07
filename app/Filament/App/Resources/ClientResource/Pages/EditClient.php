@@ -3,9 +3,11 @@
 namespace App\Filament\App\Resources\ClientResource\Pages;
 
 use App\Filament\App\Resources\ClientResource;
+use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Actions;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Support\Colors\Color;
@@ -14,6 +16,7 @@ use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;
 use JaOcero\ActivityTimeline\Components\ActivitySection;
 use JaOcero\ActivityTimeline\Components\ActivityTitle;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
 class EditClient extends EditRecord
 {
@@ -26,6 +29,30 @@ class EditClient extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('log_activity')
+                ->hiddenLabel()
+                ->icon('heroicon-o-plus-circle')
+                ->color(Color::Blue)
+                ->tooltip('Dodaj aktivnost')
+                ->modalSubmitActionLabel('Spremi')
+                ->modalHeading('Dodaj aktivnost')
+                ->slideOver()
+                ->form(function (Form $form) {
+                    return $form
+                        ->schema([
+                            RichEditor::make('activity')
+                                ->required()
+                                ->columnSpanFull()
+                                ->grow(true)
+                                ->hiddenLabel()
+                        ]);
+                })
+                ->action(function (array $data, Client $record): void {
+                    activity()
+                        ->causedBy(auth()->user())
+                        ->performedOn($record)
+                        ->log($data['activity']);
+                }),
             Actions\Action::make('activity_log')
                 ->hiddenLabel()
                 ->icon('heroicon-o-information-circle')
@@ -38,22 +65,19 @@ class EditClient extends EditRecord
                 ->infolist(function (Infolist $infolist) {
                     return $infolist
                         ->state([
-                            'activities' =>$this->getRecord()->activities
+                            'activities' => $this->getRecord()->activities()->with('causer')->latest()->get()
                         ])
                         ->schema([
                             ActivitySection::make('activities')
                                 ->schema([
-                                    ActivityTitle::make('title')
+                                    ActivityTitle::make('causer.fullName')
                                         ->placeholder('No title is set')
                                         ->allowHtml(),
                                     ActivityDescription::make('description')
                                         ->placeholder('No description is set')
                                         ->allowHtml(),
-                                    ActivityDescription::make('causer.fullName')
-                                        ->allowHtml(),
                                     ActivityDate::make('created_at')
-                                        ->date('F j, Y', 'Asia/Manila')
-                                        ->placeholder('No date is set.'),
+                                        ->date('F j, Y g:i A', 'Asia/Manila'),
                                     ActivityIcon::make('status')
                                         ->icon(fn(string|null $state): string|null => match ($state) {
                                             'ideation' => 'heroicon-m-light-bulb',
@@ -70,7 +94,10 @@ class EditClient extends EditRecord
                                             default => 'gray',
                                         }),
                                 ])
-                                ->showItemsCount(10)
+                                ->showItemsCount(2)
+                                ->emptyStateHeading('No activities yet.')
+                                ->emptyStateDescription('Check back later for activities that have been recorded.')
+                                ->emptyStateIcon('heroicon-o-bolt-slash')
                                 ->showItemsLabel('Prikaži starije')
                                 ->showItemsIcon('heroicon-m-chevron-down')
                                 ->showItemsColor('gray')
