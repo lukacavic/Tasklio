@@ -2,6 +2,7 @@
 
 namespace App\Filament\App\Resources;
 
+use App\Filament\App\Resources\ClientResource\Pages\ClientContacts;
 use App\Filament\App\Resources\ClientResource\Pages\ClientNotes;
 use App\Filament\Resources\ClientResource\Pages;
 use App\Models\Client;
@@ -118,6 +119,14 @@ class ClientResource extends Resource
                     ->isActiveWhen(function () {
                         return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\EditClient::getRouteName()) || request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\EditClient::getRouteName());
                     }),
+                PageNavigationItem::make('Kontakti')
+                    ->icon('heroicon-o-users')
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(ClientContacts::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('contacts', ['record' => $record->id]);
+                    }),
                 PageNavigationItem::make('Dokumenti')
                     ->icon('heroicon-o-paper-clip')
                     ->isActiveWhen(function () {
@@ -155,11 +164,12 @@ class ClientResource extends Resource
     {
         return [
             'index' => \App\Filament\App\Resources\ClientResource\Pages\ListClients::route('/'),
+            'contacts' => ClientContacts::route('/{record}/contacts}'),
             // 'create' => Pages\CreateClient::route('/create'),
             'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
             'documents' => \App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
             'vaults' => \App\Filament\App\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
-              'notes' => ClientNotes::route('/{record}/notes'),
+            'notes' => ClientNotes::route('/{record}/notes'),
         ];
     }
 }

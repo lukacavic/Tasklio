@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->boolean('internal')->default(true);
-            $table->integer('client_id')->nullable();
-            $table->integer('leader_id')->nullable();
-            $table->date('deadline_at')->nullable();
+            $table->integer('client_id');
+            $table->string('full_name');
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('position')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();
             $table->timestamps();
@@ -29,6 +29,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('contacts');
     }
 };
+

@@ -17,6 +17,11 @@ class Client extends BaseModel implements HasMedia
         return $this->morphMany(Vault::class, 'related');
     }
 
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
+
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'related');

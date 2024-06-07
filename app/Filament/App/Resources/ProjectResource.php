@@ -59,6 +59,12 @@ class ProjectResource extends Resource
                     ->native(false)
                     ->options(Client::get()->pluck('name', 'id')),
 
+                Forms\Components\Select::make('leader_id')
+                    ->label('Voditelj projekta')
+                    ->reactive()
+                    ->options(User::get()->pluck('fullName', 'id'))
+                    ->native(false),
+
                 Forms\Components\Select::make('clients')
                     ->relationship('clients')
                     ->reactive()
