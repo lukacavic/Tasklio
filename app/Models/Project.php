@@ -74,6 +74,15 @@ class Project extends Model implements HasCurrentTenantLabel
     {
         return $this->morphMany(Vault::class, 'related');
     }
+    public function knowledgeArticles(): HasMany
+    {
+        return $this->hasMany(KnowledgeArticle::class);
+    }
+
+    public function knowledgeCategories(): HasMany
+    {
+        return $this->hasMany(KnowledgeCategory::class);
+    }
 
     public function notes(): MorphMany
     {

@@ -3,12 +3,14 @@
 namespace App\Filament\App\Widgets;
 
 use App\Models\Event;
+use App\Models\Project;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Saade\FilamentFullCalendar\Actions\CreateAction;
 use Saade\FilamentFullCalendar\Data\EventData;
@@ -42,9 +44,11 @@ class CalendarWidget extends FullCalendarWidget
         return [
             CreateAction::make()
                 ->mutateFormDataUsing(function (array $data): array {
+                    $projectId = Filament::getTenant() instanceof Project ? Filament::getTenant()->id : null;
+
                     return [
                         ...$data,
-                        'project_id' => Filament::getTenant()->id
+                        'project_id' => $projectId
                     ];
                 })
                 ->mountUsing(
@@ -72,8 +76,10 @@ class CalendarWidget extends FullCalendarWidget
             Grid::make()
                 ->schema([
                     DateTimePicker::make('start_at')
+                        ->required()
                         ->label('Početak'),
                     DateTimePicker::make('end_at')
+                        ->required()
                         ->label('Kraj'),
                 ]),
             RichEditor::make('description')

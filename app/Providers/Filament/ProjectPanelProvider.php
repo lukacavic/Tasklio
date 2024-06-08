@@ -46,6 +46,7 @@ class ProjectPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/Project/Resources'), for: 'App\\Filament\\Project\\Resources')
             ->discoverPages(in: app_path('Filament/Project/Pages'), for: 'App\\Filament\\Project\\Pages')
+            ->discoverClusters(in: app_path('Filament/Project/Clusters'), for: 'App\\Filament\\Project\\Clusters')
             ->pages([
                 Dashboard::class,
                 TasksKanbanBoard::class

@@ -41,6 +41,11 @@ class AppServiceProvider extends ServiceProvider
             $action->slideOver();
         });
 
+        \Filament\Tables\Actions\ViewAction::configureUsing(function (\Filament\Tables\Actions\ViewAction $action) {
+            $action->icon('heroicon-o-eye');
+            $action->hiddenLabel();
+        });
+
         \Filament\Tables\Actions\CreateAction::configureUsing(function (\Filament\Tables\Actions\CreateAction $action) {
             $action->icon('heroicon-o-plus');
             $action->color(Color::Green);
