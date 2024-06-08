@@ -16,6 +16,7 @@ use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Spatie\MediaLibrary\Support\MediaStream;
 
 class ClientDocuments extends ManageRelatedRecords
 {
@@ -44,6 +45,7 @@ class ClientDocuments extends ManageRelatedRecords
                     ->maxLength(255),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
                     ->multiple()
+                    ->required()
                     ->label('Privitci')
                     ->downloadable()
             ])->columns(1);
@@ -76,41 +78,12 @@ class ClientDocuments extends ManageRelatedRecords
             ->actions([
                 Tables\Actions\Action::make('download')
                     ->hiddenLabel()
-                    ->icon('heroicon-o-arrow-down-tray'),
-                Tables\Actions\Action::make('send')
-                    ->icon('heroicon-o-envelope')
-                    ->modalWidth(MaxWidth::Full)
-                    ->modalHeading('Slanje preko email-a')
-                    ->hiddenLabel()
-                    ->form([
-                        Forms\Components\TagsInput::make('receivers')
-                            ->label('Primatelji')
-                            ->columnSpanFull()
-                            ->required(),
-                        TextInput::make('subject')
-                            ->label('Naslov')
-                            ->required()
-                            ->formatStateUsing(function (Document $record) {
-                                return $record->title;
-                            })
-                            ->columnSpanFull(),
-                        RichEditor::make('message')
-                            ->required()
-                            ->label('Odgovor')
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-                        Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
-                            ->multiple()
-                            ->label('Privitci')
-                            ->downloadable()
-                    ])
-                    ->requiresConfirmation()
-                    ->action(function (array $data) {
-                        Notification::make()
-                            ->title('Email uspješno poslan')
-                            ->success()
-                            ->send();
-                    }),
+                    ->icon('heroicon-o-arrow-down-tray')
+                ->action(function(Document $record) {
+                    $downloads = $record->getMedia();
+
+                    return MediaStream::create('attachments.zip')->addMedia($downloads);
+                }),
                 Tables\Actions\EditAction::make()
                     ->modalHeading('Izmjena dokumenta')
                     ->hiddenLabel(),

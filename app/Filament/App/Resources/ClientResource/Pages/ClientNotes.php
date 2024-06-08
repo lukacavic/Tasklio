@@ -42,10 +42,11 @@ class ClientNotes extends ManageRelatedRecords
                     ->label('Naslov')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\ToggleButtons::make('priority')
-                    ->boolean()->label('Bitna napomena')
+                Forms\Components\Toggle::make('priority')
+                    ->label('Bitna napomena')
                     ->inline()
-                    ->default(false)->columns(1),
+                    ->default(false)
+                    ->columns(1),
                 TinyEditor::make('content')
                     ->label('Sadržaj')
                     ->required(),
@@ -82,11 +83,14 @@ class ClientNotes extends ManageRelatedRecords
                     ->since(),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->modalHeading('Nova napomena'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Izmjena napomene'),
                 Tables\Actions\DeleteAction::make()
+                    ->modalHeading('Brisanje napomene')
                     ->hiddenLabel(),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),

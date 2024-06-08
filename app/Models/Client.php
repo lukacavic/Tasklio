@@ -17,7 +17,13 @@ class Client extends BaseModel implements HasMedia
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults();
+        return LogOptions::defaults()->setDescriptionForEvent(function($name) {
+            if($name === 'created') {
+                return "Kreirano";
+            }
+
+            return $name;
+        });
     }
 
     public function vaults(): MorphMany

@@ -53,10 +53,13 @@ class ClientContacts extends ManageRelatedRecords
                     ->label('Pozicija/Titula')
                     ->maxLength(255),
                 TextInput::make('email')
+                    ->unique(Contact::class, 'email', ignoreRecord: true)
+                    ->prefixIcon('heroicon-o-at-symbol')
                     ->label('Email')
                     ->email()
                     ->maxLength(255),
                 TextInput::make('phone')
+                    ->prefixIcon('heroicon-o-phone')
                     ->label('Telefon')
                     ->maxLength(255),
 
@@ -75,14 +78,14 @@ class ClientContacts extends ManageRelatedRecords
                         return $record->position;
                     })
                     ->label('Ime i prezime'),
+
                 TextColumn::make('email')
                     ->label('Email')
                     ->copyable()
                     ->copyMessage('Email adresa kopirana'),
                 TextColumn::make('phone')
                     ->label('Telefon'),
-                ToggleColumn::make('primary')
-                    ->label('Primarni kontakt'),
+
                 TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
                     ->since(),

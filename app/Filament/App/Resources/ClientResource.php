@@ -3,7 +3,9 @@
 namespace App\Filament\App\Resources;
 
 use App\Filament\App\Resources\ClientResource\Pages\ClientContacts;
+use App\Filament\App\Resources\ClientResource\Pages\ClientDocuments;
 use App\Filament\App\Resources\ClientResource\Pages\ClientNotes;
+use App\Filament\App\Resources\ClientResource\Pages\ClientOverview;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
 use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
@@ -57,6 +59,9 @@ class ClientResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(
+                fn (Model $record): string => ClientOverview::getUrl([$record->id]),
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Klijent')
@@ -117,13 +122,13 @@ class ClientResource extends Resource
             ->sidebarNavigation()
             ->setDescription('KLIJENT')
             ->setNavigationItems([
-                PageNavigationItem::make('Osnovne informacije')
+                PageNavigationItem::make('Pregled')
                     ->icon('heroicon-o-information-circle')
                     ->url(function () use ($record) {
-                        return static::getUrl('edit', ['record' => $record->id]);
+                        return static::getUrl('overview', ['record' => $record->id]);
                     })
                     ->isActiveWhen(function () {
-                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\EditClient::getRouteName()) || request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\EditClient::getRouteName());
+                        return request()->routeIs(ClientOverview::getRouteName());
                     }),
                 PageNavigationItem::make('Kontakti')
                     ->icon('heroicon-o-users')
@@ -142,7 +147,7 @@ class ClientResource extends Resource
                         return $record->media->count();
                     })
                     ->isActiveWhen(function () {
-                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::getRouteName());
+                        return request()->routeIs(ClientDocuments::getRouteName());
                     })
                     ->url(function () use ($record) {
                         return static::getUrl('documents', ['record' => $record->id]);
@@ -178,6 +183,7 @@ class ClientResource extends Resource
             'index' => \App\Filament\App\Resources\ClientResource\Pages\ListClients::route('/'),
             'contacts' => ClientContacts::route('/{record}/contacts}'),
             // 'create' => Pages\CreateClient::route('/create'),
+            'overview' => \App\Filament\App\Resources\ClientResource\Pages\ClientOverview::route('/{record}/overview'),
             'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
             'documents' => \App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
             'vaults' => \App\Filament\App\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),

@@ -15,6 +15,11 @@ class Task extends BaseModel
 
         static::creating(function (Model $model) {
             $model->status_id = 1;
+
+            if($model->related_id == null || $model->related_type == null) {
+                $model->related_id = auth()->id();
+                $model->related_type = User::class;
+            }
         });
 
     }
