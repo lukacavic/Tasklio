@@ -84,6 +84,16 @@ class Project extends Model implements HasCurrentTenantLabel
         return $this->hasMany(KnowledgeCategory::class);
     }
 
+    public function leadStatuses(): HasMany
+    {
+        return $this->hasMany(LeadStatus::class);
+    }
+
+    public function leadSources(): HasMany
+    {
+        return $this->hasMany(LeadSource::class);
+    }
+
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'related');

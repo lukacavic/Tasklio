@@ -184,8 +184,8 @@ class ClientResource extends Resource
             'contacts' => ClientContacts::route('/{record}/contacts}'),
             // 'create' => Pages\CreateClient::route('/create'),
             'overview' => \App\Filament\App\Resources\ClientResource\Pages\ClientOverview::route('/{record}/overview'),
-            'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
             'documents' => \App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
+            'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
             'vaults' => \App\Filament\App\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
             'notes' => ClientNotes::route('/{record}/notes'),
         ];

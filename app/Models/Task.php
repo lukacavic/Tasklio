@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Spatie\Tags\HasTags;
 
 class Task extends BaseModel
 {
+    use HasTags;
+
     protected static function booted(): void
     {
         parent::booted();

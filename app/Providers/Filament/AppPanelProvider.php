@@ -40,7 +40,7 @@ class AppPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/app/theme.css')
             ->font('Poppins')
             ->colors([
-                'primary' => Color::Orange
+                'primary' => '#24517a'
             ])
             ->passwordReset()
             ->authGuard('web')
@@ -84,6 +84,9 @@ class AppPanelProvider extends PanelProvider
                     ->shouldRegisterNavigation(false)
                     ->shouldShowBrowserSessionsForm(),
                 FilamentFullCalendarPlugin::make()
+                    ->plugins([
+                        'resourceTimeGrid','resourceTimeline','resourceDayGrid','scrollGrid'
+                    ])
                 ->selectable(true),
                 FilamentApexChartsPlugin::make(),
                 FilamentEmail::make(),

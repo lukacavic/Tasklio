@@ -12,12 +12,19 @@ use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 class TasksKanbanBoard extends KanbanBoard
 {
     protected static ?string $slug = 'kanban';
+
     protected static ?string $title = 'Zadaci';
+
     protected static string $model = Task::class;
+
     protected static string $recordTitleAttribute = 'title';
+
     protected static string $recordStatusAttribute = 'status_id';
+
     protected static string $headerView = 'tasks-kanban.kanban-header';
+
     protected static string $recordView = 'tasks-kanban.kanban-record';
+
     protected static bool $shouldRegisterNavigation = false;
 
     protected function statuses(): \Illuminate\Support\Collection
@@ -25,7 +32,9 @@ class TasksKanbanBoard extends KanbanBoard
         return collect([
             ['id' => '1', 'title' => 'Kreiran'],
             ['id' => '2', 'title' => 'U izradi'],
-            ['id' => '3', 'title' => 'Završen'],
+            ['id' => '3', 'title' => 'Testiranje'],
+            ['id' => '4', 'title' => 'Čeka se komentar'],
+            ['id' => '5', 'title' => 'Završeno'],
         ]);
     }
 

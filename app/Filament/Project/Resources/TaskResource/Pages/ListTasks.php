@@ -18,7 +18,6 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-
         foreach (TaskStatus::cases() as $taskStatus)
             $tabs = [
                 'created' => Tab::make('Kreiran')

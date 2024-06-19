@@ -2,6 +2,7 @@
 
 namespace App\Filament\Project\Clusters;
 
+use Filament\Actions\Action;
 use Filament\Clusters\Cluster;
 
 class KnowledgeBase extends Cluster
@@ -11,4 +12,5 @@ class KnowledgeBase extends Cluster
     protected static bool $shouldRegisterNavigation = true;
 
     protected static ?string $title = 'Baza znanja';
+
 }

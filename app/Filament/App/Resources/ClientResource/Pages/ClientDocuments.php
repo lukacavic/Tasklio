@@ -9,6 +9,7 @@ use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -79,7 +80,7 @@ class ClientDocuments extends ManageRelatedRecords
                 Tables\Actions\Action::make('download')
                     ->hiddenLabel()
                     ->icon('heroicon-o-arrow-down-tray')
-                ->action(function(Document $record) {
+                ->action(function(Document $record, $data) {
                     $downloads = $record->getMedia();
 
                     return MediaStream::create('attachments.zip')->addMedia($downloads);

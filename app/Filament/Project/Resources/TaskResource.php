@@ -5,16 +5,20 @@ namespace App\Filament\Project\Resources;
 use App\Filament\Project\Resources\TaskResource\Pages\CreateTask;
 use App\Models\Task;
 use App\Models\User;
+use App\TaskStatus;
 use Awcodes\FilamentBadgeableColumn\Components\Badge;
 use Awcodes\FilamentBadgeableColumn\Components\BadgeableColumn;
 use Awcodes\Shout\Components\Shout;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -31,6 +35,7 @@ use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -59,11 +64,11 @@ class TaskResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                DateTimePicker::make('start_at')
+                DatePicker::make('start_at')
                     ->label('Početak rada')
                     ->default(now())
                     ->required(),
-                DateTimePicker::make('deadline_at')
+                DatePicker::make('deadline_at')
                     ->label('Rok završetka'),
                 Select::make('members')
                     ->label('Djelatnici')
@@ -75,20 +80,28 @@ class TaskResource extends Resource
                         })->get()->pluck('fullName', 'id');
                     })
                     ->multiple(),
-                Select::make('priority_id')
+                ToggleButtons::make('priority_id')
+                    ->label('Prioritet')
+                    ->default(1)
                     ->options([
                         1 => 'Niski',
                         2 => 'Srednji',
                         3 => 'Visoki'
                     ])
-                    ->required()
-                    ->default(1)
-                    ->label('Prioritet'),
+                    ->colors([
+                        1 => 'warning',
+                        2 => 'info',
+                        3 => 'danger',
+                    ])->inline(),
                 RichEditor::make('description')
                     ->label('Opis')
                     ->required()
                     ->maxLength(65535)
                     ->columnSpanFull(),
+                SpatieTagsInput::make('tags')
+                    ->columnSpanFull()
+                ->suggestions(['marko','ivan'])
+                ->color(Color::Gray),
                 FileUpload::make('attachments')
                     ->label('Privitci')
                     ->columnSpanFull()
@@ -98,6 +111,12 @@ class TaskResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordClasses(fn (Model $record) => match ($record->status_id) {
+                1 => 'bg-primary',
+                2 => 'border-s-2 border-orange-600 dark:border-orange-300',
+                3 => 'border-s-2 border-green-600 dark:border-green-300',
+                default => null,
+            })
             ->recordTitleAttribute('name')
             ->emptyStateHeading('Trenutno nema upisanih zadataka')
             ->columns([
@@ -116,20 +135,17 @@ class TaskResource extends Resource
                     ->iconPosition(IconPosition::After)
                     ->label('Naziv')
                     ->searchable(),
-                ImageColumn::make('creator.avatar')
+                TextColumn::make('creator.fullName')
                     ->label('Dodao')
                     ->sortable(),
-                ImageColumn::make('members.first_name')
+                TextColumn::make('members.first_name')
                     ->label('Djelatnici')
                     ->sortable(),
                 SelectColumn::make('status_id')
                     ->label('Status')
-                    ->options([
-                        1 => 'Kreiran',
-                        2 => 'U izradi',
-                        3 => 'Završen'
-                    ])
+                    ->options(TaskStatus::class)
                     ->sortable(),
+                SpatieTagsColumn::make('tags'),
                 TextColumn::make('deadline_at')
                     ->label('Rok završetka')
                     ->dateTime()
@@ -150,7 +166,6 @@ class TaskResource extends Resource
             ->filters([
                 TrashedFilter::make()
             ])
-
             ->actions([
                 ViewAction::make()->hiddenLabel(),
                 EditAction::make()->hiddenLabel(),

@@ -9,4 +9,12 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateTask extends CreateRecord
 {
     protected static string $resource = TaskResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+          Actions\Action::make('test')
+          ->label('Primjer')
+        ];
+    }
 }
