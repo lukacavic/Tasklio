@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('company');
             $table->integer('project_id')->nullable();
+            $table->integer('status_id')->nullable();
+            $table->integer('source_id')->nullable();
             $table->string('country')->nullable();
             $table->string('website')->nullable();
             $table->integer('assigned_user_id')->nullable();

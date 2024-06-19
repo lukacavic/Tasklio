@@ -11,4 +11,9 @@ class LeadStatus extends BaseModel
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function leads()
+    {
+        return $this->hasMany(Lead::class, 'status_id');
+    }
 }
