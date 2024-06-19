@@ -17,4 +17,14 @@ class Lead extends BaseModel
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(LeadStatus::class, 'status_id');
+    }
+
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
+    }
 }

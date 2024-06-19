@@ -4,14 +4,17 @@ namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
+use App\Models\LeadStatus;
 use App\Models\Project;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class LeadResource extends Resource
 {
@@ -24,6 +27,17 @@ class LeadResource extends Resource
     protected static ?string $label = 'Potencijalni klijent';
 
     protected static ?string $pluralModelLabel = 'Potencijalni klijenti';
+
+    protected static ?string $recordTitleAttribute = 'company';
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Kontakt' => $record->fullName,
+            'E' => $record->email,
+            'M' => $record->mobile
+        ];
+    }
 
     public static function form(Form $form): Form
     {
@@ -57,34 +71,41 @@ class LeadResource extends Resource
                     ->label('Grad'),
 
                 Forms\Components\TextInput::make('zip_code')
-                    ->maxLength(255)->label('Poštanski broj'),
+                    ->maxLength(255)
+                    ->label('Poštanski broj'),
 
                 Forms\Components\TextInput::make('country')
                     ->label('Država')
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('website')
-                    ->maxLength(255)->label('Web stranica')
-                    ->prefix('http://'),
+                    ->maxLength(255)
+                    ->label('Web stranica')
+                    ->prefix('https://'),
 
                 Forms\Components\TextInput::make('mobile')
-                    ->maxLength(255)->label('Mobitel'),
+                    ->maxLength(255)
+                    ->label('Mobitel'),
 
                 Forms\Components\TextInput::make('phone')
-                    ->tel()->label('Telefon')
+                    ->tel()
+                    ->label('Telefon')
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('email')
-                    ->email()->label('Email')
+                    ->email()
+                    ->label('Email')
                     ->maxLength(255),
 
                 Forms\Components\Select::make('status_id')
+                    ->native(false)
+                    ->required()
+                    ->options(LeadStatus::get()->pluck('name', 'id'))
                     ->label('Status'),
 
                 Forms\Components\Select::make('assigned_user_id')
                     ->options(User::get()->pluck('fullName', 'id'))
                     ->label('Djelatnik'),
-
 
                 Forms\Components\DatePicker::make('last_contact_at')
                     ->label('Zadnji kontakt'),
@@ -107,6 +128,8 @@ class LeadResource extends Resource
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('email')
+                    ->copyable()
+                    ->copyMessage('Email adresa je kopirana')
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('phone')
@@ -123,6 +146,8 @@ class LeadResource extends Resource
                     ->searchable(),
 
                 SelectColumn::make('status.name')
+                    ->options(Filament::getTenant()->leadStatuses()->get()->pluck('name', 'id'))
+                    ->searchable()
                     ->label('Status'),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -151,6 +176,7 @@ class LeadResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

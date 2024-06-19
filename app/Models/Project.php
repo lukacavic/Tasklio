@@ -94,6 +94,11 @@ class Project extends Model implements HasCurrentTenantLabel
         return $this->hasMany(LeadSource::class);
     }
 
+    public function leads(): HasMany
+    {
+        return $this->hasMany(Lead::class);
+    }
+
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'related');
