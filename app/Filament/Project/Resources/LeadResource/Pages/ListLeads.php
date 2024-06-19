@@ -2,7 +2,9 @@
 
 namespace App\Filament\Project\Resources\LeadResource\Pages;
 
+use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\LeadResource;
+use App\Filament\Project\Widgets\LeadsKanbanBoard;
 use App\Models\LeadStatus;
 use Filament\Actions;
 use Filament\Resources\Components\Tab;
@@ -11,13 +13,6 @@ use Filament\Resources\Pages\ListRecords;
 class ListLeads extends ListRecords
 {
     protected static string $resource = LeadResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-        ];
-    }
 
     public function getTabs(): array
     {
@@ -39,5 +34,18 @@ class ListLeads extends ListRecords
         }
 
         return $tabs;
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make(),
+            Actions\Action::make('kanban')
+                ->hiddenLabel()
+                ->icon('heroicon-o-rectangle-group')
+                ->tooltip('Kanban prikaz')
+                ->url(fn(): string => LeadsKanbanBoard::getUrl()),
+
+        ];
     }
 }

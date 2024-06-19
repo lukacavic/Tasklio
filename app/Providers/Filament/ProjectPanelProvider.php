@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Project\Pages\Dashboard;
 use App\Filament\Project\Pages\TasksKanbanBoard;
+use App\Filament\Project\Widgets\LeadsKanbanBoard;
 use App\Models\Project;
 use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
@@ -49,7 +50,8 @@ class ProjectPanelProvider extends PanelProvider
             ->discoverClusters(in: app_path('Filament/Project/Clusters'), for: 'App\\Filament\\Project\\Clusters')
             ->pages([
                 Dashboard::class,
-                TasksKanbanBoard::class
+                TasksKanbanBoard::class,
+                LeadsKanbanBoard::class
             ])
             ->discoverWidgets(in: app_path('Filament/Project/Widgets'), for: 'App\\Filament\\Project\\Widgets')
             ->widgets([
