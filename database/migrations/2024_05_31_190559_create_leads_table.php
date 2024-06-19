@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->integer('assigned_user_id')->nullable();
             $table->text('description')->nullable();
+            $table->timestamp('last_contact_at')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();
             $table->timestamps();

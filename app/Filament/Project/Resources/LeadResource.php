@@ -4,17 +4,24 @@ namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
+use App\Models\LeadSource;
 use App\Models\LeadStatus;
 use App\Models\Project;
 use App\Models\User;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class LeadResource extends Resource
 {
@@ -74,23 +81,20 @@ class LeadResource extends Resource
                     ->maxLength(255)
                     ->label('Poštanski broj'),
 
-                Forms\Components\TextInput::make('country')
+                Country::make('country')
                     ->label('Država')
-                    ->maxLength(255),
+                    ->default('HR'),
 
                 Forms\Components\TextInput::make('website')
                     ->maxLength(255)
                     ->label('Web stranica')
                     ->prefix('https://'),
 
-                Forms\Components\TextInput::make('mobile')
-                    ->maxLength(255)
+                PhoneInput::make('mobile')
                     ->label('Mobitel'),
 
-                Forms\Components\TextInput::make('phone')
-                    ->tel()
-                    ->label('Telefon')
-                    ->maxLength(255),
+                PhoneInput::make('phone')
+                    ->label('Telefon'),
 
                 Forms\Components\TextInput::make('email')
                     ->email()
@@ -103,12 +107,23 @@ class LeadResource extends Resource
                     ->options(LeadStatus::get()->pluck('name', 'id'))
                     ->label('Status'),
 
+                Forms\Components\Select::make('source_id')
+                    ->native(false)
+                    ->required()
+                    ->options(LeadSource::get()->pluck('name', 'id'))
+                    ->label('Izvor'),
+
                 Forms\Components\Select::make('assigned_user_id')
-                    ->options(User::get()->pluck('fullName', 'id'))
+                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
+                    ->native(false)
                     ->label('Djelatnik'),
 
                 Forms\Components\DatePicker::make('last_contact_at')
                     ->label('Zadnji kontakt'),
+
+                SpatieTagsInput::make('tags')
+                    ->label('Oznake')
+                    ->columnSpanFull(),
 
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535)
@@ -132,7 +147,7 @@ class LeadResource extends Resource
                     ->copyMessage('Email adresa je kopirana')
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('phone')
+                PhoneColumn::make('phone')
                     ->searchable()
                     ->label('Telefon'),
 
@@ -148,6 +163,7 @@ class LeadResource extends Resource
                 SelectColumn::make('status.name')
                     ->options(Filament::getTenant()->leadStatuses()->get()->pluck('name', 'id'))
                     ->searchable()
+                    ->rules(['required'])
                     ->label('Status'),
 
                 Tables\Columns\TextColumn::make('created_at')
@@ -158,8 +174,14 @@ class LeadResource extends Resource
 
                 Tables\Columns\TextColumn::make('last_contact_at')
                     ->label('Zadnji kontakt')
-                    ->dateTime()
+                    ->date()
+                    ->description(function (Lead $record) {
+                        return $record->last_contact_at->diffForHumans();
+                    })
                     ->searchable(),
+
+                SpatieTagsColumn::make('tags')
+                ->label('Oznake'),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

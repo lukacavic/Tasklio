@@ -22,11 +22,20 @@ class LeadsKanbanBoard extends KanbanBoard
 
     protected static string $model = Lead::class;
 
-    protected static string $recordTitleAttribute = 'name';
+    protected static string $recordTitleAttribute = 'fullName';
 
     protected static string $recordStatusAttribute = 'status_id';
 
     protected static bool $shouldRegisterNavigation = false;
+
+    protected static string $headerView = 'leads-kanban.kanban-header';
+
+    protected static string $recordView = 'leads-kanban.kanban-record';
+
+    public function onStatusChanged(int $recordId, string $status, array $fromOrderedIds, array $toOrderedIds): void
+    {
+        Lead::find($recordId)->update(['status_id' => $status]);
+    }
 
     protected function statuses(): \Illuminate\Support\Collection
     {
