@@ -7,6 +7,7 @@ use App\Models\Project;
 use Carbon\Carbon;
 use Filament\Facades\Filament;
 use Filament\Tables;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
@@ -20,12 +21,15 @@ class UpcommingEventsWidget extends BaseWidget
 
         return $table
             ->paginated(false)
-            ->emptyStateDescription('Nema nadolazećih doagađaja.')
+            ->emptyStateHeading('Nema događaja!')
+            ->emptyStateIcon('heroicon-o-face-smile')
+            ->emptyStateDescription('Super, nema nadolazećih događaja u sljedećih 7 dana.')
             ->heading('Nadolazeći događaji')
             ->query(
                 Event::query()
                     ->limit(5)
                     ->latest()
+                    ->where('project_id', Filament::getTenant()->id)
                     ->whereBetween('start_at', [$today, $nextWeek])
             )
             ->columns([

@@ -26,8 +26,6 @@ class CalendarWidget extends FullCalendarWidget
 {
     public string|null|\Illuminate\Database\Eloquent\Model $model = Event::class;
 
-    public int $projectId;
-
     public function eventDidMount(): string
     {
         return <<<JS
@@ -97,11 +95,8 @@ class CalendarWidget extends FullCalendarWidget
         return [
             CreateAction::make()
                 ->mutateFormDataUsing(function (array $data): array {
-                    $projectId = Filament::getTenant() instanceof Project ? Filament::getTenant()->id : null;
-
                     return [
-                        ...$data,
-                        'project_id' => $projectId
+                        ...$data
                     ];
                 })
                 ->mountUsing(
