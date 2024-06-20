@@ -13,6 +13,7 @@ use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
@@ -50,84 +51,111 @@ class LeadResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('first_name')
-                    ->label('Ime')
-                    ->required()
-                    ->maxLength(255),
+                Forms\Components\Tabs::make('tabs')
+                    ->columnSpanFull()
+                    ->tabs([
+                        Forms\Components\Tabs\Tab::make('Osnovne informacije')
+                            ->columns(2)
+                            ->schema([
+                            Forms\Components\TextInput::make('first_name')
+                                ->label('Ime')
+                                ->required()
+                                ->maxLength(255),
 
-                Forms\Components\TextInput::make('last_name')
-                    ->required()
-                    ->label('Prezime')
-                    ->maxLength(255),
+                            Forms\Components\TextInput::make('last_name')
+                                ->required()
+                                ->label('Prezime')
+                                ->maxLength(255),
 
-                Forms\Components\TextInput::make('company')
-                    ->required()
-                    ->label('Tvrtka')
-                    ->maxLength(255),
+                            Forms\Components\TextInput::make('company')
+                                ->required()
+                                ->label('Tvrtka')
+                                ->maxLength(255),
 
-                Forms\Components\TextInput::make('position')
-                    ->maxLength(255)
-                    ->label('Pozicija'),
+                            Forms\Components\TextInput::make('position')
+                                ->maxLength(255)
+                                ->label('Pozicija'),
 
-                Forms\Components\TextInput::make('address')
-                    ->maxLength(255)
-                    ->label('Adresa'),
+                            Forms\Components\TextInput::make('website')
+                                ->maxLength(255)
+                                ->label('Web stranica')
+                                ->prefix('https://'),
 
-                Forms\Components\TextInput::make('city')
-                    ->maxLength(255)
-                    ->label('Grad'),
+                            PhoneInput::make('mobile')
+                                ->label('Mobitel'),
 
-                Forms\Components\TextInput::make('zip_code')
-                    ->maxLength(255)
-                    ->label('Poštanski broj'),
+                            PhoneInput::make('phone')
+                                ->label('Telefon'),
 
-                Country::make('country')
-                    ->label('Država')
-                    ->default('HR'),
+                            Forms\Components\TextInput::make('email')
+                                ->email()
+                                ->label('Email')
+                                ->maxLength(255),
 
-                Forms\Components\TextInput::make('website')
-                    ->maxLength(255)
-                    ->label('Web stranica')
-                    ->prefix('https://'),
+                            Forms\Components\Select::make('status_id')
+                                ->native(false)
+                                ->required()
+                                ->options(LeadStatus::get()->pluck('name', 'id'))
+                                ->label('Status'),
 
-                PhoneInput::make('mobile')
-                    ->label('Mobitel'),
+                            Forms\Components\Select::make('source_id')
+                                ->native(false)
+                                ->required()
+                                ->options(LeadSource::get()->pluck('name', 'id'))
+                                ->label('Izvor'),
 
-                PhoneInput::make('phone')
-                    ->label('Telefon'),
+                            Forms\Components\Select::make('assigned_user_id')
+                                ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
+                                ->native(false)
+                                ->label('Djelatnik'),
 
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->label('Email')
-                    ->maxLength(255),
+                            Forms\Components\DatePicker::make('last_contact_at')
+                                ->label('Zadnji kontakt'),
 
-                Forms\Components\Select::make('status_id')
-                    ->native(false)
-                    ->required()
-                    ->options(LeadStatus::get()->pluck('name', 'id'))
-                    ->label('Status'),
+                            SpatieTagsInput::make('tags')
+                                ->label('Oznake'),
 
-                Forms\Components\Select::make('source_id')
-                    ->native(false)
-                    ->required()
-                    ->options(LeadSource::get()->pluck('name', 'id'))
-                    ->label('Izvor'),
+                            Forms\Components\ToggleButtons::make('important')
+                                ->label('Bitan klijent')
+                                ->boolean()
+                                ->options([
+                                    true => 'Da',
+                                    false => 'Ne'
+                                ])
+                                ->colors([
+                                    true => Color::Red,
+                                    false => Color::Green
+                                ])
+                                ->default(false)
+                                ->inline(),
 
-                Forms\Components\Select::make('assigned_user_id')
-                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
-                    ->native(false)
-                    ->label('Djelatnik'),
+                            Forms\Components\Textarea::make('description')
+                                ->maxLength(65535)
+                                ->columnSpanFull()->label('Opis'),
+                        ]),
 
-                Forms\Components\DatePicker::make('last_contact_at')
-                    ->label('Zadnji kontakt'),
+                        Forms\Components\Tabs\Tab::make('Adresa')
+                            ->columns(2)
+                            ->schema([
+                            Forms\Components\TextInput::make('address')
+                                ->maxLength(255)
+                                ->label('Adresa'),
 
-                SpatieTagsInput::make('tags')
-                    ->label('Oznake')
-                    ->columnSpanFull(),
+                            Forms\Components\TextInput::make('city')
+                                ->maxLength(255)
+                                ->label('Grad'),
 
-                Forms\Components\Textarea::make('description')
-                    ->maxLength(65535)
-                    ->columnSpanFull()->label('Opis'),
+                            Forms\Components\TextInput::make('zip_code')
+                                ->maxLength(255)
+                                ->label('Poštanski broj'),
+
+                            Country::make('country')
+                                ->label('Država')
+                                ->default('HR'),
+                        ])
+                    ]),
+
+
             ]);
     }
 
@@ -176,12 +204,16 @@ class LeadResource extends Resource
                     ->label('Zadnji kontakt')
                     ->date()
                     ->description(function (Lead $record) {
-                        return $record->last_contact_at->diffForHumans();
+                        if ($record->last_contact_at != null) {
+                            return $record->last_contact_at->diffForHumans();
+                        }
+
+                        return null;
                     })
                     ->searchable(),
 
                 SpatieTagsColumn::make('tags')
-                ->label('Oznake'),
+                    ->label('Oznake'),
 
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

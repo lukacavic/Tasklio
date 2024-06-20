@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Filament\Enums\PropertyStatus;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
@@ -39,6 +40,10 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
             if (auth()->hasUser()) {
                 $builder->where('organisation_id', auth()->user()->organisation_id);
             }
+        });
+
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('active', true);
         });
     }
 

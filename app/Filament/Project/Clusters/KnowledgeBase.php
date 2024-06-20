@@ -13,4 +13,7 @@ class KnowledgeBase extends Cluster
 
     protected static ?string $title = 'Baza znanja';
 
+    protected static ?int $navigationSort = 98;
+
+
 }

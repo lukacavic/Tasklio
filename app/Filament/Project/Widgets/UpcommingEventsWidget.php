@@ -46,6 +46,7 @@ class UpcommingEventsWidget extends BaseWidget
 
                 Tables\Columns\TextColumn::make('start_at')
                     ->label('Vrijeme događaja')
+                    ->dateTime()
                     ->description(function (Event $record) {
                         return $record->start_at->diffForHumans();
                     })

@@ -50,6 +50,7 @@ class UserResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
+                    ->live()
                     ->email()
                     ->required()
                     ->maxLength(255)
@@ -89,15 +90,14 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('first_name')
-                    ->label('Ime')
+                Tables\Columns\TextColumn::make('fullName')
+                    ->label('Djelatnik')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('last_name')
-                    ->label('Prezime')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('name')
                     ->label('Korisničko ime')
                     ->searchable(),
+
                 TextColumn::make('email')
                     ->label('Email')
                     ->iconPosition(IconPosition::After)
@@ -107,19 +107,23 @@ class UserResource extends Resource
                     ->icon(function ($record) {
                         return $record->email_verified_at != null ? 'heroicon-o-check-circle' : 'heroicon-o-no-symbol';
                     }),
+
                 Tables\Columns\ToggleColumn::make('active')
                     ->label('Aktivan')
                     ->sortable(),
+
                 Tables\Columns\IconColumn::make('administrator')
                     ->label('Administrator')
                     ->visible(function() {
                         return auth()->user()->administrator;
                     })
                     ->boolean(),
+
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
