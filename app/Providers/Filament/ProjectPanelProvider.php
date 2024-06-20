@@ -15,6 +15,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -36,12 +37,17 @@ class ProjectPanelProvider extends PanelProvider
             ->tenantMenu()
             ->font('Poppins')
             ->spa()
+            ->login()
             ->authGuard('web')
             ->databaseTransactions()
             ->tenant(Project::class)
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
             ->globalSearchDebounce('750ms')
             ->globalSearchFieldKeyBindingSuffix()
+            ->renderHook(
+                PanelsRenderHook::TOPBAR_START,
+                fn () => view('filament.hook.topbar'),
+            )
             ->colors([
                 'primary' => Color::Amber,
             ])
