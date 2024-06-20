@@ -40,6 +40,8 @@ class ProjectPanelProvider extends PanelProvider
             ->login()
             ->authGuard('web')
             ->databaseTransactions()
+            ->databaseNotifications()
+            ->databaseNotificationsPolling('30s')
             ->tenant(Project::class)
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
             ->globalSearchDebounce('750ms')

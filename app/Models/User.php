@@ -67,6 +67,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'link_event_users');
+    }
+
     public function getDefaultTenant(Panel $panel): ?Model
     {
         if($panel->getId() == 'project') {

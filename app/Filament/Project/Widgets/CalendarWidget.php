@@ -51,9 +51,9 @@ class CalendarWidget extends FullCalendarWidget
         ]);
 
         Notification::make()
-            ->title('Spremljeno')
+            ->title('Promjena vremena događaja: ' . $this->record->title . '. Novo vrijeme: ' . Carbon::parse($event['start'])->toFormattedDateString())
             ->success()
-            ->send();
+            ->sendToDatabase($this->record->users);
 
         return false;
     }
@@ -131,6 +131,7 @@ class CalendarWidget extends FullCalendarWidget
                 ]),
 
             Select::make('users')
+                ->relationship('users')
                 ->label('Djelatnici')
                 ->columnSpanFull()
                 ->options(Filament::getTenant()->users()->get()->pluck('full_name', 'id'))
