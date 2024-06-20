@@ -24,7 +24,22 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
-            $panelSwitch->slideOver();
+            $panelSwitch->labels([
+                'admin' => 'Admin Panel',
+                'app' => 'CRM',
+                'project' => 'Projekt'
+            ]);
+
+            $panelSwitch->icons([
+                'project' => 'heroicon-o-command-line',
+                'app' => 'heroicon-o-globe-alt',
+            ]);
+
+            $panelSwitch->excludes([
+                'admin'
+            ]);
+
+            $panelSwitch->modalHeading('Način pregleda');
         });
 
         CreateAction::configureUsing(function (CreateAction $action) {

@@ -57,102 +57,102 @@ class LeadResource extends Resource
                         Forms\Components\Tabs\Tab::make('Osnovne informacije')
                             ->columns(2)
                             ->schema([
-                            Forms\Components\TextInput::make('first_name')
-                                ->label('Ime')
-                                ->required()
-                                ->maxLength(255),
+                                Forms\Components\TextInput::make('first_name')
+                                    ->label('Ime')
+                                    ->required()
+                                    ->maxLength(255),
 
-                            Forms\Components\TextInput::make('last_name')
-                                ->required()
-                                ->label('Prezime')
-                                ->maxLength(255),
+                                Forms\Components\TextInput::make('last_name')
+                                    ->required()
+                                    ->label('Prezime')
+                                    ->maxLength(255),
 
-                            Forms\Components\TextInput::make('company')
-                                ->required()
-                                ->label('Tvrtka')
-                                ->maxLength(255),
+                                Forms\Components\TextInput::make('company')
+                                    ->required()
+                                    ->label('Tvrtka')
+                                    ->maxLength(255),
 
-                            Forms\Components\TextInput::make('position')
-                                ->maxLength(255)
-                                ->label('Pozicija'),
+                                Forms\Components\TextInput::make('position')
+                                    ->maxLength(255)
+                                    ->label('Pozicija'),
 
-                            Forms\Components\TextInput::make('website')
-                                ->maxLength(255)
-                                ->label('Web stranica')
-                                ->prefix('https://'),
+                                Forms\Components\TextInput::make('website')
+                                    ->maxLength(255)
+                                    ->label('Web stranica')
+                                    ->prefix('https://'),
 
-                            PhoneInput::make('mobile')
-                                ->label('Mobitel'),
+                                PhoneInput::make('mobile')
+                                    ->label('Mobitel'),
 
-                            PhoneInput::make('phone')
-                                ->label('Telefon'),
+                                PhoneInput::make('phone')
+                                    ->label('Telefon'),
 
-                            Forms\Components\TextInput::make('email')
-                                ->email()
-                                ->label('Email')
-                                ->maxLength(255),
+                                Forms\Components\TextInput::make('email')
+                                    ->email()
+                                    ->label('Email')
+                                    ->maxLength(255),
 
-                            Forms\Components\Select::make('status_id')
-                                ->native(false)
-                                ->required()
-                                ->options(LeadStatus::get()->pluck('name', 'id'))
-                                ->label('Status'),
+                                Forms\Components\Select::make('status_id')
+                                    ->native(false)
+                                    ->required()
+                                    ->options(LeadStatus::get()->pluck('name', 'id'))
+                                    ->label('Status'),
 
-                            Forms\Components\Select::make('source_id')
-                                ->native(false)
-                                ->required()
-                                ->options(LeadSource::get()->pluck('name', 'id'))
-                                ->label('Izvor'),
+                                Forms\Components\Select::make('source_id')
+                                    ->native(false)
+                                    ->required()
+                                    ->options(LeadSource::get()->pluck('name', 'id'))
+                                    ->label('Izvor'),
 
-                            Forms\Components\Select::make('assigned_user_id')
-                                ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
-                                ->native(false)
-                                ->label('Djelatnik'),
+                                Forms\Components\Select::make('assigned_user_id')
+                                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
+                                    ->native(false)
+                                    ->label('Djelatnik'),
 
-                            Forms\Components\DatePicker::make('last_contact_at')
-                                ->label('Zadnji kontakt'),
+                                Forms\Components\DatePicker::make('last_contact_at')
+                                    ->label('Zadnji kontakt'),
 
-                            SpatieTagsInput::make('tags')
-                                ->label('Oznake'),
+                                SpatieTagsInput::make('tags')
+                                    ->label('Oznake'),
 
-                            Forms\Components\ToggleButtons::make('important')
-                                ->label('Bitan klijent')
-                                ->boolean()
-                                ->options([
-                                    true => 'Da',
-                                    false => 'Ne'
-                                ])
-                                ->colors([
-                                    true => Color::Red,
-                                    false => Color::Green
-                                ])
-                                ->default(false)
-                                ->inline(),
+                                Forms\Components\ToggleButtons::make('important')
+                                    ->label('Bitan klijent')
+                                    ->boolean()
+                                    ->options([
+                                        true => 'Da',
+                                        false => 'Ne'
+                                    ])
+                                    ->colors([
+                                        true => Color::Red,
+                                        false => Color::Green
+                                    ])
+                                    ->default(false)
+                                    ->inline(),
 
-                            Forms\Components\Textarea::make('description')
-                                ->maxLength(65535)
-                                ->columnSpanFull()->label('Opis'),
-                        ]),
+                                Forms\Components\Textarea::make('description')
+                                    ->maxLength(65535)
+                                    ->columnSpanFull()->label('Napomena'),
+                            ]),
 
                         Forms\Components\Tabs\Tab::make('Adresa')
                             ->columns(2)
                             ->schema([
-                            Forms\Components\TextInput::make('address')
-                                ->maxLength(255)
-                                ->label('Adresa'),
+                                Forms\Components\TextInput::make('address')
+                                    ->maxLength(255)
+                                    ->label('Adresa'),
 
-                            Forms\Components\TextInput::make('city')
-                                ->maxLength(255)
-                                ->label('Grad'),
+                                Forms\Components\TextInput::make('city')
+                                    ->maxLength(255)
+                                    ->label('Grad'),
 
-                            Forms\Components\TextInput::make('zip_code')
-                                ->maxLength(255)
-                                ->label('Poštanski broj'),
+                                Forms\Components\TextInput::make('zip_code')
+                                    ->maxLength(255)
+                                    ->label('Poštanski broj'),
 
-                            Country::make('country')
-                                ->label('Država')
-                                ->default('HR'),
-                        ])
+                                Country::make('country')
+                                    ->label('Država')
+                                    ->default('HR'),
+                            ])
                     ]),
 
 
