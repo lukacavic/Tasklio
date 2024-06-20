@@ -95,13 +95,13 @@ class LeadResource extends Resource
                                 Forms\Components\Select::make('status_id')
                                     ->native(false)
                                     ->required()
-                                    ->options(LeadStatus::get()->pluck('name', 'id'))
+                                    ->options(Filament::getTenant()->leadStatuses->pluck('name', 'id'))
                                     ->label('Status'),
 
                                 Forms\Components\Select::make('source_id')
                                     ->native(false)
                                     ->required()
-                                    ->options(LeadSource::get()->pluck('name', 'id'))
+                                    ->options(Filament::getTenant()->leadSources->pluck('name', 'id'))
                                     ->label('Izvor'),
 
                                 Forms\Components\Select::make('assigned_user_id')

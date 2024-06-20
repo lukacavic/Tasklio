@@ -32,29 +32,38 @@ class UserResource extends Resource
     {
         return auth()->user() && auth()->user()->administrator;
     }
+
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(fn($record) =>[
+            ->schema(fn($record) => [
                 Forms\Components\TextInput::make('first_name')
                     ->label('Ime')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('last_name')
                     ->label('Prezime')
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('name')
                     ->label('Korisničko ime')
                     ->unique(User::class, 'name', ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('email')
-                    ->live()
+                    ->live(onBlur: true)
                     ->email()
+                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
+                        $livewire->validateOnly($component->getStatePath());
+                    })
+                    ->prefixIcon('heroicon-o-at-symbol')
                     ->required()
                     ->maxLength(255)
                     ->unique(User::class, 'email', ignoreRecord: true),
+
                 TextInput::make('password')
                     ->password()
                     ->minValue(6)
@@ -76,10 +85,11 @@ class UserResource extends Resource
 
                 Forms\Components\Toggle::make('administrator')
                     ->default(false)
-                    ->disabled(function() {
+                    ->disabled(function () {
                         return !auth()->user()->administrator;
                     })
                     ->required(),
+
                 Forms\Components\Toggle::make('active')
                     ->default(true)
                     ->label('Aktivni djelatnik'),
@@ -110,11 +120,14 @@ class UserResource extends Resource
 
                 Tables\Columns\ToggleColumn::make('active')
                     ->label('Aktivan')
+                    ->disabled(function (User $record) {
+                        return $record->administrator;
+                    })
                     ->sortable(),
 
                 Tables\Columns\IconColumn::make('administrator')
                     ->label('Administrator')
-                    ->visible(function() {
+                    ->visible(function () {
                         return auth()->user()->administrator;
                     })
                     ->boolean(),
@@ -137,7 +150,16 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->modalHeading('Izmjena djelatnika'),
+                Tables\Actions\EditAction::make()
+                    ->modalHeading('Izmjena djelatnika')
+                    ->visible(function (User $record) {
+                        return !$record->administrator;
+                    }),
+
+                Tables\Actions\DeleteAction::make()
+                    ->visible(function (User $record) {
+                        return !$record->administrator;
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -9,6 +9,7 @@ use App\Models\LeadStatus;
 use App\Models\Task;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Widgets\Widget;
@@ -39,7 +40,7 @@ class LeadsKanbanBoard extends KanbanBoard
 
     protected function statuses(): \Illuminate\Support\Collection
     {
-        return LeadStatus::get(['id', 'name'])->map(function ($leadStatus) {
+        return Filament::getTenant()->leadStatuses()->get(['id', 'name'])->map(function ($leadStatus) {
             return [
                 'id' => $leadStatus->id,
                 'title' => $leadStatus->name,
@@ -68,6 +69,6 @@ class LeadsKanbanBoard extends KanbanBoard
 
     protected function records(): \Illuminate\Support\Collection
     {
-        return Lead::all();
+        return Filament::getTenant()->leads()->get();
     }
 }

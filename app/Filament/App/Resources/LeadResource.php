@@ -115,6 +115,9 @@ class LeadResource extends Resource
                     })
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('project.name')
+                    ->label('Projekt'),
+
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
 
@@ -131,7 +134,7 @@ class LeadResource extends Resource
                     ->badge()
                     ->searchable(),
 
-                SelectColumn::make('status.name')
+                Tables\Columns\TextColumn::make('status.name')
                     ->label('Status'),
 
                 Tables\Columns\TextColumn::make('created_at')
