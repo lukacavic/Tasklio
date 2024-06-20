@@ -188,7 +188,7 @@ class LeadResource extends Resource
                     ->badge()
                     ->searchable(),
 
-                SelectColumn::make('status.name')
+                Tables\Columns\SelectColumn::make('status_id')
                     ->options(Filament::getTenant()->leadStatuses()->get()->pluck('name', 'id'))
                     ->searchable()
                     ->rules(['required'])

@@ -5,6 +5,7 @@ namespace App\Filament\Project\Resources;
 use App\Filament\Project\Resources\TaskResource\Pages\CreateTask;
 use App\Models\Task;
 use App\Models\User;
+use App\TaskPriority;
 use App\TaskStatus;
 use Awcodes\FilamentBadgeableColumn\Components\Badge;
 use Awcodes\FilamentBadgeableColumn\Components\BadgeableColumn;
@@ -64,44 +65,38 @@ class TaskResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
-                DatePicker::make('start_at')
-                    ->label('Početak rada')
-                    ->default(now())
-                    ->required(),
+
                 DatePicker::make('deadline_at')
                     ->label('Rok završetka'),
+
+                SpatieTagsInput::make('tags')
+                    ->label('Oznake')
+                    ->color(Color::Gray),
+
                 Select::make('members')
                     ->label('Djelatnici')
                     ->relationship('members')
-                    ->options(function() {
+                    ->options(function () {
                         $projectId = Filament::getTenant()->id;
-                        return User::whereHas('projects', function($query) use ($projectId) {
+                        return User::whereHas('projects', function ($query) use ($projectId) {
                             $query->where('projects.id', $projectId);
                         })->get()->pluck('fullName', 'id');
                     })
                     ->multiple(),
+
                 ToggleButtons::make('priority_id')
                     ->label('Prioritet')
                     ->default(1)
-                    ->options([
-                        1 => 'Niski',
-                        2 => 'Srednji',
-                        3 => 'Visoki'
-                    ])
-                    ->colors([
-                        1 => 'warning',
-                        2 => 'info',
-                        3 => 'danger',
-                    ])->inline(),
+                    ->grouped()
+                    ->options(TaskPriority::class)
+                    ->inline(),
+
                 RichEditor::make('description')
                     ->label('Opis')
                     ->required()
                     ->maxLength(65535)
                     ->columnSpanFull(),
-                SpatieTagsInput::make('tags')
-                    ->columnSpanFull()
-                ->suggestions(['marko','ivan'])
-                ->color(Color::Gray),
+
                 FileUpload::make('attachments')
                     ->label('Privitci')
                     ->columnSpanFull()
@@ -111,7 +106,7 @@ class TaskResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordClasses(fn (Model $record) => match ($record->status_id) {
+            ->recordClasses(fn(Model $record) => match ($record->status_id) {
                 1 => 'bg-primary',
                 2 => 'border-s-2 border-orange-600 dark:border-orange-300',
                 3 => 'border-s-2 border-green-600 dark:border-green-300',
