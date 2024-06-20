@@ -12,6 +12,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
@@ -55,6 +56,11 @@ class CalendarWidget extends FullCalendarWidget
             ->success()
             ->sendToDatabase($this->record->users);
 
+        Notification::make()
+            ->title('Vrijeme događaja promjenjeno')
+            ->success()
+            ->send();
+
         return false;
     }
 
@@ -76,6 +82,7 @@ class CalendarWidget extends FullCalendarWidget
                 fn(Event $event) => EventData::make()
                     ->id($event->id)
                     ->resourceId(rand(1, 3))
+                    ->allDay(false)
                     ->borderColor("")
                     ->title($event->title)
                     ->start($event->start_at)
@@ -130,12 +137,16 @@ class CalendarWidget extends FullCalendarWidget
                         ->label('Kraj'),
                 ]),
 
-            Select::make('users')
-                ->relationship('users')
-                ->label('Djelatnici')
-                ->columnSpanFull()
-                ->options(Filament::getTenant()->users()->get()->pluck('full_name', 'id'))
-                ->native(false),
+            Grid::make(2)->schema([
+                Select::make('users')
+                    ->relationship('users')
+                    ->label('Djelatnici')
+                    ->options(Filament::getTenant()->users()->get()->pluck('full_name', 'id'))
+                    ->native(false),
+
+                SpatieTagsInput::make('tags')
+                    ->label('Oznake'),
+            ]),
 
             RichEditor::make('description')
                 ->label('Opis')

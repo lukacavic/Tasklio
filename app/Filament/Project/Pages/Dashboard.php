@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Pages;
 
 use App\Filament\App\Widgets\TasksByProjectChart;
+use App\Filament\Project\Widgets\UpcommingEventsWidget;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -15,6 +16,6 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function getWidgets(): array
     {
-        return [TasksByProjectChart::class];
+        return [TasksByProjectChart::class, UpcommingEventsWidget::class];
     }
 }
