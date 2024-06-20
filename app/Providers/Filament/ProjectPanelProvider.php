@@ -46,7 +46,7 @@ class ProjectPanelProvider extends PanelProvider
             ->globalSearchFieldKeyBindingSuffix()
             ->renderHook(
                 PanelsRenderHook::TOPBAR_START,
-                fn () => view('filament.hook.topbar'),
+                fn() => view('filament.hook.topbar'),
             )
             ->colors([
                 'primary' => Color::Amber,
@@ -76,7 +76,10 @@ class ProjectPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
-                FilamentFullCalendarPlugin::make(),
+                FilamentFullCalendarPlugin::make()
+                    ->editable(true)
+                    ->selectable(),
+
                 FilamentApexChartsPlugin::make(),
                 QuickCreatePlugin::make(),
             ])

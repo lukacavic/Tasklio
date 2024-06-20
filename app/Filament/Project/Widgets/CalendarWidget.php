@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Filament\Project\Widgets;
+
+use App\Models\Event;
+use App\Models\Project;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
+use Illuminate\Support\Carbon;
+use Saade\FilamentFullCalendar\Actions\CreateAction;
+use Saade\FilamentFullCalendar\Data\EventData;
+use Saade\FilamentFullCalendar\Widgets\FullCalendarWidget;
+
+class CalendarWidget extends FullCalendarWidget
+{
+    public string|null|\Illuminate\Database\Eloquent\Model $model = Event::class;
+
+    public int $projectId;
+
+    public function eventDidMount(): string
+    {
+        return <<<JS
+        function({ event, timeText, isStart, isEnd, isMirror, isPast, isFuture, isToday, el, view }){
+            el.setAttribute("x-tooltip", "tooltip");
+            el.setAttribute("x-data", "{ tooltip: '"+event.title+"' }");
+        }
+    JS;
+    }
+
+    public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta, ?array $oldResource, ?array $newResource): bool
+    {
+        if ($this->getModel()) {
+            $this->record = $this->resolveRecord($event['id']);
+        }
+
+        $diffInHours = Carbon::parse($this->record->start_at)->diffInHours($this->record->end_at);
+
+        $this->record->update([
+            'start_at' => Carbon::parse($event['start']),
+            'end_at' => Carbon::parse($event['start'])->addHours($diffInHours),
+        ]);
+
+        Notification::make()
+            ->title('Spremljeno')
+            ->success()
+            ->send();
+
+        return false;
+    }
+
+    public function config(): array
+    {
+        return [
+            'firstDay' => 1,
+            'editable' => true,
+        ];
+    }
+
+    public function fetchEvents(array $fetchInfo): array
+    {
+        return Event::query()
+            ->where('start_at', '>=', $fetchInfo['start'])
+            ->where('end_at', '<=', $fetchInfo['end'])
+            ->get()
+            ->map(
+                fn(Event $event) => EventData::make()
+                    ->id($event->id)
+                    ->resourceId(rand(1, 3))
+                    ->borderColor("")
+                    ->title($event->title)
+                    ->start($event->start_at)
+                    ->backgroundColor($event->color)
+                    ->end($event->end_at)
+
+            )->toArray();
+    }
+
+    protected function headerActions(): array
+    {
+        return [
+            CreateAction::make()
+                ->mutateFormDataUsing(function (array $data): array {
+                    $projectId = Filament::getTenant() instanceof Project ? Filament::getTenant()->id : null;
+
+                    return [
+                        ...$data,
+                        'project_id' => $projectId
+                    ];
+                })
+                ->mountUsing(
+                    function (Form $form, array $arguments) {
+                        $form->fill([
+                            'start_at' => $arguments['start'] ?? null,
+                            'end_at' => $arguments['end'] ?? null
+                        ]);
+                    }
+                )
+        ];
+    }
+
+    public function getFormSchema(): array
+    {
+        return [
+            Grid::make(2)->schema([
+                TextInput::make('title')
+                    ->label('Naziv')
+                    ->required(),
+                ColorPicker::make('color')
+                    ->required()
+                    ->label('Boja'),
+            ]),
+
+            Grid::make()
+                ->schema([
+                    DateTimePicker::make('start_at')
+                        ->required()
+                        ->label('Početak'),
+                    DateTimePicker::make('end_at')
+                        ->required()
+                        ->label('Kraj'),
+                ]),
+
+            Select::make('users')
+                ->label('Djelatnici')
+                ->columnSpanFull()
+                ->options(Filament::getTenant()->users()->get()->pluck('full_name', 'id'))
+                ->native(false),
+
+            RichEditor::make('description')
+                ->label('Opis')
+        ];
+    }
+}
