@@ -38,4 +38,9 @@ class BaseModel extends Model
     {
         return $this->belongsTo(Organisation::class);
     }
+
+    public function userCreated(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
