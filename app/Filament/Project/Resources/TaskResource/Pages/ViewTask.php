@@ -12,7 +12,10 @@ use Filament\Actions;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
+use Filament\Infolists\Components\Actions\Action;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\SpatieTagsEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -25,6 +28,7 @@ use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;
 use JaOcero\ActivityTimeline\Components\ActivitySection;
 use JaOcero\ActivityTimeline\Components\ActivityTitle;
+use Spatie\MediaLibrary\Support\MediaStream;
 
 class ViewTask extends ViewRecord
 {
@@ -89,6 +93,41 @@ class ViewTask extends ViewRecord
                         })
                         ->columnSpanFull()
                 ])->columns(4),
+
+            Section::make('Privitci')
+                ->heading(false)
+                ->visible($this->record->media()->exists())
+                ->columnSpanFull()
+                ->label(function () {
+                    return 'Privitci (' . $this->record->media()->count() . ' datoteka).';
+                })
+                ->schema([
+                    RepeatableEntry::make('media')
+                        ->label('Privitci')
+                        ->hintAction(
+                            Action::make('download')
+                                ->label('Preuzmi sve')
+                                ->icon('heroicon-m-arrow-down-tray')
+                        )
+                        ->columnSpanFull()
+                        ->grid(3)
+                        ->schema([
+                            TextEntry::make('name')
+                                ->columnSpan(2)
+                                ->label('Datoteka')
+                                ->hintAction(
+                                    Action::make('download')
+                                        ->label('Preuzmi')
+                                        ->action(function ($record) {
+                                            return response()->download($record->getPath(), $record->file_name);
+
+                                            //return MediaStream::create('attachments.zip')->addMedia($record);
+                                        })
+                                        ->hiddenLabel()
+                                        ->icon('heroicon-m-arrow-down-tray')
+                                )
+                        ])
+                ])
         ]);
     }
 
@@ -105,7 +144,7 @@ class ViewTask extends ViewRecord
             $action->action(function ($data) use ($taskStatus) {
                 $this->record->updateTaskStatus($taskStatus->value);
             });
-            $action->icon(TaskStatus::from($this->record->status_id)->getIcon());
+            $action->icon($taskStatus->getIcon());
 
             $actions[$taskStatus->getLabel()] = $action;
         }

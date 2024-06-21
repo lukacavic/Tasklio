@@ -9,11 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
 
-class Task extends BaseModel
+class Task extends BaseModel implements HasMedia
 {
-    use HasTags, LogsActivity;
+    use HasTags, LogsActivity, InteractsWithMedia;
 
     protected static function booted(): void
     {

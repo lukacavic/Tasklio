@@ -40,10 +40,10 @@ enum TaskStatus: int implements HasLabel, HasColor, HasIcon
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::Created => 'heroicon-o-plus',
-            self::InProgress => 'heroicon-o-check',
-            self::Testing => 'heroicon-o-check',
-            self::AwaitingFeedback => 'heroicon-o-user',
+            self::Created => 'heroicon-o-user-plus',
+            self::InProgress => 'heroicon-o-code-bracket',
+            self::Testing => 'heroicon-o-computer-desktop',
+            self::AwaitingFeedback => 'heroicon-o-pencil-square',
             self::Completed => 'heroicon-o-check',
         };
     }

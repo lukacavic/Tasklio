@@ -16,6 +16,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
@@ -108,7 +109,9 @@ class TaskResource extends Resource
                     ->maxLength(65535)
                     ->columnSpanFull(),
 
-                FileUpload::make('attachments')
+                SpatieMediaLibraryFileUpload::make('attachments')
+                    ->collection('task')
+                    ->multiple()
                     ->label('Privitci')
                     ->columnSpanFull()
             ]);
