@@ -8,6 +8,7 @@ use App\Filament\Project\Resources\KnowledgeCategoryResource\Pages\ViewKnowledge
 use App\Models\KnowledgeArticle;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
@@ -52,6 +53,13 @@ class KnowledgeArticleResource extends Resource
                     ->minHeight(600)
                     ->columnSpanFull()
                     ->required(),
+
+                SpatieMediaLibraryFileUpload::make('attachments')
+                    ->collection('knowledge-article')
+                    ->multiple()
+                    ->downloadable()
+                    ->label('Privitci')
+                    ->columnSpanFull()
 
             ])->columns(2);
     }

@@ -12,6 +12,7 @@ use Filament\Actions;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
@@ -23,11 +24,13 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Str;
 use JaOcero\ActivityTimeline\Components\ActivityDate;
 use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;
 use JaOcero\ActivityTimeline\Components\ActivitySection;
 use JaOcero\ActivityTimeline\Components\ActivityTitle;
+use Livewire\Component;
 use Spatie\MediaLibrary\Support\MediaStream;
 
 class ViewTask extends ViewRecord
@@ -95,6 +98,7 @@ class ViewTask extends ViewRecord
                 ])->columns(4),
 
             Section::make('Privitci')
+                ->key(Str::random())
                 ->heading(false)
                 ->visible($this->record->media()->exists())
                 ->columnSpanFull()
@@ -104,34 +108,54 @@ class ViewTask extends ViewRecord
                 ->schema([
                     RepeatableEntry::make('media')
                         ->label('Privitci')
-                        ->hintAction(
+                        ->hintActions([
+                            Action::make('upload')
+                                ->label('Učitaj privitke')
+                                ->form([
+                                    SpatieMediaLibraryFileUpload::make('attachments')
+                                        ->collection('task')
+                                        ->multiple()
+                                        ->required()
+                                        ->label('Privitci')
+                                        ->columnSpanFull()
+                                ])
+                                ->action(function (Task $record, array $data, Action $action) {
+                                    dd($action->getFormData());
+                                })
+                                ->icon('heroicon-m-paper-clip'),
+
                             Action::make('download')
-                                ->action(function($record) {
+                                ->action(function (Task $record) {
                                     $downloads = $record->getMedia('task');
+
+                                    $record->addLog('Napravio download svih dokumenata zadatka.');
 
                                     return MediaStream::create('attachments.zip')->addMedia($downloads);
                                 })
                                 ->label('Preuzmi sve')
-                                ->icon('heroicon-m-arrow-down-tray')
-                        )
+                                ->icon('heroicon-m-arrow-down-tray'),
+
+                        ])
                         ->columnSpanFull()
                         ->grid(3)
-                        ->schema([
-                            TextEntry::make('name')
-                                ->columnSpan(2)
-                                ->label('Datoteka')
-                                ->hintAction(
-                                    Action::make('download')
-                                        ->label('Preuzmi')
-                                        ->action(function ($record) {
-                                            return response()->download($record->getPath(), $record->file_name);
+                        ->schema(function (Task $task) {
+                            return [
+                                TextEntry::make('name')
+                                    ->columnSpan(2)
+                                    ->label('Datoteka')
+                                    ->hintAction(
+                                        Action::make('download')
+                                            ->label('Preuzmi')
+                                            ->action(function ($record) use ($task) {
+                                                $task->addLog('Napravio download datoteke: ' . $record->name);
 
-                                            //return MediaStream::create('attachments.zip')->addMedia($record);
-                                        })
-                                        ->hiddenLabel()
-                                        ->icon('heroicon-m-arrow-down-tray')
-                                )
-                        ])
+                                                return response()->download($record->getPath(), $record->file_name);
+                                            })
+                                            ->hiddenLabel()
+                                            ->icon('heroicon-m-arrow-down-tray')
+                                    )
+                            ];
+                        })
                 ])
         ]);
     }
@@ -266,7 +290,7 @@ class ViewTask extends ViewRecord
                                         default => 'gray',
                                     }),
                             ])
-                            ->showItemsCount(2)
+                            ->showItemsCount(10)
                             ->emptyStateHeading('Nema aktivnosti.')
                             ->emptyStateDescription('Trenutno nema aktivnosti na zadatku, provjerite kasnije :)')
                             ->emptyStateIcon('heroicon-o-bolt-slash')
