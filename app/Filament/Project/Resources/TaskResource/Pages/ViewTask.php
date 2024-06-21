@@ -8,6 +8,7 @@ use App\Models\User;
 use App\TaskPriority;
 use App\TaskStatus;
 use Filament\Actions;
+use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Infolists\Components\Section;
@@ -31,7 +32,18 @@ class ViewTask extends ViewRecord
     protected function getActions(): array
     {
         return [
+            ActionGroup::make($this->getDynamicStatusActions())
+                ->label(function () {
+                    return TaskStatus::from($this->getRecord()->status_id)->getLabel();
+                })->color(function () {
+                    return TaskStatus::from($this->getRecord()->status_id)->getColor();
+                })->icon(TaskStatus::from($this->record->status_id)->getIcon())
+                ->button(),
+
             Actions\Action::make('updatTaskUsers')
+                ->visible(function (Task $record) {
+                    return $record->status_id != TaskStatus::Completed->value;
+                })
                 ->label('Promjena djelatnika')
                 ->color(Color::Blue)
                 ->fillForm(fn(Task $record): array => [
@@ -58,10 +70,20 @@ class ViewTask extends ViewRecord
                 ->icon('heroicon-o-user'),
 
             Actions\Action::make('mark-completed')
+                ->visible(function (Task $record) {
+                    return $record->status_id != TaskStatus::Completed->value;
+                })
                 ->label('Završeno')
                 ->requiresConfirmation()
                 ->color(Color::Green)
                 ->icon('heroicon-o-check')
+                ->action(function (Task $record) {
+                    $record->update([
+                        'status_id' => TaskStatus::Completed
+                    ]);
+
+                    $this->getRecord()->refresh();
+                })
         ];
     }
 
@@ -112,5 +134,26 @@ class ViewTask extends ViewRecord
 
 
         ]);
+    }
+
+    private function getDynamicStatusActions(): array
+    {
+        $actions = [];
+
+        foreach (TaskStatus::cases() as $taskStatus) {
+            if ($taskStatus->value == $this->record->status_id) continue;
+
+            $action = new Actions\Action($taskStatus->getLabel());
+            $action->label($taskStatus->getLabel());
+            $action->color($taskStatus->getColor());
+            $action->action(function ($data) use ($taskStatus) {
+                $this->record->updateTaskStatus($taskStatus->value);
+            });
+            $action->icon(TaskStatus::from($this->record->status_id)->getIcon());
+
+            $actions[$taskStatus->getLabel()] = $action;
+        }
+
+        return $actions;
     }
 }

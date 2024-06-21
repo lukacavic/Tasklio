@@ -46,4 +46,11 @@ class Task extends BaseModel
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function updateTaskStatus($statusId): void
+    {
+        $this->update([
+           'status_id' => $statusId
+        ]);
+    }
 }

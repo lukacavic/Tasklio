@@ -2,9 +2,12 @@
 
 namespace App;
 
+use Filament\Support\Colors\Color;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum TaskStatus: int implements HasLabel
+enum TaskStatus: int implements HasLabel, HasColor, HasIcon
 {
     case Created = 1;
     case InProgress = 2;
@@ -20,6 +23,28 @@ enum TaskStatus: int implements HasLabel
             self::Testing => 'Testiranje',
             self::AwaitingFeedback => 'Čeka se komentar',
             self::Completed => 'Završen',
+        };
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::Created => Color::Green,
+            self::InProgress => Color::Gray,
+            self::Testing => Color::Orange,
+            self::AwaitingFeedback => Color::Red,
+            self::Completed => Color::Yellow,
+        };
+    }
+
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::Created => 'heroicon-o-plus',
+            self::InProgress => 'heroicon-o-check',
+            self::Testing => 'heroicon-o-check',
+            self::AwaitingFeedback => 'heroicon-o-user',
+            self::Completed => 'heroicon-o-check',
         };
     }
 }
