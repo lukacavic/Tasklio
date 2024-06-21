@@ -52,8 +52,8 @@ class ViewKnowledgeArticle extends ViewRecord
                 ->label('Naziv'),
 
             TextEntry::make('category.title')
+                ->badge()
                 ->label('Kategorija'),
-
 
             TextEntry::make('user.fullName')
                 ->label('Kreirao'),

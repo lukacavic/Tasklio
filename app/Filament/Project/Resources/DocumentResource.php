@@ -40,6 +40,11 @@ class DocumentResource extends Resource
                     ->required()
                     ->label('Privitci')
                     ->downloadable(),
+
+                Forms\Components\SpatieTagsInput::make('tags')
+                    ->label('Oznake')
+                    ->columnSpanFull(),
+
             ])->columns(1);
     }
 
@@ -55,8 +60,13 @@ class DocumentResource extends Resource
                         return 'Ukupno ' . $record->media()->count() . ' dokumenata';
                     })
                     ->label('Naslov'),
+
                 Tables\Columns\TextColumn::make('user.fullName')
                     ->label('Dodao'),
+
+                Tables\Columns\SpatieTagsColumn::make('tags')
+                    ->label('Oznake'),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
                     ->since(),

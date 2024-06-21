@@ -68,6 +68,9 @@ class KnowledgeArticleResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ColorColumn::make('category.color')
+                    ->label(''),
+
                 Tables\Columns\TextColumn::make('title')
                     ->label('Naziv'),
 

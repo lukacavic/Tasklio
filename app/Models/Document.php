@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\Tags\HasTags;
 
 class Document extends BaseModel implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasTags;
 
     public function project(): MorphTo
     {
