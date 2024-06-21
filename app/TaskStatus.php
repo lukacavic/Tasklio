@@ -29,11 +29,11 @@ enum TaskStatus: int implements HasLabel, HasColor, HasIcon
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Created => Color::Green,
-            self::InProgress => Color::Gray,
+            self::Created => Color::Yellow,
+            self::InProgress => Color::Blue,
             self::Testing => Color::Orange,
-            self::AwaitingFeedback => Color::Red,
-            self::Completed => Color::Yellow,
+            self::AwaitingFeedback => Color::Gray,
+            self::Completed => Color::Green,
         };
     }
 
