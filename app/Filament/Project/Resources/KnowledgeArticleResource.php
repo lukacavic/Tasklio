@@ -7,6 +7,7 @@ use App\Filament\Project\Resources\KnowledgeArticleResource\Pages;
 use App\Filament\Project\Resources\KnowledgeCategoryResource\Pages\ViewKnowledgeArticle;
 use App\Models\KnowledgeArticle;
 use Filament\Actions\DeleteAction;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -28,6 +29,11 @@ class KnowledgeArticleResource extends Resource
     protected static ?string $pluralLabel = 'Članci';
 
     protected static ?string $cluster = KnowledgeBase::class;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return Filament::getTenant()->knowledgeArticles()->count();
+    }
 
     public static function infolist(Infolist $infolist): Infolist
     {
