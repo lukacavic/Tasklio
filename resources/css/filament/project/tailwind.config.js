@@ -5,6 +5,7 @@ export default {
     content: [
         './app/Filament/Project/Clusters/KnowledgeBase/**/*.php',
         './resources/views/filament/project/clusters/knowledge-base/**/*.blade.php',
+        './vendor/jaocero/activity-timeline/resources/views/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
     ],
 }

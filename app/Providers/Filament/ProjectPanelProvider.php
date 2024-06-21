@@ -38,6 +38,7 @@ class ProjectPanelProvider extends PanelProvider
             ->font('Poppins')
             ->spa()
             ->login()
+            ->viteTheme('resources/css/filament/project/theme.css')
             ->authGuard('web')
             ->databaseTransactions()
             ->databaseNotifications()

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Project\Resources\TaskResource\Pages;
 
+use App\Filament\App\Resources\ClientResource\Pages\EditClient;
 use App\Filament\Project\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
@@ -19,6 +20,11 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Illuminate\Contracts\Support\Htmlable;
+use JaOcero\ActivityTimeline\Components\ActivityDate;
+use JaOcero\ActivityTimeline\Components\ActivityDescription;
+use JaOcero\ActivityTimeline\Components\ActivityIcon;
+use JaOcero\ActivityTimeline\Components\ActivitySection;
+use JaOcero\ActivityTimeline\Components\ActivityTitle;
 
 class ViewTask extends ViewRecord
 {
@@ -32,6 +38,7 @@ class ViewTask extends ViewRecord
     protected function getActions(): array
     {
         return [
+            $this->getActivityLogActions(),
             $this->getChangeAssignedUsersAction(),
             $this->getMarkAsCompletedAction(),
             $this->getSwitchStatusActions(),
@@ -170,5 +177,61 @@ class ViewTask extends ViewRecord
                 return TaskStatus::from($this->getRecord()->status_id)->getColor();
             })->icon(TaskStatus::from($this->record->status_id)->getIcon())
             ->button();
+    }
+
+    private function getActivityLogActions()
+    {
+        return Actions\Action::make('activity_log')
+            ->hiddenLabel()
+            ->icon('heroicon-o-information-circle')
+            ->modalSubmitAction(false)
+            ->color(Color::Cyan)
+            ->tooltip('Povijest aktivnosti')
+            ->modalCancelAction(false)
+            ->modalHeading('Povijest aktivnosti')
+            ->slideOver()
+            ->infolist(function (Infolist $infolist) {
+                return $infolist
+                    ->state([
+                        'activities' => $this->getRecord()->activities()->with('causer')->latest()->get()
+                    ])
+                    ->schema([
+                        ActivitySection::make('activities')
+                            ->schema([
+                                ActivityTitle::make('causer.fullName')
+                                    ->placeholder('No title is set')
+                                    ->allowHtml(),
+                                ActivityDescription::make('description')
+                                    ->placeholder('No description is set')
+                                    ->allowHtml(),
+                                ActivityDate::make('created_at')
+                                    ->date('F j, Y g:i A', 'Asia/Manila'),
+                                ActivityIcon::make('status')
+                                    ->icon(fn(string|null $state): string|null => match ($state) {
+                                        'ideation' => 'heroicon-m-light-bulb',
+                                        'drafting' => 'heroicon-m-bolt',
+                                        'reviewing' => 'heroicon-m-document-magnifying-glass',
+                                        'published' => 'heroicon-m-rocket-launch',
+                                        default => null,
+                                    })
+                                    ->color(fn(string|null $state): string|null => match ($state) {
+                                        'ideation' => 'purple',
+                                        'drafting' => 'info',
+                                        'reviewing' => 'warning',
+                                        'published' => 'success',
+                                        default => 'gray',
+                                    }),
+                            ])
+                            ->showItemsCount(2)
+                            ->emptyStateHeading('Nema aktivnosti.')
+                            ->emptyStateDescription('Trenutno nema aktivnosti na zadatku, provjerite kasnije :)')
+                            ->emptyStateIcon('heroicon-o-bolt-slash')
+                            ->showItemsLabel('Prikaži starije')
+                            ->showItemsIcon('heroicon-m-chevron-down')
+                            ->showItemsColor('gray')
+                            ->aside(true)
+                            ->headingVisible(false)
+                    ]);
+            });
     }
 }

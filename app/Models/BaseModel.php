@@ -18,10 +18,10 @@ class BaseModel extends Model
     protected static function booted(): void
     {
         static::creating(function (Model $model) {
-            if(auth()->hasUser()) {
+            if (auth()->hasUser()) {
                 $model->organisation_id = auth()->user()->organisation_id;
 
-                if(Schema::hasColumn($model->getTable(), 'user_id')) {
+                if (Schema::hasColumn($model->getTable(), 'user_id')) {
                     $model->user_id = auth()->user()->id;
                 }
             }
@@ -32,6 +32,11 @@ class BaseModel extends Model
                 $query->where('organisation_id', auth()->user()->organisation_id);
             }
         });
+    }
+
+    public function addLog($logMessage): void
+    {
+        activity()->performedOn($this)->by(auth()->user())->log($logMessage);
     }
 
     public function organisation(): BelongsTo
