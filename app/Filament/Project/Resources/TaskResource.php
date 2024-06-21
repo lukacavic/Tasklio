@@ -117,12 +117,6 @@ class TaskResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordClasses(fn(Model $record) => match ($record->status_id) {
-                1 => 'bg-primary',
-                2 => 'border-s-2 border-orange-600 dark:border-orange-300',
-                3 => 'border-s-2 border-green-600 dark:border-green-300',
-                default => null,
-            })
             ->recordTitleAttribute('name')
             ->emptyStateHeading('Trenutno nema upisanih zadataka')
             ->columns([
@@ -133,40 +127,38 @@ class TaskResource extends Resource
                     ->tooltip(function (Task $record) {
                         return strip_tags($record->description);
                     })
-                    ->icon(function (Task $record) {
-                        if ($record->priority_id == 3) {
-                            return 'heroicon-m-exclamation-triangle';
-                        }
-
-                        return null;
-                    })
-                    ->iconColor(Color::Orange)
-                    ->iconPosition(IconPosition::After)
                     ->label('Naziv')
                     ->searchable(),
+
                 TextColumn::make('creator.fullName')
                     ->label('Dodao')
                     ->sortable(),
+
                 TextColumn::make('members.first_name')
                     ->label('Djelatnici')
                     ->sortable(),
+
                 SelectColumn::make('status_id')
                     ->label('Status')
                     ->options(TaskStatus::class)
                     ->sortable(),
                 SpatieTagsColumn::make('tags'),
+
                 TextColumn::make('deadline_at')
                     ->label('Rok završetka')
                     ->dateTime()
                     ->sortable(),
+
                 TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

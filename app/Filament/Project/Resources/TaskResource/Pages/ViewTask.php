@@ -113,6 +113,7 @@ class ViewTask extends ViewRecord
                 return $record->status_id != TaskStatus::Completed->value;
             })
             ->hiddenLabel()
+            ->tooltip('Označi zadatak završenim')
             ->requiresConfirmation()
             ->modalHeading('Označiti zadatak završenim?')
             ->color(Color::Green)
@@ -133,8 +134,8 @@ class ViewTask extends ViewRecord
                 return $record->status_id != TaskStatus::Completed->value;
             })
             ->hiddenLabel()
+            ->tooltip('Promjena djelatnika na zadatku')
             ->modalHeading('Promjena djelatnika na zadatku')
-            ->color(Color::Blue)
             ->fillForm(fn(Task $record): array => [
                 'new-members' => array_values($record->members->pluck('id')->toArray())
             ])
@@ -162,6 +163,7 @@ class ViewTask extends ViewRecord
     private function getSwitchStatusActions(): ActionGroup
     {
         return ActionGroup::make($this->getDynamicStatusActions())
+            ->tooltip('Promjena statusa zadatka')
             ->label(function () {
                 return TaskStatus::from($this->getRecord()->status_id)->getLabel();
             })->color(function () {

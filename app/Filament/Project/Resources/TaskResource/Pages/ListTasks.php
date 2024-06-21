@@ -21,7 +21,9 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-        $myTasks = Task::query()->where('user_id', auth()->user()->id);
+        $myTasks = Task::query()->whereHas('members', function ($query) {
+            return $query->where('user_id', auth()->id());
+        });
 
         $tabs = [
             'all' => Tab::make('Svi')->badge(Filament::getTenant()->tasks()->count())
@@ -29,7 +31,7 @@ class ListTasks extends ListRecords
 
         $tabs['my-tasks'] = Tab::make('Moji zadaci')
             ->badge($myTasks->count())
-            ->modifyQueryUsing(function ($query)  use($myTasks) {
+            ->modifyQueryUsing(function ($query) use ($myTasks) {
                 return $myTasks;
             });
 
