@@ -5,6 +5,7 @@ namespace App\Filament\Project\Resources\LeadResource\Pages;
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\LeadResource;
 use App\Filament\Project\Widgets\LeadsKanbanBoard;
+use App\Models\Lead;
 use App\Models\LeadStatus;
 use Filament\Actions;
 use Filament\Facades\Filament;
@@ -17,7 +18,17 @@ class ListLeads extends ListRecords
 
     public function getTabs(): array
     {
-        $tabs = ['all' => Tab::make('Svi')->badge(Filament::getTenant()->leads()->count())];
+        $myLeads = Lead::query()->where('assigned_user_id', auth()->user()->id);
+
+        $tabs = [
+            'all' => Tab::make('Svi')->badge(Filament::getTenant()->leads()->count())
+        ];
+
+        $tabs['my-leads'] = Tab::make('Moji leadovi')
+            ->badge($myLeads->count())
+            ->modifyQueryUsing(function ($query)  use($myLeads) {
+                return $myLeads;
+            });
 
         $leadStatuses = Filament::getTenant()->leadStatuses()->orderBy('order', 'asc')
             ->withCount('leads')
