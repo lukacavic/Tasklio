@@ -43,6 +43,7 @@ class KnowledgeArticleResource extends Resource
 
                 Select::make('category_id')
                     ->required()
+                    ->native(false)
                     ->relationship('category', 'title')
                     ->label('Kategorija'),
 

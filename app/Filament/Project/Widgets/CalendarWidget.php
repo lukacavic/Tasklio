@@ -134,6 +134,7 @@ class CalendarWidget extends FullCalendarWidget
 
             Grid::make(2)->schema([
                 Select::make('users')
+                    ->multiple()
                     ->relationship('users')
                     ->label('Djelatnici')
                     ->options(Filament::getTenant()->users()->get()->pluck('full_name', 'id'))

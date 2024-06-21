@@ -15,6 +15,7 @@ use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rule;
 
 class UserResource extends Resource
 {
@@ -49,20 +50,28 @@ class UserResource extends Resource
 
                 Forms\Components\TextInput::make('name')
                     ->label('Korisničko ime')
-                    ->unique(User::class, 'name', ignoreRecord: true)
+                    ->live()
+                    ->rules(Rule::unique('users', 'name')
+                        ->where('organisation_id', filament()->getTenant()->id)
+                    )
+                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
+                        $livewire->validateOnly($component->getStatePath());
+                    })
                     ->required()
                     ->maxLength(255),
 
                 Forms\Components\TextInput::make('email')
-                    ->live(onBlur: true)
+                    ->live()
                     ->email()
+                    ->rules(Rule::unique('users', 'email')
+                        ->where('organisation_id', filament()->getTenant()->id)
+                    )
                     ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
                         $livewire->validateOnly($component->getStatePath());
                     })
                     ->prefixIcon('heroicon-o-at-symbol')
                     ->required()
-                    ->maxLength(255)
-                    ->unique(User::class, 'email', ignoreRecord: true),
+                    ->maxLength(255),
 
                 TextInput::make('password')
                     ->password()
@@ -87,8 +96,7 @@ class UserResource extends Resource
                     ->default(false)
                     ->disabled(function () {
                         return !auth()->user()->administrator;
-                    })
-                    ->required(),
+                    }),
 
                 Forms\Components\Toggle::make('active')
                     ->default(true)

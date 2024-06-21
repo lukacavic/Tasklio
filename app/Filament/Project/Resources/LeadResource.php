@@ -2,6 +2,7 @@
 
 namespace App\Filament\Project\Resources;
 
+use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource;
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
 use App\Models\LeadSource;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -19,6 +21,7 @@ use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
@@ -63,7 +66,6 @@ class LeadResource extends Resource
                                     ->maxLength(255),
 
                                 Forms\Components\TextInput::make('last_name')
-                                    ->required()
                                     ->label('Prezime')
                                     ->maxLength(255),
 
@@ -82,13 +84,28 @@ class LeadResource extends Resource
                                     ->prefix('https://'),
 
                                 PhoneInput::make('mobile')
+                                    ->live()
+                                    ->rules(Rule::unique('leads', 'mobile')
+                                        ->where('project_id', filament()->getTenant()->id)
+                                    )
+                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
+                                        $livewire->validateOnly($component->getStatePath());
+                                    })
                                     ->label('Mobitel'),
 
                                 PhoneInput::make('phone')
                                     ->label('Telefon'),
 
                                 Forms\Components\TextInput::make('email')
+                                    ->prefixIcon('heroicon-o-at-symbol')
+                                    ->live()
                                     ->email()
+                                    ->rules(Rule::unique('leads', 'email')
+                                        ->where('project_id', filament()->getTenant()->id)
+                                    )
+                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
+                                        $livewire->validateOnly($component->getStatePath());
+                                    })
                                     ->label('Email')
                                     ->maxLength(255),
 
@@ -101,6 +118,15 @@ class LeadResource extends Resource
                                 Forms\Components\Select::make('source_id')
                                     ->native(false)
                                     ->required()
+                                    ->createOptionUsing(function (array $data) {
+                                        $leadSource = LeadSource::query()->create([
+                                            'project_id' => Filament::getTenant()->id,
+                                            'name' => $data['name']
+                                        ]);
+
+                                        return $leadSource->getKey();
+                                    })
+                                    ->createOptionForm(fn(Form $form) => LeadSourceResource::form($form))
                                     ->options(Filament::getTenant()->leadSources->pluck('name', 'id'))
                                     ->label('Izvor'),
 

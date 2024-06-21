@@ -7,6 +7,7 @@ use App\Filament\Project\Resources\LeadResource;
 use App\Filament\Project\Widgets\LeadsKanbanBoard;
 use App\Models\LeadStatus;
 use Filament\Actions;
+use Filament\Facades\Filament;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 
@@ -16,9 +17,9 @@ class ListLeads extends ListRecords
 
     public function getTabs(): array
     {
-        $tabs = ['all' => Tab::make('Svi')->badge($this->getModel()::count())];
+        $tabs = ['all' => Tab::make('Svi')->badge(Filament::getTenant()->leads()->count())];
 
-        $leadStatuses = LeadStatus::orderBy('order', 'asc')
+        $leadStatuses = Filament::getTenant()->leadStatuses()->orderBy('order', 'asc')
             ->withCount('leads')
             ->get();
 
@@ -29,7 +30,10 @@ class ListLeads extends ListRecords
             $tabs[$slug] = Tab::make($name)
                 ->badge($leadStatus->leads_count)
                 ->modifyQueryUsing(function ($query) use ($leadStatus) {
-                    return $query->where('status_id', $leadStatus->id);
+                    if ($leadStatus != null) {
+                        return $query->where('status_id', $leadStatus->id);
+                    }
+                    return $query;
                 });
         }
 
