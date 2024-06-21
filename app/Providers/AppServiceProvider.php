@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
                 'admin'
             ]);
 
+            $panelSwitch->visible(false);
+
             $panelSwitch->modalHeading('Način pregleda');
         });
 

@@ -46,10 +46,10 @@ class ProjectPanelProvider extends PanelProvider
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
             ->globalSearchDebounce('750ms')
             ->globalSearchFieldKeyBindingSuffix()
-            ->renderHook(
+            /*->renderHook(
                 PanelsRenderHook::TOPBAR_START,
                 fn() => view('filament.hook.topbar'),
-            )
+            )*/
             ->colors([
                 'primary' => Color::Amber,
             ])

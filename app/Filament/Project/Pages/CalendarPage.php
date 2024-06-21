@@ -14,7 +14,7 @@ class CalendarPage extends Page
 
     protected static ?string $slug = 'calendar';
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static ?string $navigationLabel = 'Kalendar';
 
