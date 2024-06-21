@@ -106,6 +106,11 @@ class ViewTask extends ViewRecord
                         ->label('Privitci')
                         ->hintAction(
                             Action::make('download')
+                                ->action(function($record) {
+                                    $downloads = $record->getMedia('task');
+
+                                    return MediaStream::create('attachments.zip')->addMedia($downloads);
+                                })
                                 ->label('Preuzmi sve')
                                 ->icon('heroicon-m-arrow-down-tray')
                         )
