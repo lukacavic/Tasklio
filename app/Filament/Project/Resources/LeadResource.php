@@ -85,10 +85,10 @@ class LeadResource extends Resource
 
                                 PhoneInput::make('mobile')
                                     ->live()
-                                    ->rules(Rule::unique('leads', 'mobile')
-                                        ->where('project_id', filament()->getTenant()->id)
-                                    )
-                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
+                                    ->unique('leads', 'mobile', ignoreRecord: true, modifyRuleUsing: function ($rule) {
+                                        return $rule->where('organisation_id', auth()->user()->organisation_id);
+                                    })
+                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, PhoneInput $component) {
                                         $livewire->validateOnly($component->getStatePath());
                                     })
                                     ->label('Mobitel'),
@@ -100,10 +100,10 @@ class LeadResource extends Resource
                                     ->prefixIcon('heroicon-o-at-symbol')
                                     ->live()
                                     ->email()
-                                    ->rules(Rule::unique('leads', 'email')
-                                        ->where('project_id', filament()->getTenant()->id)
-                                    )
-                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
+                                    ->unique('leads', 'email', ignoreRecord: true, modifyRuleUsing: function ($rule) {
+                                        return $rule->where('organisation_id', auth()->user()->organisation_id);
+                                    })
+                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, PhoneInput $component) {
                                         $livewire->validateOnly($component->getStatePath());
                                     })
                                     ->label('Email')

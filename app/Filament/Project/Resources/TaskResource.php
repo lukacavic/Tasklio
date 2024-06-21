@@ -41,6 +41,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
@@ -55,6 +56,16 @@ class TaskResource extends Resource
     protected static ?string $pluralModelLabel = 'Zadaci';
 
     protected static ?string $navigationLabel = 'Zadaci';
+
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Naziv' => $record->title,
+            'Opis' => strip_tags($record->description)
+        ];
+    }
 
     public static function form(Form $form): Form
     {
@@ -117,6 +128,9 @@ class TaskResource extends Resource
             ->columns([
                 TextColumn::make('title')
                     ->description(function (Task $record) {
+                        return strip_tags(Str::limit($record->description, 40));
+                    })
+                    ->tooltip(function (Task $record) {
                         return strip_tags($record->description);
                     })
                     ->icon(function (Task $record) {

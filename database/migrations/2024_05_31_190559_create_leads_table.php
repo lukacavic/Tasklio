@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->string('first_name');
-            $table->string('last_name');
+            $table->string('last_name')->nullable();
             $table->string('position')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->string('mobile')->nullable();
             $table->string('company');
             $table->integer('project_id')->nullable();
             $table->integer('status_id')->nullable();

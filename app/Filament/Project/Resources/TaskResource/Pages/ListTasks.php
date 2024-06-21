@@ -4,8 +4,11 @@ namespace App\Filament\Project\Resources\TaskResource\Pages;
 
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\TaskResource;
+use App\Models\Lead;
+use App\Models\Task;
 use App\TaskStatus;
 use Filament\Actions;
+use Filament\Facades\Filament;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
@@ -18,38 +21,31 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-        foreach (TaskStatus::cases() as $taskStatus)
-            $tabs = [
-                'created' => Tab::make('Kreiran')
-                    ->modifyQueryUsing(function (Builder $query) {
-                        return $query->where('status_id', TaskStatus::Created);
-                    })
-                    ->badge($this->getModel()::where('status_id', TaskStatus::Created)->count()),
+        $myTasks = Task::query()->where('user_id', auth()->user()->id);
 
-                'in_progress' => Tab::make('U izradi')
-                    ->modifyQueryUsing(function (Builder $query) {
-                        return $query->where('status_id', TaskStatus::InProgress);
-                    })
-                    ->badge($this->getModel()::where('status_id', TaskStatus::InProgress)->count()),
+        $tabs = [
+            'all' => Tab::make('Svi')->badge(Filament::getTenant()->tasks()->count())
+        ];
 
-                'testing' => Tab::make('Testiranje')
-                    ->modifyQueryUsing(function (Builder $query) {
-                        return $query->where('status_id', TaskStatus::Testing);
-                    })
-                    ->badge($this->getModel()::where('status_id', TaskStatus::Testing)->count()),
+        $tabs['my-tasks'] = Tab::make('Moji zadaci')
+            ->badge($myTasks->count())
+            ->modifyQueryUsing(function ($query)  use($myTasks) {
+                return $myTasks;
+            });
 
-                'awaiting_feedback' => Tab::make('Čeka se komentar')
-                    ->modifyQueryUsing(function (Builder $query) {
-                        return $query->where('status_id', TaskStatus::AwaitingFeedback);
-                    })
-                    ->badge($this->getModel()::where('status_id', TaskStatus::AwaitingFeedback)->count()),
+        foreach (TaskStatus::cases() as $taskStatus) {
+            $name = $taskStatus->getLabel();
+            $slug = str($name)->slug()->toString();
 
-                'completed' => Tab::make('Završeno')
-                    ->modifyQueryUsing(function (Builder $query) {
-                        return $query->where('status_id', TaskStatus::Completed);
-                    })
-                    ->badge($this->getModel()::where('status_id', TaskStatus::Completed)->count())
-            ];
+            $tabs[$slug] = Tab::make($name)
+                ->badge(Task::where('status_id', $taskStatus->value)->count())
+                ->modifyQueryUsing(function ($query) use ($taskStatus) {
+                    if ($taskStatus != null) {
+                        return $query->where('status_id', $taskStatus->value);
+                    }
+                    return $query;
+                });
+        }
 
         return $tabs;
     }

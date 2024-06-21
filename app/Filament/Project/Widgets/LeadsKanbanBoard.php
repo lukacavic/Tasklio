@@ -19,7 +19,7 @@ class LeadsKanbanBoard extends KanbanBoard
 {
     protected static ?string $slug = 'leads-kanban';
 
-    protected static ?string $title = 'Leadovi';
+    protected static ?string $title = 'Potencijalni klijenti';
 
     protected static string $model = Lead::class;
 
@@ -51,19 +51,11 @@ class LeadsKanbanBoard extends KanbanBoard
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('kanban')
+            Action::make('table')
                 ->hiddenLabel()
                 ->icon('heroicon-o-table-cells')
-                ->tooltip('Kanban prikaz')
+                ->tooltip('Prikaz u tablici')
                 ->url(fn(): string => LeadResource::getUrl()),
-
-            CreateAction::make()
-                ->model(Lead::class)
-                ->mutateFormDataUsing(function ($data) {
-                    $data['user_id'] = auth()->id();
-
-                    return $data;
-                })
         ];
     }
 

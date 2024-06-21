@@ -16,6 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Validation\Rule;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class UserResource extends Resource
 {
@@ -63,9 +64,9 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->live()
                     ->email()
-                    ->rules(Rule::unique('users', 'email')
-                        ->where('organisation_id', filament()->getTenant()->id)
-                    )
+                    ->unique('users', 'email', ignoreRecord: true, modifyRuleUsing: function ($rule) {
+                        return $rule->where('organisation_id', auth()->user()->organisation_id);
+                    })
                     ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
                         $livewire->validateOnly($component->getStatePath());
                     })
