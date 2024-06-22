@@ -168,12 +168,12 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make()
                     ->modalHeading('Izmjena djelatnika')
                     ->visible(function (User $record) {
-                        return !$record->administrator;
+                        return auth()->user()->administrator;
                     }),
 
                 Tables\Actions\DeleteAction::make()
                     ->visible(function (User $record) {
-                        return !$record->administrator;
+                        return auth()->user()->administrator;
                     }),
             ])
             ->bulkActions([
