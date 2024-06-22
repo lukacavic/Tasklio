@@ -4,11 +4,13 @@ namespace App\Filament\Project\Resources\KnowledgeCategoryResource\Pages;
 
 use App\Filament\Project\Resources\KnowledgeArticleResource;
 use App\Models\KnowledgeArticle;
+use App\Models\Lead;
 use App\Models\Task;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\TagsInput;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -16,19 +18,46 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Validation\Rule;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Spatie\MediaLibrary\Support\MediaStream;
 
 class ViewKnowledgeArticle extends ViewRecord
 {
     protected static string $resource = KnowledgeArticleResource::class;
 
+    public function getSendEmailAction(): Action
+    {
+        return Action::make('send-email')
+            ->modalHeading('Pošalji email')
+            ->fillForm(fn(KnowledgeArticle $record): array => [
+                'content' => $record->content,
+            ])
+            ->icon('heroicon-o-at-symbol')
+            ->form([
+                TagsInput::make('receivers')
+                    ->placeholder('Unesite email adresu primatelja')
+                    ->suggestions(Lead::get()->pluck('email')->toArray())
+                    ->prefixIcon('heroicon-o-at-symbol')
+                    ->nestedRecursiveRules([
+                        'email',
+                    ])
+                    ->required()
+                    ->label('Primatelji'),
+
+                TinyEditor::make('content')
+                    ->label('Sadržaj')
+                    ->columnSpanFull()
+            ])
+            ->requiresConfirmation()
+            ->color(Color::Blue)
+            ->hiddenLabel();
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('send-email')
-                ->icon('heroicon-o-at-symbol')
-                ->color(Color::Blue)
-                ->hiddenLabel(),
+            $this->getSendEmailAction(),
 
             EditAction::make()
                 ->icon('heroicon-o-pencil')

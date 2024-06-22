@@ -104,6 +104,11 @@ class Project extends Model implements HasCurrentTenantLabel
         return $this->morphMany(Note::class, 'related');
     }
 
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class, 'project_id');
+    }
+
     public function getCurrentTenantLabel(): string
     {
         return 'TRENUTNI PROJEKT';
