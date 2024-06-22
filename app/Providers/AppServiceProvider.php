@@ -6,6 +6,7 @@ use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        URL::forceScheme('https');
+
         TinyEditor::configureUsing(function (TinyEditor $tinyEditor) {
             $tinyEditor->profile('default');
         });
