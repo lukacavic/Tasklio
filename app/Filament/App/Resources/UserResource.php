@@ -16,6 +16,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Validation\Rule;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class UserResource extends Resource
@@ -102,6 +103,11 @@ class UserResource extends Resource
                 Forms\Components\Toggle::make('active')
                     ->default(true)
                     ->label('Aktivni djelatnik'),
+
+                TinyEditor::make('email_signature')
+                    ->profile('default')
+                    ->label('Email potpis')
+                    ->columnSpanFull()
             ]);
     }
 

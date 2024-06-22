@@ -19,10 +19,11 @@ return new class extends Migration
             $table->integer('user_id');
             $table->timestamp('meeting_from')->nullable();
             $table->timestamp('meeting_to')->nullable();
+            $table->timestamp('started_at')->nullable();
+            $table->boolean('not_held')->default(false);
             $table->timestamp('finished_at')->nullable();
             $table->text('finished_note')->nullable();
             $table->integer('project_id')->nullable();
-            $table->json('tags')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();
             $table->timestamps();

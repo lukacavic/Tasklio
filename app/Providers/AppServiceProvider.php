@@ -7,6 +7,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\ServiceProvider;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        TinyEditor::configureUsing(function (TinyEditor $tinyEditor) {
+            $tinyEditor->profile('default');
+        });
+
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch->labels([
                 'admin' => 'Admin Panel',
@@ -39,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
                 'admin'
             ]);
 
-           // $panelSwitch->visible(false);
+            // $panelSwitch->visible(false);
 
             $panelSwitch->modalHeading('Način pregleda');
         });

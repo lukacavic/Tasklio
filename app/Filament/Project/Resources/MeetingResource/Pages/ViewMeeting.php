@@ -61,6 +61,7 @@ class ViewMeeting extends ViewRecord
                         ->color(Color::Orange),
                     TinyEditor::make('finished_note')
                         ->label('Zaključak sastanka')
+                        ->required()
                         ->columnSpan(3),
 
                     Toggle::make('send-email')
@@ -70,10 +71,10 @@ class ViewMeeting extends ViewRecord
                     TagsInput::make('receivers')
                         ->label('Primatelji')
                         ->columnSpanFull()
-                        ->visible(function(Get $get) {
+                        ->visible(function (Get $get) {
                             return $get('send-email');
                         })
-                        ->required(function(Get $get) {
+                        ->required(function (Get $get) {
                             return $get('send-email');
                         })
                         ->prefixIcon('heroicon-o-at-symbol')

@@ -35,6 +35,7 @@ class ProjectPanelProvider extends PanelProvider
             ->id('project')
             ->path('project')
             ->tenantMenu()
+            //->domain('{account}.taskl.io')
             ->font('Poppins')
             ->spa()
             ->login()
