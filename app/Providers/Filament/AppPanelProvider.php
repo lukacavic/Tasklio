@@ -2,9 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Livewire\AccountSettingsPage;
+use App\Livewire\CustomPersonalInfo;
+use App\Livewire\ProfileAddressComponent;
 use App\Models\Organisation;
 use Awcodes\FilamentGravatar\GravatarPlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
+use Filament\Forms\Components\FileUpload;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -19,7 +23,9 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use RickDBCN\FilamentEmail\FilamentEmail;
@@ -76,18 +82,20 @@ class AppPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                FilamentEditProfilePlugin::make()
-                    ->setTitle('My Profile')
-                    ->setNavigationLabel('My Profile')
-                    ->setNavigationGroup('Group Profile')
-                    ->setIcon('heroicon-o-user')
-                    ->shouldRegisterNavigation(false)
-                    ->shouldShowBrowserSessionsForm(),
+                BreezyCore::make()
+                    ->myProfileComponents([
+                        'personal_info' => CustomPersonalInfo::class,
+                    ])
+                    ->myProfile(
+                        hasAvatars: true,
+                        slug: 'edit-profile',
+                        navigationGroup: 'Settings'
+                    ),
                 FilamentFullCalendarPlugin::make()
                     ->plugins([
-                        'resourceTimeGrid','resourceTimeline','resourceDayGrid','scrollGrid'
+                        'resourceTimeGrid', 'resourceTimeline', 'resourceDayGrid', 'scrollGrid'
                     ])
-                ->selectable(true),
+                    ->selectable(true),
                 FilamentApexChartsPlugin::make(),
                 FilamentEmail::make(),
             ]);

@@ -115,6 +115,12 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('avatar_url')
+                    ->circular()
+                    ->defaultImageUrl(function (User $record) {
+                        return 'http://ui-avatars.com/api?name=' . $record->fullName;
+                    }),
+
                 Tables\Columns\TextColumn::make('fullName')
                     ->label('Djelatnik')
                     ->searchable(),

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Filament\Enums\PropertyStatus;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
@@ -17,8 +18,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
-class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants
+class User extends Authenticatable implements FilamentUser, HasDefaultTenant, HasTenants, HasAvatar
 {
     use HasFactory, Notifiable, SoftDeletes;
 
@@ -45,6 +47,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         static::addGlobalScope('active', function (Builder $builder) {
             $builder->where('active', true);
         });
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url ? Storage::url($this->avatar_url) : null;
     }
 
     public function canAccessPanel(Panel $panel): bool
@@ -79,7 +86,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     public function getDefaultTenant(Panel $panel): ?Model
     {
-        if($panel->getId() == 'project') {
+        if ($panel->getId() == 'project') {
             return $this->projects->first();
         }
 
@@ -88,7 +95,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     public function getTenants(Panel $panel): array|Collection
     {
-        if($panel->getId() == 'project') {
+        if ($panel->getId() == 'project') {
             return $this->projects;
         }
 

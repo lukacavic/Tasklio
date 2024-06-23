@@ -5,6 +5,9 @@ namespace App\Providers\Filament;
 use App\Filament\Project\Pages\Dashboard;
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Widgets\LeadsKanbanBoard;
+use App\Livewire\AccountSettingsPage;
+use App\Livewire\CustomPersonalInfo;
+use App\Livewire\ProfileAddressComponent;
 use App\Models\Project;
 use Awcodes\FilamentQuickCreate\QuickCreatePlugin;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
@@ -24,6 +27,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 
@@ -80,6 +84,15 @@ class ProjectPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                BreezyCore::make()
+                    ->myProfileComponents([
+                        'personal_info' => CustomPersonalInfo::class,
+                    ])
+                    ->myProfile(
+                        hasAvatars: true,
+                        slug: 'edit-profile',
+                        navigationGroup: 'Settings'
+                    ),
                 FilamentFullCalendarPlugin::make()
                     ->editable(true)
                     ->selectable(),

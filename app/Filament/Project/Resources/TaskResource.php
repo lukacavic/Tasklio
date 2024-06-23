@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Resources\TaskResource\Pages\CreateTask;
+use App\Filament\Shared\Components\AvatarColumn;
 use App\Models\Task;
 use App\Models\User;
 use App\TaskPriority;
@@ -133,7 +134,10 @@ class TaskResource extends Resource
                     ->label('Naziv')
                     ->searchable(),
 
-                TextColumn::make('creator.fullName')
+                AvatarColumn::make('creator.avatar_url')
+                    ->tooltip(function (Task $record) {
+                        return $record->fullName;
+                    })
                     ->label('Dodao')
                     ->sortable(),
 
@@ -145,7 +149,7 @@ class TaskResource extends Resource
                     ->label('Status')
                     ->options(TaskStatus::class)
                     ->sortable(),
-                SpatieTagsColumn::make('tags'),
+                SpatieTagsColumn::make('tags')->label('Oznake'),
 
                 TextColumn::make('deadline_at')
                     ->label('Rok završetka')
@@ -198,7 +202,7 @@ class TaskResource extends Resource
     {
         return [
             'index' => TaskResource\Pages\ListTasks::route('/'),
-             'view' => TaskResource\Pages\ViewTask::route('/{record}'),
+            'view' => TaskResource\Pages\ViewTask::route('/{record}'),
             //'create' =>CreateTask::route('/create'),
             //'edit' => Pages\EditTask::route('/{record}/edit'),
         ];

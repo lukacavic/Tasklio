@@ -91,7 +91,8 @@ class MeetingsResource extends Resource
                     ->label('Vrijeme')
                     ->dateTime(),
 
-                Tables\Columns\TextColumn::make('userParticipants.first_name')
+                Tables\Columns\ImageColumn::make('userParticipants.avatar_url')
+                    ->circular()
                     ->label('Djelatnici'),
 
                 Tables\Columns\SpatieTagsColumn::make('tags')
