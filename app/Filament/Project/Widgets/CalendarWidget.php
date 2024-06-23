@@ -96,7 +96,8 @@ class CalendarWidget extends FullCalendarWidget
             CreateAction::make()
                 ->mutateFormDataUsing(function (array $data): array {
                     return [
-                        ...$data
+                        ...$data,
+                        'project_id' => Filament::getTenant()->id
                     ];
                 })
                 ->mountUsing(
