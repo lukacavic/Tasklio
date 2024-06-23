@@ -66,6 +66,7 @@ class CalendarWidget extends FullCalendarWidget
     {
         return [
             'firstDay' => 1,
+            'height' => 'auto',
             'editable' => true,
         ];
     }

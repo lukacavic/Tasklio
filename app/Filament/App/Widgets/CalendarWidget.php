@@ -37,35 +37,9 @@ class CalendarWidget extends FullCalendarWidget
     public function config(): array
     {
         return [
-            'resourceAreaColumns' => [
-                [
-                    'field' => 'fname',
-                    'headerContent' => 'First Name'
-                ],
-                [
-                    'field' => 'lname',
-                    'headerContent' => 'Last Name'
-                ]
-            ],
-            'locale' => 'hr',
-            'dragScroll' => true,
             'firstDay' => 1,
+            'height' => 'auto',
             'editable' => true,
-            'dayMinWidth' => '500',
-            'headerToolbar' => [
-                'left' => 'dayGridWeek,dayGridDay',
-                'center' => 'title',
-                'right' => 'prev,next today',
-            ],
-            'initialView' => 'resourceTimeGridDay',
-            'resources' => [
-                [
-                    'id' => 1, 'title' => 'Room A', 'fname' => 'John',
-                    'lname' => 'Smith'
-                ],
-                ['id' => 2, 'title' => 'Room C'],
-                ['id' => 3, 'title' => 'Room B'],
-            ],
         ];
     }
 

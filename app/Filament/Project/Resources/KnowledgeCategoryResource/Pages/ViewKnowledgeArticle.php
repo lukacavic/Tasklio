@@ -16,6 +16,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Validation\Rule;
@@ -30,6 +31,7 @@ class ViewKnowledgeArticle extends ViewRecord
     {
         return Action::make('send-email')
             ->modalHeading('Pošalji email')
+            ->modalWidth(MaxWidth::ExtraLarge)
             ->fillForm(fn(KnowledgeArticle $record): array => [
                 'content' => $record->content,
             ])
@@ -93,6 +95,9 @@ class ViewKnowledgeArticle extends ViewRecord
                 ->columnSpanFull(),
 
             RepeatableEntry::make('media')
+                ->visible(function(KnowledgeArticle $record){
+                    return $record->media()->count() > 0;
+                })
                 ->label('Privitci')
                 ->hintActions([
                     \Filament\Infolists\Components\Actions\Action::make('download')
