@@ -16,6 +16,9 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
 class KnowledgeArticleResource extends Resource
@@ -29,6 +32,20 @@ class KnowledgeArticleResource extends Resource
     protected static ?string $pluralLabel = 'Članci';
 
     protected static ?string $cluster = KnowledgeBase::class;
+
+    protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return 'Baza znanja';
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Naslov' => $record->title,
+        ];
+    }
 
     public static function getNavigationBadge(): ?string
     {
@@ -51,7 +68,14 @@ class KnowledgeArticleResource extends Resource
                 Select::make('category_id')
                     ->required()
                     ->native(false)
+                    ->options(Filament::getTenant()->knowledgeCategories()->get()->pluck('title', 'id'))
                     ->relationship('category', 'title')
+                    ->createOptionForm([
+                        TextInput::make('title')
+                            ->label('Naziv kategorije')
+                            ->required()
+                            ->columnSpanFull()
+                    ])
                     ->label('Kategorija'),
 
                 TinyEditor::make('content')
