@@ -82,7 +82,7 @@ class ViewKnowledgeArticle extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Grid::make()->schema([
+            \Filament\Infolists\Components\Section::make()->schema([
                 TextEntry::make('title')
                     ->label('Naziv'),
 
@@ -92,7 +92,15 @@ class ViewKnowledgeArticle extends ViewRecord
 
                 TextEntry::make('userCreated.fullName')
                     ->label('Kreirao'),
-            ])->columns(3),
+
+                TextEntry::make('created_at')
+                    ->label('Vrijeme kreiranja')
+                    ->date(),
+
+                TextEntry::make('updated_at')
+                    ->label('Zadnja izmjena')
+                    ->date(),
+            ])->columns(5),
 
             \Filament\Infolists\Components\Section::make()
                 ->schema([

@@ -115,13 +115,25 @@ class KnowledgeArticleResource extends Resource
                     ->label(''),
 
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Naziv'),
+                    ->label('Naziv')
+                    ->description(function (KnowledgeArticle $record) {
+                        return $record->category->title;
+                    }),
 
                 Tables\Columns\TextColumn::make('userCreated.fullName')
-                    ->label('Kreirao'),
+                    ->label('Kreirao')
+                    ->description(function (KnowledgeArticle $record) {
+                        return $record->created_at->diffForHumans();
+                    }),
 
-                Tables\Columns\TextColumn::make('category.title')
-                    ->label('Kategorija')
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Zadnja izmjena')
+                    ->date()
+                    ->description(function (KnowledgeArticle $record) {
+                        return $record->updated_at->diffForHumans();
+                    }),
+
+
             ])
             ->filters([
                 //
