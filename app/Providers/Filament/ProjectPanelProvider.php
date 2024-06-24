@@ -39,9 +39,11 @@ class ProjectPanelProvider extends PanelProvider
             ->id('project')
             ->path('project')
             ->tenantMenu()
-            //->domain('{account}.taskl.io')
             ->font('Poppins')
             ->spa()
+            ->colors([
+                'primary' => '#24517a'
+            ])
             ->login()
             ->viteTheme('resources/css/filament/project/theme.css')
             ->authGuard('web')
@@ -52,13 +54,6 @@ class ProjectPanelProvider extends PanelProvider
             ->globalSearchKeyBindings(['command+f', 'ctrl+f'])
             ->globalSearchDebounce('750ms')
             ->globalSearchFieldKeyBindingSuffix()
-            /*->renderHook(
-                PanelsRenderHook::TOPBAR_START,
-                fn() => view('filament.hook.topbar'),
-            )*/
-            ->colors([
-                'primary' => Color::Amber,
-            ])
             ->discoverResources(in: app_path('Filament/Project/Resources'), for: 'App\\Filament\\Project\\Resources')
             ->discoverPages(in: app_path('Filament/Project/Pages'), for: 'App\\Filament\\Project\\Pages')
             ->discoverClusters(in: app_path('Filament/Project/Clusters'), for: 'App\\Filament\\Project\\Clusters')

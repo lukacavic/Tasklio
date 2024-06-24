@@ -45,9 +45,6 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->viteTheme('resources/css/filament/app/theme.css')
             ->font('Poppins')
-            ->colors([
-                'primary' => '#24517a'
-            ])
             ->passwordReset()
             ->authGuard('web')
             ->unsavedChangesAlerts()
