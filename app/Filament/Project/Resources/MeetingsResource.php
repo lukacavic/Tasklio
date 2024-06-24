@@ -87,14 +87,16 @@ class MeetingsResource extends Resource
                     }),
 
                 Tables\Columns\TextColumn::make('userCreated.first_name')
-                    ->label('Kreirao'),
+                    ->label('Kreirao')
+                    ->description(function (Meeting $record) {
+                        return $record->created_at->diffForHumans();
+                    }),
 
                 Tables\Columns\TextColumn::make('meeting_from')
-                    ->label('Vrijeme')
+                    ->label('Vrijeme sastanka')
                     ->dateTime(),
 
-                Tables\Columns\ImageColumn::make('userParticipants.avatar_url')
-                    ->circular()
+                Tables\Columns\TextColumn::make('userParticipants.first_name')
                     ->label('Djelatnici'),
 
                 Tables\Columns\SpatieTagsColumn::make('tags')

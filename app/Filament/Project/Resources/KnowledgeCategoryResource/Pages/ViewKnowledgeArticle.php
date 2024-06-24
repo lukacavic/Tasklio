@@ -118,7 +118,7 @@ class ViewKnowledgeArticle extends ViewRecord
                 ->hintActions([
                     \Filament\Infolists\Components\Actions\Action::make('download')
                         ->action(function (KnowledgeArticle $record) {
-                            $downloads = $record->getMedia('task');
+                            $downloads = $record->getMedia('knowledge-article');
 
                             return MediaStream::create('attachments.zip')->addMedia($downloads);
                         })
@@ -128,7 +128,7 @@ class ViewKnowledgeArticle extends ViewRecord
                 ])
                 ->columnSpanFull()
                 ->grid(3)
-                ->schema(function (Task $task) {
+                ->schema(function (KnowledgeArticle $knowledgeArticle) {
                     return [
                         TextEntry::make('name')
                             ->columnSpan(2)
@@ -136,9 +136,7 @@ class ViewKnowledgeArticle extends ViewRecord
                             ->hintAction(
                                 \Filament\Infolists\Components\Actions\Action::make('download')
                                     ->label('Preuzmi')
-                                    ->action(function ($record) use ($task) {
-                                        $task->addLog('Napravio download datoteke: ' . $record->name);
-
+                                    ->action(function ($record) use ($knowledgeArticle) {
                                         return response()->download($record->getPath(), $record->file_name);
                                     })
                                     ->hiddenLabel()

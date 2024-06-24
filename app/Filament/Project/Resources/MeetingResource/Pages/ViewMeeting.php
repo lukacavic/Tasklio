@@ -5,12 +5,14 @@ namespace App\Filament\Project\Resources\MeetingResource\Pages;
 use App\Filament\Project\Resources\MeetingsResource;
 use App\Models\KnowledgeArticle;
 use App\Models\Meeting;
+use App\Models\Task;
 use Awcodes\Shout\Components\Shout;
 use Filament\Actions;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -20,6 +22,7 @@ use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\MaxWidth;
 use Illuminate\Contracts\Support\Htmlable;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+use Spatie\MediaLibrary\Support\MediaStream;
 
 class ViewMeeting extends ViewRecord
 {
@@ -131,7 +134,42 @@ class ViewMeeting extends ViewRecord
                     TextEntry::make('remarks')
                         ->html()
                         ->hiddenLabel()
-                ])->columns(1)
+                ])->columns(1),
+
+            RepeatableEntry::make('media')
+                ->visible(function (Meeting $record) {
+                    return $record->media()->count() > 0;
+                })
+                ->label('Privitci')
+                ->hintActions([
+                    \Filament\Infolists\Components\Actions\Action::make('download')
+                        ->action(function (Meeting $record) {
+                            $downloads = $record->getMedia('meeting');
+
+                            return MediaStream::create('attachments.zip')->addMedia($downloads);
+                        })
+                        ->label('Preuzmi sve')
+                        ->icon('heroicon-m-arrow-down-tray'),
+
+                ])
+                ->columnSpanFull()
+                ->grid(3)
+                ->schema(function (Meeting $meeting) {
+                    return [
+                        TextEntry::make('name')
+                            ->columnSpan(2)
+                            ->label('Datoteka')
+                            ->hintAction(
+                                \Filament\Infolists\Components\Actions\Action::make('download')
+                                    ->label('Preuzmi')
+                                    ->action(function ($record) use ($meeting) {
+                                        return response()->download($record->getPath(), $record->file_name);
+                                    })
+                                    ->hiddenLabel()
+                                    ->icon('heroicon-m-arrow-down-tray')
+                            )
+                    ];
+                })
 
         ]);
     }
