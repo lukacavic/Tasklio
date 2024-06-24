@@ -34,42 +34,44 @@ class MeetingsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Naslov')
-                    ->required()
-                    ->columnSpanFull(),
+                Forms\Components\Section::make()->schema([
+                    Forms\Components\TextInput::make('name')
+                        ->label('Naslov')
+                        ->required()
+                        ->columnSpanFull(),
 
-                Forms\Components\DateTimePicker::make('meeting_from')
-                    ->label('Početak')
-                    ->required(),
+                    Forms\Components\DateTimePicker::make('meeting_from')
+                        ->label('Početak')
+                        ->required(),
 
-                Forms\Components\DateTimePicker::make('meeting_to')
-                    ->label('Kraj'),
+                    Forms\Components\DateTimePicker::make('meeting_to')
+                        ->label('Kraj'),
 
-                Forms\Components\Textarea::make('description')
-                    ->label('Opis sastanka')
-                    ->columnSpanFull(),
+                    Forms\Components\Textarea::make('description')
+                        ->label('Opis sastanka')
+                        ->columnSpanFull(),
 
-                Forms\Components\Select::make('userParticipants')
-                    ->label('Djelatnici')
-                    ->relationship('userParticipants')
-                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
-                    ->multiple()
-                    ->native(false),
+                    Forms\Components\Select::make('userParticipants')
+                        ->label('Djelatnici')
+                        ->relationship('userParticipants')
+                        ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
+                        ->multiple()
+                        ->native(false),
 
-                Forms\Components\SpatieTagsInput::make('tags')
-                    ->label('Oznake'),
+                    Forms\Components\SpatieTagsInput::make('tags')
+                        ->label('Oznake'),
 
-                TinyEditor::make('remarks')
-                    ->label('Zapažanja sa sastanka')
-                    ->maxHeight(500)
-                    ->columnSpanFull(),
+                    TinyEditor::make('remarks')
+                        ->label('Zapažanja sa sastanka')
+                        ->maxHeight(500)
+                        ->columnSpanFull(),
 
-                SpatieMediaLibraryFileUpload::make('media')
-                    ->collection('meeting')
-                    ->multiple()
-                    ->label('Privitci')
-                    ->columnSpanFull()
+                    SpatieMediaLibraryFileUpload::make('media')
+                        ->collection('meeting')
+                        ->multiple()
+                        ->label('Privitci')
+                        ->columnSpanFull()
+                ])->columns(2),
 
             ]);
     }
@@ -124,8 +126,8 @@ class MeetingsResource extends Resource
     {
         return [
             'index' => Pages\ListMeetings::route('/'),
-            //'create' => Pages\CreateMeetings::route('/create'),
-            //'edit' => Pages\EditMeetings::route('/{record}/edit'),
+            'create' => Pages\CreateMeetings::route('/create'),
+            'edit' => Pages\EditMeetings::route('/{record}/edit'),
             'view' => ViewMeeting::route('/{record}'),
         ];
     }

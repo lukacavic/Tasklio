@@ -11,6 +11,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\ViewRecord;
@@ -101,7 +102,7 @@ class ViewMeeting extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Card::make('Informacije')->schema([
+            Section::make()->schema([
                 TextEntry::make('name')
                     ->label('Naslov'),
 
@@ -125,7 +126,7 @@ class ViewMeeting extends ViewRecord
                     ->columnSpanFull()
             ])->columns(3),
 
-            Card::make('Zapažanja na sastanku')
+            Section::make('Zapažanja na sastanku')
                 ->schema([
                     TextEntry::make('remarks')
                         ->html()

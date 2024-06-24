@@ -63,6 +63,9 @@ class KnowledgeCategoryResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(function ($record) {
+                        return $record->articles()->exists();
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
