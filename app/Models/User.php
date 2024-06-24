@@ -26,6 +26,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     protected $guarded = ['id'];
 
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -38,6 +39,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     protected static function booted(): void
     {
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('first_name', 'asc');
+            $builder->orderBy('last_name', 'asc');
+        });
+
         static::addGlobalScope('organisation', function (Builder $builder) {
             if (auth()->hasUser()) {
                 $builder->where('organisation_id', auth()->user()->organisation_id);

@@ -85,7 +85,7 @@ class CalendarWidget extends FullCalendarWidget
                     ->borderColor("")
                     ->title($event->title)
                     ->start($event->start_at)
-                    ->backgroundColor($event->color)
+                    ->backgroundColor($event->color != null ? $event->color : 'gray')
                     ->end($event->end_at)
 
             )->toArray();
@@ -120,7 +120,6 @@ class CalendarWidget extends FullCalendarWidget
                     ->label('Naziv')
                     ->required(),
                 ColorPicker::make('color')
-                    ->required()
                     ->label('Boja'),
             ]),
 
