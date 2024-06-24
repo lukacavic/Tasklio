@@ -6,8 +6,11 @@ use App\Filament\Project\Clusters\KnowledgeBase;
 use App\Filament\Project\Resources\KnowledgeArticleResource\Pages;
 use App\Filament\Project\Resources\KnowledgeCategoryResource\Pages\ViewKnowledgeArticle;
 use App\Models\KnowledgeArticle;
+use App\Models\KnowledgeCategory;
 use Filament\Actions\DeleteAction;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -61,35 +64,45 @@ class KnowledgeArticleResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')
-                    ->required()
-                    ->label('Naslov'),
+                Section::make()->schema([
+                    TextInput::make('title')
+                        ->required()
+                        ->label('Naslov'),
 
-                Select::make('category_id')
-                    ->required()
-                    ->native(false)
-                    ->options(Filament::getTenant()->knowledgeCategories()->get()->pluck('title', 'id'))
-                    ->relationship('category', 'title')
-                    ->createOptionForm([
-                        TextInput::make('title')
-                            ->label('Naziv kategorije')
-                            ->required()
-                            ->columnSpanFull()
-                    ])
-                    ->label('Kategorija'),
+                    Select::make('category_id')
+                        ->required()
+                        ->native(false)
+                        ->options(Filament::getTenant()->knowledgeCategories()->get()->pluck('title', 'id'))
+                        ->relationship('category', 'title')
+                        ->createOptionForm([
+                            TextInput::make('title')
+                                ->label('Naziv kategorije')
+                                ->required()
+                                ->columnSpanFull()
+                        ])
+                        ->createOptionUsing(function (array $data) {
+                            $record = Filament::getTenant()->knowledgeCategories()->create([
+                                'title' => $data['title']
+                            ]);
 
-                TinyEditor::make('content')
-                    ->label('Sadržaj')
-                    ->minHeight(600)
-                    ->columnSpanFull()
-                    ->required(),
+                            return $record->getKey(); //like this
+                        })
+                        ->label('Kategorija'),
 
-                SpatieMediaLibraryFileUpload::make('attachments')
-                    ->collection('knowledge-article')
-                    ->multiple()
-                    ->downloadable()
-                    ->label('Privitci')
-                    ->columnSpanFull()
+                    TinyEditor::make('content')
+                        ->label('Sadržaj')
+                        ->minHeight(600)
+                        ->columnSpanFull()
+                        ->required(),
+
+                    SpatieMediaLibraryFileUpload::make('attachments')
+                        ->collection('knowledge-article')
+                        ->multiple()
+                        ->downloadable()
+                        ->label('Privitci')
+                        ->columnSpanFull()
+                ])->columns(2),
+
 
             ])->columns(2);
     }
@@ -103,6 +116,9 @@ class KnowledgeArticleResource extends Resource
 
                 Tables\Columns\TextColumn::make('title')
                     ->label('Naziv'),
+
+                Tables\Columns\TextColumn::make('userCreated.fullName')
+                    ->label('Kreirao'),
 
                 Tables\Columns\TextColumn::make('category.title')
                     ->label('Kategorija')
@@ -133,10 +149,9 @@ class KnowledgeArticleResource extends Resource
     {
         return [
             'index' => Pages\ListKnowledgeArticles::route('/'),
+            'create' => Pages\CreateKnowledgeArticle::route('/create'),
+            'edit' => Pages\EditKnowledgeArticle::route('/{record}/edit'),
             'view' => ViewKnowledgeArticle::route('/{record}'),
-
-            //'create' => Pages\CreateKnowledgeArticle::route('/create'),
-            //'edit' => Pages\EditKnowledgeArticle::route('/{record}/edit'),
         ];
     }
 }

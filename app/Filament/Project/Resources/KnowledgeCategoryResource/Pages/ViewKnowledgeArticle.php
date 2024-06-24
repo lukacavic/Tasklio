@@ -9,8 +9,11 @@ use App\Models\Task;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TagsInput;
+use Filament\Infolists\Components\Card;
+use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -59,7 +62,7 @@ class ViewKnowledgeArticle extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            $this->getSendEmailAction(),
+            //$this->getSendEmailAction(),
 
             EditAction::make()
                 ->icon('heroicon-o-pencil')
@@ -79,23 +82,28 @@ class ViewKnowledgeArticle extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            TextEntry::make('title')
-                ->label('Naziv'),
+            Grid::make()->schema([
+                TextEntry::make('title')
+                    ->label('Naziv'),
 
-            TextEntry::make('category.title')
-                ->badge()
-                ->label('Kategorija'),
+                TextEntry::make('category.title')
+                    ->badge()
+                    ->label('Kategorija'),
 
-            TextEntry::make('user.fullName')
-                ->label('Kreirao'),
+                TextEntry::make('userCreated.fullName')
+                    ->label('Kreirao'),
+            ])->columns(3),
 
-            TextEntry::make('content')
-                ->label('Sadržaj')
-                ->html(true)
-                ->columnSpanFull(),
+            \Filament\Infolists\Components\Section::make()
+                ->schema([
+                    TextEntry::make('content')
+                        ->label('Sadržaj')
+                        ->html(true)
+                        ->columnSpanFull(),
+                ]),
 
             RepeatableEntry::make('media')
-                ->visible(function(KnowledgeArticle $record){
+                ->visible(function (KnowledgeArticle $record) {
                     return $record->media()->count() > 0;
                 })
                 ->label('Privitci')

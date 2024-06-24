@@ -11,20 +11,31 @@ use App\TaskStatus;
 use Awcodes\FilamentBadgeableColumn\Components\Badge;
 use Awcodes\FilamentBadgeableColumn\Components\BadgeableColumn;
 use Awcodes\Shout\Components\Shout;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
 use Filament\Facades\Filament;
+use Filament\Forms\ComponentContainer;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
@@ -43,6 +54,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
@@ -103,6 +115,59 @@ class TaskResource extends Resource
                     ->grouped()
                     ->options(TaskPriority::class)
                     ->inline(),
+
+                Placeholder::make('divider')
+                    ->columnSpanFull()
+                    ->hiddenLabel()
+                    ->visible(false)
+                    ->content(new HtmlString('<hr>')),
+
+                TableRepeater::make('childTasks')
+                    ->visible(false)
+                    ->addActionLabel('Dodaj stavku')
+                    ->extraItemActions([
+                        Action::make('saveAsTemplate')
+                            ->icon('heroicon-m-envelope')
+                            ->action(function (array $arguments, Repeater $component): void {
+
+                            }),
+                    ])
+                    ->showLabels()
+                    ->emptyLabel('There are no users registered.')
+                    ->label('Podzadaci (3/4)')
+                    ->streamlined()
+                    ->columnSpanFull()
+                    ->renderHeader(false)
+                    ->hintAction(function(){
+                        return Action::make('hide-completed')
+                            ->color(Color::Gray)
+                            ->label('Sakrij riješeno');
+                    })
+                    ->headers([
+                        Header::make('name')->width('250px'),
+                        Header::make('assignedUser')->width('250px'),
+                        Header::make('completed')->width('50px')->align(Alignment::Right),
+                    ])
+                    ->schema([
+                        TextInput::make('name')
+                            ->placeholder('Naziv zadatka...')
+                            ->autofocus()
+                            ->hiddenLabel()
+                            ->required(),
+                        Select::make('assigned_user_id')
+                            ->prefixIcon(('heroicon-o-user'))
+                            ->options(User::get()->pluck('fullName', 'id'))
+                            ->native(false)
+                            ->hiddenLabel(),
+                        Toggle::make('completed')
+                            ->onColor(Color::Green)
+                            ->onIcon('heroicon-m-check')
+                            ->inline()
+                            ->label('Završeno?')
+                            ->default(false),
+
+                    ]),
+
 
                 RichEditor::make('description')
                     ->label('Opis')

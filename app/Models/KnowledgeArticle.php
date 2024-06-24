@@ -23,10 +23,4 @@ class KnowledgeArticle extends BaseModel implements HasMedia
         return $this->belongsTo(Project::class, 'project_id');
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-
 }
