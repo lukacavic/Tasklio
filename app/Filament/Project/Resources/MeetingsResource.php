@@ -4,9 +4,7 @@ namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Resources\MeetingResource\Pages\ViewMeeting;
 use App\Filament\Project\Resources\MeetingsResource\Pages;
-use App\Filament\Project\Resources\MeetingsResource\RelationManagers;
 use App\Models\Meeting;
-use App\Models\Meetings;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -15,7 +13,9 @@ use Filament\Infolists\Components\SpatieTagsEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
@@ -30,6 +30,19 @@ class MeetingsResource extends Resource
 
     protected static ?string $pluralLabel = 'Sastanci';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
+    {
+        return 'Sastanci';
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Naslov' => $record->title,
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form
