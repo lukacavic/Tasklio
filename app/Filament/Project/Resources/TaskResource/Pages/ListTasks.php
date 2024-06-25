@@ -5,6 +5,7 @@ namespace App\Filament\Project\Resources\TaskResource\Pages;
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\TaskResource;
 use App\Models\Lead;
+use App\Models\Project;
 use App\Models\Task;
 use App\TaskStatus;
 use Filament\Actions;
@@ -21,18 +22,22 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-        $myTasks = Task::query()->whereHas('members', function ($query) {
-            return $query->where('user_id', auth()->id());
-        });
+        $myTasks = Task::query()
+            ->whereHas('members', function ($query) {
+                return $query->where('user_id', auth()->id());
+            });
 
         $tabs = [
-            'all' => Tab::make('Svi')->badge(Filament::getTenant()->tasks()->count())
+            'all' => Tab::make('Svi')
+                ->badge(Filament::getTenant()->tasks()->count())
         ];
 
         $tabs['my-tasks'] = Tab::make('Moji zadaci')
-            ->badge($myTasks->count())
-            ->modifyQueryUsing(function ($query) use ($myTasks) {
-                return $myTasks;
+            ->badge($myTasks->getQuery()->get()->count())
+            ->modifyQueryUsing(function ($query) {
+                $query->whereHas('members', function ($query) {
+                    return $query->where('user_id', auth()->id());
+                });
             });
 
         foreach (TaskStatus::cases() as $taskStatus) {
@@ -40,7 +45,7 @@ class ListTasks extends ListRecords
             $slug = str($name)->slug()->toString();
 
             $tabs[$slug] = Tab::make($name)
-                ->badge(Task::where('status_id', $taskStatus->value)->count())
+                ->badge(Filament::getTenant()->tasks()->where('status_id', $taskStatus->value)->count())
                 ->modifyQueryUsing(function ($query) use ($taskStatus) {
                     if ($taskStatus != null) {
                         return $query->where('status_id', $taskStatus->value);

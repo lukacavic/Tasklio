@@ -73,6 +73,8 @@ class TaskResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
@@ -199,10 +201,7 @@ class TaskResource extends Resource
                     ->label('Naziv')
                     ->searchable(),
 
-                AvatarColumn::make('creator.avatar_url')
-                    ->tooltip(function (Task $record) {
-                        return $record->fullName;
-                    })
+                TextColumn::make('creator.fullName')
                     ->label('Dodao')
                     ->sortable(),
 
