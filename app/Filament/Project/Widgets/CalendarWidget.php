@@ -136,7 +136,10 @@ class CalendarWidget extends FullCalendarWidget
         return Meeting::query()
             ->where('project_id', Filament::getTenant()->id)
             ->where('meeting_from', '>=', $fetchInfo['start'])
-            ->where('meeting_to', '<=', $fetchInfo['end'])
+            ->where(function ($query) use ($fetchInfo) {
+                $query->where('meeting_to', '<=', $fetchInfo['end'])
+                    ->orWhereNull('meeting_to');
+            })
             ->get();
     }
 
@@ -163,9 +166,9 @@ class CalendarWidget extends FullCalendarWidget
 
     public function form(Form $form): Form
     {
-        if($this->model == Event::class) {
+        if ($this->model == Event::class) {
             return parent::form($form);
-        }else if($this->model == Meeting::class) {
+        } else if ($this->model == Meeting::class) {
             return MeetingsResource::form($form);
         }
     }
