@@ -2,7 +2,9 @@
 
 namespace App\Filament\Project\Widgets;
 
+use App\Filament\Project\Resources\MeetingsResource;
 use App\Models\Event;
+use App\Models\Meeting;
 use App\Models\Project;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -17,6 +19,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Saade\FilamentFullCalendar\Actions\CreateAction;
 use Saade\FilamentFullCalendar\Data\EventData;
@@ -34,6 +37,22 @@ class CalendarWidget extends FullCalendarWidget
             el.setAttribute("x-data", "{ tooltip: '"+event.title+"' }");
         }
     JS;
+    }
+
+    public function onEventClick(array $event): void
+    {
+        if ($event['extendedProps']['model'] == Event::class) {
+            $this->model = Event::class;
+            $this->record = $this->resolveRecord($event['id']);
+        } else if ($event['extendedProps']['model'] == Meeting::class) {
+            $this->model = Meeting::class;
+            $this->record = $this->resolveRecord($event['id']);
+        }
+
+        $this->mountAction('view', [
+            'type' => 'click',
+            'event' => $event,
+        ]);
     }
 
     public function onEventDrop(array $event, array $oldEvent, array $relatedEvents, array $delta, ?array $oldResource, ?array $newResource): bool
@@ -71,25 +90,54 @@ class CalendarWidget extends FullCalendarWidget
         ];
     }
 
-    public function fetchEvents(array $fetchInfo): array
+    private function fetchEventsForCalendar(array $fetchInfo): \Illuminate\Database\Eloquent\Collection|array
     {
         return Event::query()
             ->where('project_id', Filament::getTenant()->id)
             ->where('start_at', '>=', $fetchInfo['start'])
             ->where('end_at', '<=', $fetchInfo['end'])
-            ->get()
-            ->map(
-                fn(Event $event) => EventData::make()
-                    ->id($event->id)
-                    ->resourceId(rand(1, 3))
-                    ->allDay(false)
-                    ->borderColor("")
-                    ->title($event->title)
-                    ->start($event->start_at)
-                    ->backgroundColor($event->color != null ? $event->color : 'gray')
-                    ->end($event->end_at)
+            ->get();
+    }
 
-            )->toArray();
+    public function fetchEvents(array $fetchInfo): array
+    {
+        $meetings = $this->fetchMeetingsForCalendar($fetchInfo)->map(
+            fn(Meeting $event) => EventData::make()
+                ->id($event->id)
+                ->extraProperties([
+                    'model' => Meeting::class
+                ])
+                ->allDay(false)
+                ->borderColor("")
+                ->title($event->name)
+                ->url(MeetingsResource::getUrl('view', ['record' => $event]), true)
+                ->start($event->meeting_from)
+                ->end($event->meeting_to)
+        );
+
+        $events = $this->fetchEventsForCalendar($fetchInfo)->map(
+            fn(Event $event) => EventData::make()
+                ->id($event->id)
+                ->allDay(false)
+                ->extraProperties([
+                    'model' => Event::class
+                ])
+                ->borderColor("")
+                ->title($event->title)
+                ->start($event->start_at)
+                ->end($event->end_at)
+        );
+
+        return collect([$meetings, $events])->flatten(1)->toArray();
+    }
+
+    public function fetchMeetingsForCalendar(array $fetchInfo): array|\Illuminate\Database\Eloquent\Collection
+    {
+        return Meeting::query()
+            ->where('project_id', Filament::getTenant()->id)
+            ->where('meeting_from', '>=', $fetchInfo['start'])
+            ->where('meeting_to', '<=', $fetchInfo['end'])
+            ->get();
     }
 
     protected function headerActions(): array
@@ -111,6 +159,15 @@ class CalendarWidget extends FullCalendarWidget
                     }
                 )
         ];
+    }
+
+    public function form(Form $form): Form
+    {
+        if($this->model == Event::class) {
+            return parent::form($form);
+        }else if($this->model == Meeting::class) {
+            return MeetingsResource::form($form);
+        }
     }
 
     public function getFormSchema(): array
@@ -149,5 +206,7 @@ class CalendarWidget extends FullCalendarWidget
             RichEditor::make('description')
                 ->label('Opis')
         ];
+
     }
+
 }
