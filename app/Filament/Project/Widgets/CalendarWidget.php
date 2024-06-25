@@ -119,6 +119,7 @@ class CalendarWidget extends FullCalendarWidget
             fn(Event $event) => EventData::make()
                 ->id($event->id)
                 ->allDay(false)
+                ->backgroundColor($event->color ?? 'gray')
                 ->extraProperties([
                     'model' => Event::class
                 ])
