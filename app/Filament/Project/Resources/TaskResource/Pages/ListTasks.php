@@ -10,11 +10,14 @@ use App\Models\Task;
 use App\TaskStatus;
 use Filament\Actions;
 use Filament\Facades\Filament;
+use Filament\Forms\Get;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Component;
+use Livewire\Livewire;
 
 class ListTasks extends ListRecords
 {
@@ -22,18 +25,21 @@ class ListTasks extends ListRecords
 
     public function getTabs(): array
     {
-        $myTasks = Task::query()
-            ->whereHas('members', function ($query) {
-                return $query->where('user_id', auth()->id());
-            });
-
         $tabs = [
             'all' => Tab::make('Svi')
                 ->badge(Filament::getTenant()->tasks()->count())
         ];
 
         $tabs['my-tasks'] = Tab::make('Moji zadaci')
-            ->badge($myTasks->getQuery()->get()->count())
+            ->badge(function () {
+                return Task::query()
+                    ->whereHasMorph('related', [Project::class], function (Builder $query) {
+                        $query->where('id', Filament::getTenant()->id);
+                    })
+                    ->whereHas('members', function ($query) {
+                        return $query->where('user_id', auth()->id());
+                    })->count();
+            })
             ->modifyQueryUsing(function ($query) {
                 $query->whereHas('members', function ($query) {
                     return $query->where('user_id', auth()->id());

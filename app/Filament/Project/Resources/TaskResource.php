@@ -73,7 +73,7 @@ class TaskResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    protected static bool $shouldRegisterNavigation = false;
+    //protected static bool $shouldRegisterNavigation = false;
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {

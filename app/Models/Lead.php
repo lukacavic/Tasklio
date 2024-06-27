@@ -3,11 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Tags\HasTags;
 
-class Lead extends BaseModel
+class Lead extends BaseModel implements HasMedia
 {
-    use HasTags;
+    use HasTags, InteractsWithMedia, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->setDescriptionForEvent(function($name) {
+            if($name === 'created') {
+                return "Kreirano";
+            }
+
+            return $name;
+        });
+    }
 
     public function getDates()
     {
@@ -19,6 +35,11 @@ class Lead extends BaseModel
         return $this->first_name . ' ' . $this->last_name;
     }
 
+    public function documents(): MorphMany
+    {
+        return $this->morphMany(Document::class, 'related');
+    }
+
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
@@ -27,6 +48,11 @@ class Lead extends BaseModel
     public function status(): BelongsTo
     {
         return $this->belongsTo(LeadStatus::class);
+    }
+
+    public function notes(): MorphMany
+    {
+        return $this->morphMany(Note::class, 'related');
     }
 
     public function source(): BelongsTo

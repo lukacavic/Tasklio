@@ -3,12 +3,17 @@
 namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource;
+use App\Filament\Project\Resources\LeadResource\Pages\LeadDocuments;
+use App\Filament\Project\Resources\LeadResource\Pages\LeadNotes;
+use App\Filament\Project\Resources\LeadResource\Pages\LeadOverview;
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
 use App\Models\LeadSource;
 use App\Models\LeadStatus;
 use App\Models\Project;
 use App\Models\User;
+use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
+use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\SpatieTagsInput;
@@ -48,6 +53,73 @@ class LeadResource extends Resource
             'E' => $record->email,
             'M' => $record->mobile
         ];
+    }
+
+    public static function sidebar(Model $record): FilamentPageSidebar
+    {
+        return FilamentPageSidebar::make()
+            ->setTitle($record->fullName)
+            ->sidebarNavigation()
+            ->setDescription('POTENCIJALNI KLIJENT')
+            ->setNavigationItems([
+                PageNavigationItem::make('Pregled')
+                    ->icon('heroicon-o-information-circle')
+                    ->url(function () use ($record) {
+                        return static::getUrl('overview', ['record' => $record->id]);
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(LeadOverview::getRouteName());
+                    }),
+
+                PageNavigationItem::make('Dokumenti')
+                    ->icon('heroicon-o-paper-clip')
+                    ->badge(function () use ($record) {
+                        return $record->media->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(LeadDocuments::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('documents', ['record' => $record->id]);
+                    }),
+
+                PageNavigationItem::make('Napomene')
+                    ->icon('heroicon-o-pencil')
+                    ->badge(function () use ($record) {
+                        return $record->notes->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(LeadNotes::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('notes', ['record' => $record->id]);
+                    }),
+
+                /*PageNavigationItem::make('Kontakti')
+                    ->icon('heroicon-o-users')
+                    ->badge(function () use ($record) {
+                        return $record->contacts->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(ClientContacts::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('contacts', ['record' => $record->id]);
+                    }),
+
+
+                PageNavigationItem::make('Trezor')
+                    ->icon('heroicon-o-lock-open')
+                    ->badge(function () use ($record) {
+                        return $record->vaults->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\ClientVault::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('vaults', ['record' => $record->id]);
+                    }),*/
+            ]);
     }
 
     public static function form(Form $form): Form
@@ -188,6 +260,9 @@ class LeadResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(
+                fn(Model $record): string => LeadOverview::getUrl([$record->id]),
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('fullName')
                     ->label('Kontakt')
@@ -278,6 +353,9 @@ class LeadResource extends Resource
             'index' => ListLeads::route('/'),
             //'create' => CreateLead::route('/create'),
             //'edit' => EditLead::route('/{record}/edit'),
+            'overview' => LeadOverview::route('/{record}/overview'),
+            'documents' => LeadDocuments::route('/{record}/documents'),
+            'notes' => LeadNotes::route('/{record}/notes'),
         ];
     }
 }

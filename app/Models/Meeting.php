@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Facades\Filament;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,8 +20,8 @@ class Meeting extends BaseModel implements HasMedia
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->setDescriptionForEvent(function($name) {
-            if($name === 'created') {
+        return LogOptions::defaults()->setDescriptionForEvent(function ($name) {
+            if ($name === 'created') {
                 return "Kreirano";
             }
 
