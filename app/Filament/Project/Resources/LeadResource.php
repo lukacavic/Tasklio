@@ -64,7 +64,9 @@ class LeadResource extends Resource
         return FilamentPageSidebar::make()
             ->setTitle($record->fullName)
             ->sidebarNavigation()
-            ->setDescription('POTENCIJALNI KLIJENT')
+            ->setDescription(function(Lead $record) {
+                return $record->lost ? 'IZGUBLJEN':'POTENCIJALNI KLIJENT';
+            })
             ->setNavigationItems([
                 PageNavigationItem::make('Pregled')
                     ->icon('heroicon-o-information-circle')

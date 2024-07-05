@@ -5,6 +5,7 @@ namespace App\Filament\Project\Resources\LeadResource\Helpers\Actions;
 use App\Filament\Project\Resources\LeadResource;
 use App\Models\Lead;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
@@ -56,10 +57,10 @@ class HeaderActions
                 ->modalCancelAction(false)
                 ->modalHeading('Povijest aktivnosti')
                 ->slideOver()
-                ->infolist(function (Infolist $infolist) {
+                ->infolist(function (Infolist $infolist, Lead $record) {
                     return $infolist
                         ->state([
-                            'activities' => $this->getRecord()->activities()->with('causer')->latest()->get()
+                            'activities' => $record->activities()->with('causer')->latest()->get()
                         ])
                         ->schema([
                             ActivitySection::make('activities')
@@ -100,17 +101,43 @@ class HeaderActions
                         ]);
                 }),
 
-            EditAction::make()
-                ->hiddenLabel()
-                ->slideOver()
-                ->form(function(Form $form) {
-                    return LeadResource::form($form);
-                })
-                ->icon('heroicon-o-pencil'),
+            ActionGroup::make([
+                Action::make('mark-as-lost')
+                    ->label(function (Lead $record) {
+                        return $record->lost ? 'Nije izgubljen' : 'Označi kao izgubljen';
+                    })
+                    ->action(function (Lead $lead) {
+                        $logMessage = 'Označen kao ' . $lead->lost ? 'nije izgubljen' : 'izgubljen';
 
-            DeleteAction::make()
+                        $lead->addLog($logMessage);
+
+                        $lead->update([
+                            'lost' => !$lead->lost
+                        ]);
+
+                    })
+                    ->color(function (Lead $record) {
+                        return $record->lost ? Color::Green : Color::Red;
+                    })
+                    ->icon('heroicon-o-user-minus'),
+
+                EditAction::make()
+                    ->hiddenLabel()
+                    ->slideOver()
+                    ->form(function (Form $form) {
+                        return LeadResource::form($form);
+                    })
+                    ->icon('heroicon-o-pencil'),
+
+                DeleteAction::make()
+                    ->successRedirectUrl(LeadResource::getUrl('index'))
+                    ->hiddenLabel()
+                    ->icon('heroicon-o-trash'),
+            ])->button()
                 ->hiddenLabel()
-                ->icon('heroicon-o-trash'),
+                ->icon('heroicon-o-bars-4'),
+
+
         ];
     }
 }

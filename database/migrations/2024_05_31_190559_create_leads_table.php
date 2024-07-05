@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('mobile')->nullable();
+            $table->boolean('lost')->default(false);
             $table->string('company');
             $table->integer('project_id')->nullable();
             $table->integer('status_id')->nullable();
