@@ -221,6 +221,7 @@ class LeadResource extends Resource
                                     ->label('Izvor'),
 
                                 Forms\Components\Select::make('assigned_user_id')
+                                    ->default(auth()->user()->id)
                                     ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
                                     ->native(false)
                                     ->label('Djelatnik'),

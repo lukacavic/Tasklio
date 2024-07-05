@@ -146,28 +146,17 @@ class LeadTasks extends ManageRelatedRecords
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->label('Novi zadatak')
                     ->mutateFormDataUsing(function($data) {
                         $data['related_id'] = $this->record->id;
                         $data['related_type'] = Lead::class;
                         $data['project_id'] = Filament::getTenant()->id;
 
                         return $data;
-                    })
-                    ->modalHeading('Učitaj dokument')
-                    ->label('Učitaj dokument')
-                    ->icon('heroicon-o-paper-clip'),
+                    }),
             ])
             ->actions([
-                Tables\Actions\Action::make('download')
-                    ->hiddenLabel()
-                    ->icon('heroicon-o-arrow-down-tray')
-                    ->action(function(Document $record, $data) {
-                        $downloads = $record->getMedia();
-
-                        return MediaStream::create('attachments.zip')->addMedia($downloads);
-                    }),
                 Tables\Actions\EditAction::make()
-                    ->modalHeading('Izmjena dokumenta')
                     ->hiddenLabel(),
                 Tables\Actions\DeleteAction::make()
                     ->hiddenLabel(),

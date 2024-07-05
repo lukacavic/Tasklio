@@ -2,24 +2,15 @@
 
 namespace App\Filament\Project\Resources\LeadResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
 use App\Filament\Project\Resources\LeadResource;
-use App\Models\Client;
-use App\Models\Document;
 use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
@@ -34,11 +25,6 @@ class LeadNotes extends ManageRelatedRecords
     protected static ?string $navigationIcon = 'heroicon-o-pencil';
 
     protected static ?string $title = 'Napomene';
-
-    protected function getHeaderActions(): array
-    {
-        return LeadResource\Helpers\Actions\HeaderActions::getHeaderActions();
-    }
 
     public function form(Form $form): Form
     {
@@ -90,6 +76,7 @@ class LeadNotes extends ManageRelatedRecords
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->label('Dodaj')
                     ->modalHeading('Nova napomena'),
             ])
             ->actions([
@@ -108,5 +95,10 @@ class LeadNotes extends ManageRelatedRecords
                     Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return LeadResource\Helpers\Actions\HeaderActions::getHeaderActions();
     }
 }

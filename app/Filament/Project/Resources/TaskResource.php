@@ -65,15 +65,15 @@ class TaskResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-check-circle';
 
-    protected static ?string $label = 'Zadatak';
+    protected static ?string $label = 'zadatak';
 
-    protected static ?string $pluralModelLabel = 'Zadaci';
+    protected static ?string $pluralModelLabel = 'zadaci';
 
     protected static ?string $navigationLabel = 'Zadaci';
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    //protected static bool $shouldRegisterNavigation = false;
+    protected static ?string $modelLabel = 'zadatak';
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
