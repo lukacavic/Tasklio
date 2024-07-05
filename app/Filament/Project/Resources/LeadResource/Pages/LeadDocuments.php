@@ -2,20 +2,12 @@
 
 namespace App\Filament\Project\Resources\LeadResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
-use App\Filament\App\Resources\ProjectResource;
 use App\Filament\Project\Resources\LeadResource;
 use App\Models\Document;
-use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Spatie\MediaLibrary\Support\MediaStream;
@@ -81,7 +73,7 @@ class LeadDocuments extends ManageRelatedRecords
                 Tables\Actions\Action::make('download')
                     ->hiddenLabel()
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->action(function(Document $record, $data) {
+                    ->action(function (Document $record, $data) {
                         $downloads = $record->getMedia();
 
                         return MediaStream::create('attachments.zip')->addMedia($downloads);
@@ -101,5 +93,10 @@ class LeadDocuments extends ManageRelatedRecords
                     Tables\Actions\ForceDeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return LeadResource\Helpers\Actions\HeaderActions::getHeaderActions();
     }
 }

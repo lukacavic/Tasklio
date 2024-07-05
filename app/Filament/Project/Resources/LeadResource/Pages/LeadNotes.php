@@ -35,6 +35,11 @@ class LeadNotes extends ManageRelatedRecords
 
     protected static ?string $title = 'Napomene';
 
+    protected function getHeaderActions(): array
+    {
+        return LeadResource\Helpers\Actions\HeaderActions::getHeaderActions();
+    }
+
     public function form(Form $form): Form
     {
         return $form
