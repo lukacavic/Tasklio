@@ -15,6 +15,7 @@
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "filament/spatie-laravel-tags-plugin": "^3.2",
+        "ibrahimbougaoua/filament-sort-order": "^1.1",
         "jaocero/activity-timeline": "^1.2",
         "jeffgreco13/filament-breezy": "^2.4",
         "laravel/framework": "^11.0",

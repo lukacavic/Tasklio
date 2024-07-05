@@ -4,6 +4,7 @@ namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Clusters\SettingsCluster;
 use App\Filament\Project\Resources\LeadStatusResource\Pages\ManageLeadStatuses;
+use App\Models\Lead;
 use App\Models\LeadStatus;
 use Filament\Forms;
 use Filament\Forms\Components\ColorPicker;
@@ -15,6 +16,8 @@ use Filament\Tables;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use IbrahimBougaoua\FilamentSortOrder\Actions\DownStepAction;
+use IbrahimBougaoua\FilamentSortOrder\Actions\UpStepAction;
 
 class LeadStatusResource extends Resource
 {
@@ -40,7 +43,7 @@ class LeadStatusResource extends Resource
                         ColorPicker::make('color')
                             ->label('Boja')
                             ->required(),
-                        TextInput::make('order')
+                        TextInput::make('sort_order')
                             ->label('Poredak')
                             ->numeric()
                             ->required(),
@@ -51,17 +54,28 @@ class LeadStatusResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('sort_order', 'asc')
             ->columns([
-                TextColumn::make('name')->label('Naziv'),
+                TextColumn::make('name')->label('Naziv')
+                    ->description(function (LeadStatus $record) {
+                        return 'Ukupno: ' . $record->leads->count() . ' pot. klijenata';
+                    }),
                 ColorColumn::make('color')->label('Boja'),
-                TextColumn::make('order')->label('Poredak')
             ])
             ->filters([
                 //
             ])
             ->actions([
+                DownStepAction::make()->hiddenLabel()
+                ->visible(function(LeadStatus $record) {
+                    return !$record->is_client;
+                }),
+                UpStepAction::make()->hiddenLabel(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+                    ->visible(function (LeadStatus $record) {
+                        return !$record->is_client;
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

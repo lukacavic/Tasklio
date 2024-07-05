@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('color');
-            $table->integer('order');
+            $table->integer('sort_order')->default(1);
             $table->boolean('is_client')->default(false);
             $table->boolean('is_created')->default(false);
             $table->integer('project_id')->unsigned()->nullable();
