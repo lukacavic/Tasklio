@@ -29,6 +29,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use TomatoPHP\FilamentMediaManager\Form\MediaManagerInput;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
@@ -354,6 +355,7 @@ class LeadResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make(),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

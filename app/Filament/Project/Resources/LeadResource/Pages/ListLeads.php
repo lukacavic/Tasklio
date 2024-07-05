@@ -11,6 +11,7 @@ use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 
 class ListLeads extends ListRecords
 {
@@ -26,11 +27,11 @@ class ListLeads extends ListRecords
 
         $tabs['my-leads'] = Tab::make('Moji leadovi')
             ->badge($myLeads->count())
-            ->modifyQueryUsing(function ($query)  use($myLeads) {
+            ->modifyQueryUsing(function ($query) use ($myLeads) {
                 return $myLeads;
             });
 
-        $leadStatuses = Filament::getTenant()->leadStatuses()->orderBy('order', 'asc')
+        $leadStatuses = Filament::getTenant()->leadStatuses()
             ->withCount('leads')
             ->get();
 
@@ -55,6 +56,9 @@ class ListLeads extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            \pxlrbt\FilamentExcel\Actions\Pages\ExportAction::make('export')
+                ->hiddenLabel()
+                ->tooltip('Izvoz u Excel'),
             Actions\Action::make('kanban')
                 ->hiddenLabel()
                 ->icon('heroicon-o-rectangle-group')
