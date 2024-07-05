@@ -45,6 +45,11 @@ class Lead extends BaseModel implements HasMedia
         return $this->belongsTo(Project::class);
     }
 
+    public function tasks(): MorphMany
+    {
+        return $this->morphMany(Task::class, 'related');
+    }
+
     public function status(): BelongsTo
     {
         return $this->belongsTo(LeadStatus::class);

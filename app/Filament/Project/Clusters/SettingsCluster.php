@@ -10,5 +10,5 @@ class SettingsCluster extends Cluster
 
     protected static ?string $navigationLabel = 'Postavke';
 
-    protected static ?int $navigationSort = 99;
+    protected static ?int $navigationSort = 9999;
 }

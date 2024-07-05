@@ -6,6 +6,7 @@ use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource;
 use App\Filament\Project\Resources\LeadResource\Pages\LeadDocuments;
 use App\Filament\Project\Resources\LeadResource\Pages\LeadNotes;
 use App\Filament\Project\Resources\LeadResource\Pages\LeadOverview;
+use App\Filament\Project\Resources\LeadResource\Pages\LeadTasks;
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
 use App\Models\LeadSource;
@@ -28,6 +29,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
+use TomatoPHP\FilamentMediaManager\Form\MediaManagerInput;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
@@ -45,6 +47,8 @@ class LeadResource extends Resource
     protected static ?string $pluralModelLabel = 'Potencijalni klijenti';
 
     protected static ?string $recordTitleAttribute = 'company';
+
+    protected static ?string $navigationGroup = 'CRM';
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
@@ -93,6 +97,18 @@ class LeadResource extends Resource
                     })
                     ->url(function () use ($record) {
                         return static::getUrl('notes', ['record' => $record->id]);
+                    }),
+
+                PageNavigationItem::make('Zadaci')
+                    ->icon('heroicon-o-check-circle')
+                    ->badge(function () use ($record) {
+                        return $record->tasks->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(LeadTasks::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('tasks', ['record' => $record->id]);
                     }),
 
                 /*PageNavigationItem::make('Kontakti')
@@ -356,6 +372,7 @@ class LeadResource extends Resource
             'overview' => LeadOverview::route('/{record}/overview'),
             'documents' => LeadDocuments::route('/{record}/documents'),
             'notes' => LeadNotes::route('/{record}/notes'),
+            'tasks' => LeadTasks::route('/{record}/tasks'),
         ];
     }
 }

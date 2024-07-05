@@ -20,6 +20,8 @@ class CalendarPage extends Page
 
     protected static ?string $title = 'Kalendar';
 
+    protected static ?string $navigationGroup = 'CRM';
+
     protected function getHeaderWidgets(): array
     {
         return [

@@ -26,6 +26,16 @@ class Client extends BaseModel implements HasMedia
         });
     }
 
+    public function project()
+    {
+        return $this->projects();
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'link_project_clients');
+    }
+
     public function vaults(): MorphMany
     {
         return $this->morphMany(Vault::class, 'related');

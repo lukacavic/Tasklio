@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->smallInteger('user_id');
             $table->morphs('related');
+            $table->integer('project_id')->nullable();
             $table->smallInteger('priority_id');
             $table->smallInteger('status_id');
             $table->timestamp('completed_at')->nullable();

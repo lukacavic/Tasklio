@@ -9,8 +9,5 @@ class ViewTask extends ViewRecord
 {
     protected static string $resource = TaskResource::class;
 
-    public function getView(): string
-    {
-        return "filament.app.resources.task-resource.view-task";
-    }
+
 }

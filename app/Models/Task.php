@@ -52,9 +52,9 @@ class Task extends BaseModel implements HasMedia
         return $this->belongsToMany(User::class, 'link_task_users');
     }
 
-    public function project(): MorphTo
+    public function project(): BelongsTo
     {
-        return $this->related();
+        return $this->belongsTo(Project::class);
     }
 
     public function related(): MorphTo
@@ -66,8 +66,6 @@ class Task extends BaseModel implements HasMedia
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-
 
     public function updateTaskStatus($statusId): void
     {

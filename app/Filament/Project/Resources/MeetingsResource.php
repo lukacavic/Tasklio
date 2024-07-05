@@ -32,6 +32,8 @@ class MeetingsResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationGroup = 'CRM';
+
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
         return 'Sastanci';

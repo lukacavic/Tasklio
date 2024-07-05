@@ -40,9 +40,9 @@ class Project extends Model implements HasCurrentTenantLabel
         return $this->morphMany(Event::class, 'related');
     }
 
-    public function tasks(): MorphMany
+    public function tasks(): HasMany
     {
-        return $this->morphMany(Task::class, 'related');
+        return $this->hasMany(Task::class);
     }
 
     public function clients(): BelongsToMany
