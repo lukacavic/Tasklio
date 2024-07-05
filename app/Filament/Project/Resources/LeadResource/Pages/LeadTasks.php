@@ -8,7 +8,9 @@ use App\Filament\Project\Resources\LeadResource;
 use App\Models\Document;
 use App\Models\Lead;
 use App\Models\Note;
+use App\Models\Task;
 use App\Models\User;
+use App\TaskStatus;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -23,7 +25,11 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\SpatieTagsColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\Support\MediaStream;
 
 class LeadTasks extends ManageRelatedRecords
@@ -87,12 +93,51 @@ class LeadTasks extends ManageRelatedRecords
     {
         return $table
             ->recordTitleAttribute('name')
+            ->emptyStateHeading('Trenutno nema upisanih zadataka')
             ->columns([
-                Tables\Columns\TextColumn::make('user.fullName')
-                    ->label('Dodao'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Vrijeme kreiranja')
-                    ->since(),
+                TextColumn::make('title')
+                    ->description(function (Task $record) {
+                        return strip_tags(Str::limit($record->description, 40));
+                    })
+                    ->tooltip(function (Task $record) {
+                        return strip_tags($record->description);
+                    })
+                    ->label('Naziv')
+                    ->searchable(),
+
+                TextColumn::make('creator.fullName')
+                    ->label('Dodao')
+                    ->sortable(),
+
+                TextColumn::make('members.first_name')
+                    ->label('Djelatnici')
+                    ->sortable(),
+
+                SelectColumn::make('status_id')
+                    ->label('Status')
+                    ->options(TaskStatus::class)
+                    ->sortable(),
+                SpatieTagsColumn::make('tags')->label('Oznake'),
+
+                TextColumn::make('deadline_at')
+                    ->label('Rok završetka')
+                    ->dateTime()
+                    ->sortable(),
+
+                TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
