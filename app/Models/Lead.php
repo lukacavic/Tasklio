@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Spatie\Activitylog\LogOptions;
@@ -16,8 +17,8 @@ class Lead extends BaseModel implements HasMedia
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->setDescriptionForEvent(function($name) {
-            if($name === 'created') {
+        return LogOptions::defaults()->setDescriptionForEvent(function ($name) {
+            if ($name === 'created') {
                 return "Kreirano";
             }
 
@@ -68,5 +69,40 @@ class Lead extends BaseModel implements HasMedia
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    public function convertToClient(array $data): void
+    {
+        //kreiraj kompaniju
+        $client = Filament::getTenant()->clients()->create([
+            'name' => $data['company'],
+            'country' => $data['country'],
+            'phone' => $data['phone'],
+            'website' => $data['website'],
+        ]);
+
+        $client->contacts()->create([
+            'full_name' => $data['first_name'] . ' ' . $data['last_name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'position' => $data['position'],
+        ]);
+
+        $this->update([
+            'client_id' => $client->id,
+            'client_converted_at' => now(),
+            'status_id' => Filament::getTenant()->leadStatuses()->where('is_client', true)->get()->first()->id,
+        ]);
+
+        //Update lead notes and transfer to client
+        if ($data['transfer_notes']) {
+            Note::where([
+                'related_type' => Lead::class,
+                'related_id' => $this->id,
+            ])->update([
+                'related_type' => Client::class,
+                'related_id' => $client->id,
+            ]);
+        }
     }
 }

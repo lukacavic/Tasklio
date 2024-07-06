@@ -194,7 +194,7 @@ class LeadResource extends Resource
                                     ->unique('leads', 'email', ignoreRecord: true, modifyRuleUsing: function ($rule) {
                                         return $rule->where('organisation_id', auth()->user()->organisation_id);
                                     })
-                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, PhoneInput $component) {
+                                    ->afterStateUpdated(function (Forms\Contracts\HasForms $livewire, TextInput $component) {
                                         $livewire->validateOnly($component->getStatePath());
                                     })
                                     ->label('Email')
@@ -312,6 +312,9 @@ class LeadResource extends Resource
                 Tables\Columns\SelectColumn::make('status_id')
                     ->options(Filament::getTenant()->leadStatuses()->get()->pluck('name', 'id'))
                     ->searchable()
+                    ->disabled(function(Lead $record) {
+                        return $record->client_id != null;
+                    })
                     ->rules(['required'])
                     ->label('Status'),
 
@@ -355,7 +358,7 @@ class LeadResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    ExportBulkAction::make(),
+                    ExportBulkAction::make()->tooltip('Izvoz u Excel'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);

@@ -7,7 +7,9 @@ use App\Filament\App\Resources\ClientResource\Pages\EditClient;
 use App\Filament\Project\Resources\LeadResource;
 use App\Models\Client;
 use App\Models\Lead;
+use Awcodes\Shout\Components\Shout;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use CodeWithDennis\SimpleAlert\SimpleAlert;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -29,7 +31,7 @@ class LeadOverview extends Page
 
     protected static ?string $title = 'Pregled';
 
-    public function mount(int | string $record): void
+    public function mount(int|string $record): void
     {
         $this->record = $this->resolveRecord($record);
     }
@@ -42,4 +44,5 @@ class LeadOverview extends Page
     {
         return LeadResource\Helpers\Actions\HeaderActions::getHeaderActions();
     }
+
 }

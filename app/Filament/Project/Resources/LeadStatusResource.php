@@ -45,6 +45,9 @@ class LeadStatusResource extends Resource
                             ->required(),
                         TextInput::make('sort_order')
                             ->label('Poredak')
+                            ->visible(function (LeadStatus $record) {
+                                return !$record->is_client;
+                            })
                             ->numeric()
                             ->required(),
                     ]),
@@ -67,10 +70,12 @@ class LeadStatusResource extends Resource
             ])
             ->actions([
                 DownStepAction::make()->hiddenLabel()
-                ->visible(function(LeadStatus $record) {
+                    ->visible(function (LeadStatus $record) {
+                        return !$record->is_client;
+                    }),
+                UpStepAction::make()->hiddenLabel()->visible(function (LeadStatus $record) {
                     return !$record->is_client;
                 }),
-                UpStepAction::make()->hiddenLabel(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->visible(function (LeadStatus $record) {

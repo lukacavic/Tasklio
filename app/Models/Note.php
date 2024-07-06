@@ -13,8 +13,6 @@ class Note extends BaseModel implements HasMedia
 {
     use InteractsWithMedia;
 
-
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');

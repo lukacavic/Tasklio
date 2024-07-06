@@ -8,7 +8,12 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Infolists\Infolist;
 use Filament\Support\Colors\Color;
@@ -17,12 +22,79 @@ use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;
 use JaOcero\ActivityTimeline\Components\ActivitySection;
 use JaOcero\ActivityTimeline\Components\ActivityTitle;
+use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class HeaderActions
 {
     public static function getHeaderActions(): array
     {
         return [
+            Action::make('convert-to-client')
+                ->label('Prebaci u klijenta')
+                ->visible(function (Lead $record) {
+                    return $record->client_id == null;
+                })
+                ->icon('heroicon-o-user-plus')
+                ->color(Color::Green)
+                ->form([
+                    Grid::make(2)->schema([
+                        TextInput::make('first_name')
+                            ->label('Ime')
+                            ->required(),
+
+                        TextInput::make('last_name')
+                            ->label('Prezime')
+                            ->required(),
+
+                        TextInput::make('position')
+                            ->label('Pozicija'),
+
+                        TextInput::make('email')
+                            ->label('Email')
+                            ->required()
+                            ->prefixIcon('heroicon-o-at-symbol')
+                            ->email(),
+
+                        PhoneInput::make('phone')
+                            ->label('Telefon'),
+
+                        Country::make('country')
+                            ->native(false)
+                            ->label('Država'),
+
+                        TextInput::make('company')
+                            ->label('Tvrtka')
+                            ->required(),
+
+                        TextInput::make('website')
+                            ->label('Web stranica')
+                            ->prefixIcon('heroicon-o-globe'),
+
+                        Placeholder::make('divider')
+                            ->columnSpanFull()
+                            ->hiddenLabel(),
+
+                        Toggle::make('transfer_notes')
+                            ->label('Prebaci upisane napomene na novog klijenta')
+                    ])
+                ])
+                ->fillForm(function(array $data, Lead $record){
+                    $data['first_name'] = $record->first_name ?? null;
+                    $data['last_name'] = $record->last_name ?? null;
+                    $data['email'] = $record->email ?? null;
+                    $data['phone'] = $record->phone ?? null;
+                    $data['position'] = $record->position ?? null;
+                    $data['company'] = $record->company ?? null;
+                    $data['country'] = $record->country ?? null;
+                    $data['website'] = $record->website ?? null;
+
+                    return $data;
+                })
+                ->action(function (array $data, Lead $record) {
+                    $record->convertToClient($data);
+                }),
+
             Action::make('log_activity')
                 ->hiddenLabel()
                 ->icon('heroicon-o-plus-circle')

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('mobile')->nullable();
             $table->boolean('lost')->default(false);
             $table->string('company');
+            $table->integer('client_id')->nullable();
+            $table->timestamp('client_converted_at')->nullable();
             $table->integer('project_id')->nullable();
             $table->integer('status_id')->nullable();
             $table->integer('source_id')->nullable();
