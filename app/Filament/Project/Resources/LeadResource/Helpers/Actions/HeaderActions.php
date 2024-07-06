@@ -69,7 +69,7 @@ class HeaderActions
 
                         TextInput::make('website')
                             ->label('Web stranica')
-                            ->prefixIcon('heroicon-o-globe'),
+                            ->prefixIcon('heroicon-o-globe-alt'),
 
                         Placeholder::make('divider')
                             ->columnSpanFull()
