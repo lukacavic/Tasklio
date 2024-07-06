@@ -88,6 +88,8 @@ class Lead extends BaseModel implements HasMedia
             'position' => $data['position'],
         ]);
 
+        $client->addLog('Klijent kreiran od potencijalnog klijenta');
+
         $this->update([
             'client_id' => $client->id,
             'client_converted_at' => now(),
@@ -104,5 +106,7 @@ class Lead extends BaseModel implements HasMedia
                 'related_id' => $client->id,
             ]);
         }
+
+        $this->addLog('Potencijalni klijent prebačen u klijenta.');
     }
 }

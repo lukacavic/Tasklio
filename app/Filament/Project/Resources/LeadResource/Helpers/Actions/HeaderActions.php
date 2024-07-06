@@ -79,6 +79,7 @@ class HeaderActions
                             ->label('Prebaci upisane napomene na novog klijenta')
                     ])
                 ])
+                ->databaseTransaction()
                 ->fillForm(function(array $data, Lead $record){
                     $data['first_name'] = $record->first_name ?? null;
                     $data['last_name'] = $record->last_name ?? null;

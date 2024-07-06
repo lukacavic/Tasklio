@@ -18,6 +18,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use IbrahimBougaoua\FilamentSortOrder\Actions\DownStepAction;
 use IbrahimBougaoua\FilamentSortOrder\Actions\UpStepAction;
+use Illuminate\Database\Eloquent\Model;
 
 class LeadStatusResource extends Resource
 {
@@ -45,8 +46,8 @@ class LeadStatusResource extends Resource
                             ->required(),
                         TextInput::make('sort_order')
                             ->label('Poredak')
-                            ->visible(function (LeadStatus $record) {
-                                return !$record->is_client;
+                            ->visible(function ( $record) {
+                                return $record == null  || !$record->is_client;
                             })
                             ->numeric()
                             ->required(),
