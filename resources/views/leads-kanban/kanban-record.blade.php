@@ -29,6 +29,12 @@
         {{ strip_tags($record->description) }}
     </div>
 
+    @if($record->source)
+        <div class="text-xs text-gray-400 border-l-4 pl-2 mt-2 mb-2">
+            <b>Izvor: </b>{{ strip_tags($record->source->name) }}
+        </div>
+    @endif
+
     @if($record->assignedUser)
         <div class="flex hover:-space-x-1 -space-x-3">
             @if($record->assignedUser->avatar_url)
