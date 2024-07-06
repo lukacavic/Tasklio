@@ -146,7 +146,7 @@ class LeadTasks extends ManageRelatedRecords
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Novi zadatak')
+                    ->label('Dodaj')
                     ->mutateFormDataUsing(function($data) {
                         $data['related_id'] = $this->record->id;
                         $data['related_type'] = Lead::class;

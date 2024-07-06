@@ -34,7 +34,7 @@ class LeadNotes extends ManageRelatedRecords
                     ->label('Naslov')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('priority')
+                Forms\Components\Toggle::make('important')
                     ->label('Bitna napomena')
                     ->inline()
                     ->default(false)
@@ -52,6 +52,7 @@ class LeadNotes extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
+            ->defaultSort('important', 'DESC')
             ->emptyStateHeading('Nema učitanih napomena')
             ->emptyStateDescription('Učitajte novu za početak')
             ->recordTitleAttribute('name')
