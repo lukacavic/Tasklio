@@ -60,10 +60,11 @@ class LeadsKanbanBoard extends KanbanBoard
 
     protected function statuses(): \Illuminate\Support\Collection
     {
-        return Filament::getTenant()->leadStatuses()->get(['id', 'name'])->map(function ($leadStatus) {
+        return Filament::getTenant()->leadStatuses()->get(['id', 'name','color'])->map(function ($leadStatus) {
             return [
                 'id' => $leadStatus->id,
                 'title' => $leadStatus->name,
+                'color' => $leadStatus->color,
             ];
         });
     }
