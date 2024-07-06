@@ -12,6 +12,8 @@ use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 
@@ -33,9 +35,27 @@ class LeadsKanbanBoard extends KanbanBoard
 
     protected static string $recordView = 'leads-kanban.kanban-record';
 
+    public function form(Form $form): Form
+    {
+        return LeadResource::form($form)
+            ->statePath('editModalFormState')
+            ->model($this->editModalRecordId ? static::$model::find($this->editModalRecordId) : static::$model);
+    }
+
     public function onStatusChanged(int $recordId, string $status, array $fromOrderedIds, array $toOrderedIds): void
     {
-        Lead::find($recordId)->update(['status_id' => $status]);
+        $lead = Lead::find($recordId);
+
+        if ($lead->client_id != null) {
+            Notification::make('alert')
+                ->title('Upozorenje')
+                ->body('Lead je već pretvoren u klijenta, promjena statusa nije moguća.')
+                ->send();
+
+            return;
+        }
+
+        $lead->update(['status_id' => $status]);
     }
 
     protected function statuses(): \Illuminate\Support\Collection
