@@ -6,6 +6,7 @@ use App\Filament\App\Resources\ClientResource\Pages\EditClient;
 use App\Filament\Project\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\TaskCompleted;
 use App\TaskPriority;
 use App\TaskStatus;
 use Filament\Actions;
@@ -45,10 +46,22 @@ class ViewTask extends ViewRecord
     protected function getActions(): array
     {
         return [
-            $this->getActivityLogActions(),
-            $this->getChangeAssignedUsersAction(),
+
             $this->getMarkAsCompletedAction(),
             $this->getSwitchStatusActions(),
+            ActionGroup::make([
+                $this->getActivityLogActions(),
+                $this->getChangeAssignedUsersAction(),
+                Actions\EditAction::make()
+                    ->icon('heroicon-o-pencil')
+                    ->hiddenLabel(),
+                Actions\DeleteAction::make()
+                ->icon('heroicon-o-trash')
+                ->hiddenLabel(),
+            ])
+            ->hiddenLabel()
+            ->button()
+
         ];
     }
 
@@ -109,7 +122,7 @@ class ViewTask extends ViewRecord
                     RepeatableEntry::make('media')
                         ->label('Privitci')
                         ->hintActions([
-                            Action::make('upload')
+                            /*Action::make('upload')
                                 ->label('Učitaj privitke')
                                 ->form([
                                     SpatieMediaLibraryFileUpload::make('attachments')
@@ -122,7 +135,7 @@ class ViewTask extends ViewRecord
                                 ->action(function (Task $record, array $data, Action $action) {
                                     dd($action->getFormData());
                                 })
-                                ->icon('heroicon-m-paper-clip'),
+                                ->icon('heroicon-m-paper-clip'),*/
 
                             Action::make('download')
                                 ->action(function (Task $record) {
@@ -195,8 +208,13 @@ class ViewTask extends ViewRecord
             ->icon('heroicon-o-check')
             ->action(function (Task $record) {
                 $record->update([
-                    'status_id' => TaskStatus::Completed
+                    'status_id' => TaskStatus::Completed,
+                    'completed_at' => now()
                 ]);
+
+                $record->addLog('Označio zadatak riješenim');
+
+                \Illuminate\Support\Facades\Notification::send($record->usersToNotify(), new TaskCompleted($record));
 
                 $this->getRecord()->refresh();
             });
@@ -205,6 +223,7 @@ class ViewTask extends ViewRecord
     private function getChangeAssignedUsersAction(): Actions\Action
     {
         return Actions\Action::make('updatTaskUsers')
+            ->label('Promjena djelatnika')
             ->visible(function (Task $record) {
                 return $record->status_id != TaskStatus::Completed->value;
             })
@@ -251,6 +270,7 @@ class ViewTask extends ViewRecord
     {
         return Actions\Action::make('activity_log')
             ->hiddenLabel()
+            ->label('Log aktivnosti')
             ->icon('heroicon-o-information-circle')
             ->modalSubmitAction(false)
             ->color(Color::Cyan)

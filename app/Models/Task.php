@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\TaskStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -74,5 +75,20 @@ class Task extends BaseModel implements HasMedia
         ]);
 
         $this->addLog('Promjenjen status zadatka na: ' . TaskStatus::from($statusId)->getLabel());
+    }
+
+    public function usersToNotify(): \Illuminate\Support\Collection
+    {
+        $users = collect();
+
+        foreach ($this->members as $member) {
+            $users->add($member);
+        }
+
+        $users->add($this->creator);
+
+        return $users->filter(function (User $user, int $key) {
+            return $user->id != auth()->id();
+        });
     }
 }
