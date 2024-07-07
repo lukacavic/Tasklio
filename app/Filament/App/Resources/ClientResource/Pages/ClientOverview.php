@@ -35,13 +35,6 @@ class ClientOverview extends Page
         $this->record = $this->resolveRecord($record);
     }
 
-    protected function getHeaderWidgets(): array
-    {
-        return [
-
-        ];
-    }
-
     protected function getHeaderActions(): array
     {
         return [

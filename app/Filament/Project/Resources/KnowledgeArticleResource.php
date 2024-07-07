@@ -38,6 +38,16 @@ class KnowledgeArticleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return static::getUrl('view', ['record' => $record]);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'category.title', 'content'];
+    }
+
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
         return 'Baza znanja';

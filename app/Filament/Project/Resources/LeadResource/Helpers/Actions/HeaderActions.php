@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Resources\LeadResource\Helpers\Actions;
 
 use App\Filament\Project\Resources\LeadResource;
+use App\Filament\Shared\Actions\SendEmailAction;
 use App\Models\Lead;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -80,7 +81,7 @@ class HeaderActions
                     ])
                 ])
                 ->databaseTransaction()
-                ->fillForm(function(array $data, Lead $record){
+                ->fillForm(function (array $data, Lead $record) {
                     $data['first_name'] = $record->first_name ?? null;
                     $data['last_name'] = $record->last_name ?? null;
                     $data['email'] = $record->email ?? null;
@@ -175,6 +176,11 @@ class HeaderActions
                 }),
 
             ActionGroup::make([
+                SendEmailAction::make('send-email')->mutateFormDataUsing(function($data){
+                    $data['receivers'] = ['marko'];
+
+                    return $data;
+                }),
                 Action::make('mark-as-lost')
                     ->label(function (Lead $record) {
                         return $record->lost ? 'Nije izgubljen' : 'Označi kao izgubljen';

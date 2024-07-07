@@ -51,6 +51,11 @@ class LeadResource extends Resource
 
     protected static ?string $navigationGroup = 'CRM';
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['company', 'first_name', 'last_name', 'email'];
+    }
+
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
@@ -65,8 +70,8 @@ class LeadResource extends Resource
         return FilamentPageSidebar::make()
             ->setTitle($record->fullName)
             ->sidebarNavigation()
-            ->setDescription(function(Lead $record) {
-                return $record->lost ? 'IZGUBLJEN':'POTENCIJALNI KLIJENT';
+            ->setDescription(function (Lead $record) {
+                return $record->lost ? 'IZGUBLJEN' : 'POTENCIJALNI KLIJENT';
             })
             ->setNavigationItems([
                 PageNavigationItem::make('Pregled')
@@ -312,7 +317,7 @@ class LeadResource extends Resource
                 Tables\Columns\SelectColumn::make('status_id')
                     ->options(Filament::getTenant()->leadStatuses()->get()->pluck('name', 'id'))
                     ->searchable()
-                    ->disabled(function(Lead $record) {
+                    ->disabled(function (Lead $record) {
                         return $record->client_id != null;
                     })
                     ->rules(['required'])

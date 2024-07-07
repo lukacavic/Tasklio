@@ -36,13 +36,18 @@ class MeetingsResource extends Resource
 
     public static function getGlobalSearchResultTitle(Model $record): string|Htmlable
     {
-        return 'Sastanci';
+        return 'Sastanak';
+    }
+
+    public static function getGlobalSearchResultUrl(Model $record): string
+    {
+        return static::getUrl('view', ['record' => $record]);
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         return [
-            'Naslov' => $record->title,
+            'Opis' => $record->description,
         ];
     }
     public static function form(Form $form): Form

@@ -66,8 +66,7 @@ class LeadDocuments extends ManageRelatedRecords
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->modalHeading('Učitaj dokument')
-                    ->label('Dodaj')
-                    ->icon('heroicon-o-paper-clip'),
+                    ->label('Dodaj'),
             ])
             ->actions([
                 Tables\Actions\Action::make('download')

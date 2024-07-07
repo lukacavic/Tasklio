@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
 
 class ClientsResource extends Resource
@@ -24,6 +25,13 @@ class ClientsResource extends Resource
     protected static ?string $pluralLabel = 'klijenti';
 
     protected static ?string $navigationGroup = 'CRM';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name'];
+    }
 
     public static function form(Form $form): Form
     {
