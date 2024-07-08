@@ -15,7 +15,6 @@ use Awcodes\TableRepeater\Header;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Livewire;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
@@ -47,7 +46,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use Livewire\Component;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class TaskResource extends Resource
@@ -102,17 +100,20 @@ class TaskResource extends Resource
 
                 Select::make('related_id')
                     ->label('Vezani modul')
+                    ->required(function(Get $get) {
+                        return $get('related_type') != null;
+                    })
                     ->native(false)
                     ->options(function (Get $get) {
-                        if($get('related_type') == Client::class) {
-                            return Client::whereHas('projects', function($query){
+                        if ($get('related_type') == Client::class) {
+                            return Client::whereHas('projects', function ($query) {
                                 return $query->where('project_id', Filament::getTenant()->id);
                             })->pluck('name', 'id');
-                        }else if($get('related_type') == Lead::class) {
-                            return Lead::where('project_id',Filament::getTenant()->id)->get()->pluck('company', 'id');
+                        } else if ($get('related_type') == Lead::class) {
+                            return Lead::where('project_id', Filament::getTenant()->id)->get()->pluck('company', 'id');
                         }
 
-
+                        return collect();
                     }),
 
                 Select::make('members')
