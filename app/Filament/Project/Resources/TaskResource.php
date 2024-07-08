@@ -41,9 +41,11 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
@@ -271,6 +273,13 @@ class TaskResource extends Resource
                     ->native(false)
                     ->multiple()
                     ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id')),
+
+                Filter::make('has_media')
+                    ->label('Sadrži privitak')
+                    ->baseQuery(function($query) {
+                        return $query->whereHas('media');
+                    })
+                    ->toggle()
             ])
             ->actions([
                 ViewAction::make()->hiddenLabel(),
