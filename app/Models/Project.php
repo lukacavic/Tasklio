@@ -45,6 +45,11 @@ class Project extends Model implements HasCurrentTenantLabel
         return $this->hasMany(Task::class);
     }
 
+    public function projectMilestones(): HasMany
+    {
+        return $this->hasMany(ProjectMilestone::class);
+    }
+
     public function clients(): BelongsToMany
     {
         return $this->belongsToMany(Client::class, 'link_project_clients');

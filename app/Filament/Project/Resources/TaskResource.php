@@ -100,7 +100,7 @@ class TaskResource extends Resource
 
                 Select::make('related_id')
                     ->label('Vezani modul')
-                    ->required(function(Get $get) {
+                    ->required(function (Get $get) {
                         return $get('related_type') != null;
                     })
                     ->native(false)
@@ -115,6 +115,13 @@ class TaskResource extends Resource
 
                         return collect();
                     }),
+
+                Select::make('project_milestone_id')
+                    ->label('Prekretnica')
+                    ->native(false)
+                    ->options(Filament::getTenant()->projectMilestones()->current()->orWhere(function ($query) {
+                        $query->future();
+                    })->get()->pluck('name', 'id')),
 
                 Select::make('members')
                     ->label('Djelatnici')
