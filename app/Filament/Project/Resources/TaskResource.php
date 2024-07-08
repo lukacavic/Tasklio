@@ -41,6 +41,7 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -259,7 +260,17 @@ class TaskResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TrashedFilter::make()
+                SelectFilter::make('project_milestone_id')
+                    ->label('Prekretnica (Milestone)')
+                    ->native(false)
+                    ->multiple()
+                    ->options(Filament::getTenant()->projectMilestones()->get()->pluck('name', 'id')),
+
+                SelectFilter::make('user_id')
+                    ->label('Kreirao')
+                    ->native(false)
+                    ->multiple()
+                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id')),
             ])
             ->actions([
                 ViewAction::make()->hiddenLabel(),
