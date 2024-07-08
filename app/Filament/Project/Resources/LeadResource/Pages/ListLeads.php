@@ -2,16 +2,13 @@
 
 namespace App\Filament\Project\Resources\LeadResource\Pages;
 
-use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\LeadResource;
 use App\Filament\Project\Widgets\LeadsKanbanBoard;
 use App\Models\Lead;
-use App\Models\LeadStatus;
 use Filament\Actions;
 use Filament\Facades\Filament;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 
 class ListLeads extends ListRecords
 {
@@ -56,9 +53,13 @@ class ListLeads extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            \pxlrbt\FilamentExcel\Actions\Pages\ExportAction::make('export')
+            /*ImportAction::make()
+                ->importer(LeadsImporter::class),
+            Actions\ExportAction::make()
                 ->hiddenLabel()
-                ->tooltip('Izvoz u Excel'),
+                ->icon('heroicon-o-arrow-down-tray')
+                ->tooltip('Izvoz u Excel')
+                ->exporter(LeadsExporter::class),*/
             Actions\Action::make('kanban')
                 ->hiddenLabel()
                 ->icon('heroicon-o-rectangle-group')

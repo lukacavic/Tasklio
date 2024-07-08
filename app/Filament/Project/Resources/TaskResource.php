@@ -2,43 +2,35 @@
 
 namespace App\Filament\Project\Resources;
 
-use App\Filament\Project\Resources\TaskResource\Pages\CreateTask;
-use App\Filament\Shared\Components\AvatarColumn;
+use App\Models\Client;
+use App\Models\Lead;
 use App\Models\Task;
 use App\Models\User;
 use App\TaskPriority;
 use App\TaskStatus;
 use Awcodes\FilamentBadgeableColumn\Components\Badge;
 use Awcodes\FilamentBadgeableColumn\Components\BadgeableColumn;
-use Awcodes\Shout\Components\Shout;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Facades\Filament;
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Livewire;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\SpatieTagsInput;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\IconPosition;
 use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -47,7 +39,6 @@ use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Actions\ViewAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -56,7 +47,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+use Livewire\Component;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class TaskResource extends Resource
@@ -100,6 +91,30 @@ class TaskResource extends Resource
                     ->label('Oznake')
                     ->color(Color::Gray),
 
+                Select::make('related_type')
+                    ->label('Vezan za')
+                    ->live()
+                    ->native(false)
+                    ->options([
+                        Client::class => 'Klijent',
+                        Lead::class => 'Potencijalni klijent',
+                    ]),
+
+                Select::make('related_id')
+                    ->label('Vezani modul')
+                    ->native(false)
+                    ->options(function (Get $get) {
+                        if($get('related_type') == Client::class) {
+                            return Client::whereHas('projects', function($query){
+                                return $query->where('project_id', Filament::getTenant()->id);
+                            })->pluck('name', 'id');
+                        }else if($get('related_type') == Lead::class) {
+                            return Lead::where('project_id',Filament::getTenant()->id)->get()->pluck('company', 'id');
+                        }
+
+
+                    }),
+
                 Select::make('members')
                     ->label('Djelatnici')
                     ->relationship('members')
@@ -140,7 +155,7 @@ class TaskResource extends Resource
                     ->streamlined()
                     ->columnSpanFull()
                     ->renderHeader(false)
-                    ->hintAction(function(){
+                    ->hintAction(function () {
                         return Action::make('hide-completed')
                             ->color(Color::Gray)
                             ->label('Sakrij riješeno');
@@ -250,7 +265,6 @@ class TaskResource extends Resource
                     DeleteBulkAction::make(),
                     RestoreBulkAction::make(),
                     ForceDeleteBulkAction::make(),
-                    ExportBulkAction::make()
                 ]),
             ]);
     }

@@ -10,9 +10,6 @@ use App\Filament\Project\Resources\LeadResource\Pages\LeadTasks;
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
 use App\Models\LeadSource;
-use App\Models\LeadStatus;
-use App\Models\Project;
-use App\Models\User;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
 use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
 use Filament\Facades\Filament;
@@ -23,16 +20,11 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-use TomatoPHP\FilamentMediaManager\Form\MediaManagerInput;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
-use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 
 class LeadResource extends Resource
@@ -363,7 +355,6 @@ class LeadResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    ExportBulkAction::make()->tooltip('Izvoz u Excel'),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
