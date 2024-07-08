@@ -51,7 +51,10 @@ class ProjectMilestoneResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function ($query) {
-                return $query->withCount('tasks');
+                return $query->withCount('tasks')
+                    ->withCount(['tasks' => function($query) {
+                        return $query->notCompleted();
+                    }]);
             })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
@@ -75,7 +78,13 @@ class ProjectMilestoneResource extends Resource
                     ->date(),
 
                 Tables\Columns\TextColumn::make('tasks_count')
-                    ->label('Broj zadataka'),
+                    ->formatStateUsing(function($state) {
+                        return 'Ukupno: ' . $state;
+                    })
+                    ->description(function(ProjectMilestone $record) {
+                        return 'Neriješeno: ' . $record->tasks()->notCompleted()->count();
+                    })
+                    ->label('Zadaci'),
 
             ])
             ->filters([
@@ -83,6 +92,7 @@ class ProjectMilestoneResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
