@@ -63,6 +63,11 @@ class Task extends BaseModel implements HasMedia
         return $this->belongsTo(Project::class);
     }
 
+    public function projectMilestone(): BelongsTo
+    {
+        return $this->belongsTo(ProjectMilestone::class);
+    }
+
     public function related(): MorphTo
     {
         return $this->morphTo();

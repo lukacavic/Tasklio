@@ -10,7 +10,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ProjectMilestone extends BaseModel
 {
+    protected static function booted(): void
+    {
+        parent::booted();
 
+        static::addGlobalScope('order', function (\Illuminate\Contracts\Database\Eloquent\Builder $builder) {
+            $builder->orderBy('start_date', 'asc');
+        });
+
+    }
     public function getDates(): array
     {
         return ['created_at', 'updated_at', 'start_date', 'due_date'];

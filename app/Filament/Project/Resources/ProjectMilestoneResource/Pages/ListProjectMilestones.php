@@ -2,6 +2,7 @@
 
 namespace App\Filament\Project\Resources\ProjectMilestoneResource\Pages;
 
+use App\Filament\Project\Pages\ProjectMilestoneKanBan;
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\ProjectMilestoneResource;
 use Filament\Actions;
@@ -47,11 +48,11 @@ class ListProjectMilestones extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('kanban')
+            Actions\Action::make('kanban-project-milestone')
                 ->hiddenLabel()
                 ->icon('heroicon-o-rectangle-group')
                 ->tooltip('Kanban prikaz')
-                ->url(fn(): string => TasksKanbanBoard::getUrl()),
+                ->url(fn(): string => ProjectMilestoneKanBan::getUrl()),
             Actions\CreateAction::make()
                 ->label('Dodaj'),
         ];
