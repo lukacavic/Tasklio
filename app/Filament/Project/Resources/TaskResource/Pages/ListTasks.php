@@ -33,9 +33,7 @@ class ListTasks extends ListRecords
         $tabs['my-tasks'] = Tab::make('Moji zadaci')
             ->badge(function () {
                 return Task::query()
-                    ->whereHasMorph('related', [Project::class], function (Builder $query) {
-                        $query->where('id', Filament::getTenant()->id);
-                    })
+                    ->where('project_id', Filament::getTenant()->id)
                     ->whereHas('members', function ($query) {
                         return $query->where('user_id', auth()->id());
                     })->count();
