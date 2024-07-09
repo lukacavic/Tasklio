@@ -10,6 +10,7 @@ use Filament\Models\Contracts\HasDefaultTenant;
 use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,9 +56,16 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         });
     }
 
+    protected function avatar(): Attribute
+    {
+        return Attribute::make(function(){
+            return $this->avatar_url == null ? 'https://innostudio.de/fileuploader/images/default-avatar.png' : $this->avatar_url;
+        });
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? Storage::url($this->avatar_url) : null;
+        return $this->avatar_url ? Storage::url($this->avatar_url) : 'https://innostudio.de/fileuploader/images/default-avatar.png';
     }
 
     public function canAccessPanel(Panel $panel): bool

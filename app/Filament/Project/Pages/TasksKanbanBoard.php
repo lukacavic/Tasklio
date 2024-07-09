@@ -5,8 +5,10 @@ namespace App\Filament\Project\Pages;
 use App\Filament\Project\Resources\TaskResource;
 use App\Models\Task;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 
 class TasksKanbanBoard extends KanbanBoard
@@ -60,8 +62,15 @@ class TasksKanbanBoard extends KanbanBoard
         ];
     }
 
+    public function form(Form $form): Form
+    {
+        return TaskResource::form($form)
+            ->statePath('editModalFormState')
+            ->model($this->editModalRecordId ? static::$model::find($this->editModalRecordId) : static::$model);
+    }
+
     protected function records(): \Illuminate\Support\Collection
     {
-        return Task::all();
+        return Task::where('project_id', Filament::getTenant()->id)->get();
     }
 }

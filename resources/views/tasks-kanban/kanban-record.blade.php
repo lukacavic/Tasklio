@@ -31,13 +31,20 @@
     </div>
 
     <div class="flex hover:-space-x-1 -space-x-3">
-        @foreach(['Luka', 'Amel'] as $member)
-            <div class="w-8 h-8 transition-all rounded-full bg-gray-200 border-2 border-white"></div>
+        @foreach($record->members as $member)
+            <x-filament::avatar
+                src="{{asset($member->getFilamentAvatarUrl())}}"
+            />
         @endforeach
     </div>
 
-    <div class="mt-2 relative">
-        <div class="absolute h-1 bg-primary-500 rounded-full" style="width: 56%"></div>
-        <div class="h-1 bg-gray-200 rounded-full"></div>
-    </div>
+    @if($record->tags()->exists())
+        <div class="mt-2 relative">
+            <div class="flex space-x-2 fs text-xs fs-">
+                @foreach($record->tags as $tag)
+                    <span class="bg-gray-100 text-blue-600 px-2 py-1 rounded-md border border-gray-300 mr-4 ">{{$tag->name}}</span>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>

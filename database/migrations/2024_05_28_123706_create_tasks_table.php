@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->smallInteger('user_id');
-            $table->morphs('related');
+            $table->nullableMorphs('related');
             $table->integer('project_id')->nullable();
             $table->integer('project_milestone_id')->nullable();
             $table->smallInteger('priority_id');

@@ -36,13 +36,9 @@
 
     <div class="flex hover:-space-x-1 -space-x-3">
         @foreach($record->members as $member)
-            @if($member->avatar_url)
-                <x-filament::avatar
-                    src="{{asset($member->avatar_url)}}"
-                />
-            @else
-                <div class="w-8 h-8 transition-all rounded-full bg-gray-200 border-2 border-white"></div>
-            @endif
+            <x-filament::avatar
+                src="{{asset($member->getFilamentAvatarUrl())}}"
+            />
         @endforeach
     </div>
 

@@ -36,6 +36,7 @@ use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -96,6 +97,7 @@ class TaskResource extends Resource
                     ->options([
                         Client::class => 'Klijent',
                         Lead::class => 'Potencijalni klijent',
+                        User::class => 'Djelatnik'
                     ]),
 
                 Select::make('related_id')
@@ -225,11 +227,17 @@ class TaskResource extends Resource
                     ->label('Naziv')
                     ->searchable(),
 
-                TextColumn::make('creator.fullName')
+                ImageColumn::make('creator.avatar')
                     ->label('Dodao')
+                    ->circular()
+                    ->tooltip(function(Task $record) {
+                        return $record->creator->fullName;
+                    })
                     ->sortable(),
 
-                TextColumn::make('members.first_name')
+                ImageColumn::make('members.avatar_url')
+                    ->circular()
+                    ->stacked()
                     ->label('Djelatnici')
                     ->sortable(),
 
