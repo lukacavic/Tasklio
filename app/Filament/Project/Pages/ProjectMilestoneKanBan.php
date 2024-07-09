@@ -3,19 +3,13 @@
 namespace App\Filament\Project\Pages;
 
 use App\Filament\Project\Resources\LeadResource;
+use App\Filament\Project\Resources\ProjectMilestoneResource;
 use App\Filament\Project\Resources\TaskResource;
-use App\Models\Lead;
-use App\Models\LeadStatus;
 use App\Models\ProjectMilestone;
 use App\Models\Task;
 use Filament\Actions\Action;
-use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
-use Filament\Widgets\Widget;
 use Mokhosh\FilamentKanban\Pages\KanbanBoard;
 
 class ProjectMilestoneKanBan extends KanbanBoard
@@ -36,40 +30,34 @@ class ProjectMilestoneKanBan extends KanbanBoard
 
     protected static string $recordView = 'project-milestone-kanban.kanban-record';
 
-    /*public function form(Form $form): Form
+    public function form(Form $form): Form
     {
-        return LeadResource::form($form)
+        return TaskResource::form($form)
             ->statePath('editModalFormState')
             ->model($this->editModalRecordId ? static::$model::find($this->editModalRecordId) : static::$model);
-    }*/
+    }
 
     public function onStatusChanged(int $recordId, string $status, array $fromOrderedIds, array $toOrderedIds): void
     {
-        $lead = Lead::find($recordId);
+        $task = Task::find($recordId);
 
-        if ($lead->client_id != null) {
-            Notification::make('alert')
-                ->title('Upozorenje')
-                ->body('Lead je već pretvoren u klijenta, promjena statusa nije moguća.')
-                ->send();
+        $milestone = ProjectMilestone::find($status);
 
-            return;
-        }
+        $task->addLog("Prebačen u milestone {$milestone} ");
 
-        $lead->update(['status_id' => $status]);
+        $task->update(['project_milestone_id' => $status]);
     }
 
     protected function statuses(): \Illuminate\Support\Collection
     {
         return Filament::getTenant()
             ->projectMilestones()
-            //->current()
             ->get(['id', 'name'])->map(function ($projectMilestone) {
-            return [
-                'id' => $projectMilestone->id,
-                'title' => $projectMilestone->name,
-            ];
-        });
+                return [
+                    'id' => $projectMilestone->id,
+                    'title' => $projectMilestone->name,
+                ];
+            });
     }
 
     protected function getHeaderActions(): array
@@ -79,7 +67,7 @@ class ProjectMilestoneKanBan extends KanbanBoard
                 ->hiddenLabel()
                 ->icon('heroicon-o-table-cells')
                 ->tooltip('Prikaz u tablici')
-                ->url(fn(): string => LeadResource::getUrl()),
+                ->url(fn(): string => ProjectMilestoneResource::getUrl()),
         ];
     }
 
