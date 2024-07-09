@@ -8,8 +8,6 @@ use App\Models\Task;
 use App\Models\User;
 use App\TaskPriority;
 use App\TaskStatus;
-use Awcodes\FilamentBadgeableColumn\Components\Badge;
-use Awcodes\FilamentBadgeableColumn\Components\BadgeableColumn;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Facades\Filament;
@@ -49,7 +47,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 
 class TaskResource extends Resource
 {

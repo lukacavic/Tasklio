@@ -3,13 +3,13 @@
 namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Resources\ProjectMilestoneResource\Pages;
-use App\Filament\Project\Resources\ProjectMilestoneResource\RelationManagers;
 use App\Models\ProjectMilestone;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class ProjectMilestoneResource extends Resource
 {
@@ -23,6 +23,15 @@ class ProjectMilestoneResource extends Resource
 
     protected static ?string $pluralLabel = 'Prekretnice';
 
+    protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Naziv' => $record->name,
+            'Opis' => strip_tags($record->description)
+        ];
+    }
     public static function form(Form $form): Form
     {
         return $form
