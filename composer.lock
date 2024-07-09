@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9b28e0b20db32a6cdd5b9375309f5aa",
+    "content-hash": "de5ae2f07f68ee07636331b12d952da7",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -6445,6 +6445,79 @@
                 }
             ],
             "time": "2024-02-26T18:08:49+00:00"
+        },
+        {
+            "name": "ryangjchandler/laravel-comments",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ryangjchandler/laravel-comments.git",
+                "reference": "04ff1d7ea669590cb8f56c40c257ca600c8745fa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ryangjchandler/laravel-comments/zipball/04ff1d7ea669590cb8f56c40c257ca600c8745fa",
+                "reference": "04ff1d7ea669590cb8f56c40c257ca600c8745fa",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^11.0",
+                "illuminate/database": "^11.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.16.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "nunomaduro/collision": "^8.0",
+                "orchestra/testbench": "^9.0",
+                "pestphp/pest": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^10.0",
+                "spatie/laravel-ray": "^1.35"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "RyanChandler\\Comments\\CommentsServiceProvider"
+                    ],
+                    "aliases": {
+                        "Comments": "RyanChandler\\Comments\\Facades\\Comments"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RyanChandler\\Comments\\": "src",
+                    "RyanChandler\\Comments\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan Chandler",
+                    "email": "support@ryangjchandler.co.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A dead-simple comments package for Laravel.",
+            "homepage": "https://github.com/ryangjchandler/laravel-comments",
+            "keywords": [
+                "laravel",
+                "laravel-comments",
+                "ryangjchandler"
+            ],
+            "support": {
+                "issues": "https://github.com/ryangjchandler/laravel-comments/issues",
+                "source": "https://github.com/ryangjchandler/laravel-comments/tree/v1.0.0"
+            },
+            "time": "2024-03-12T21:22:43+00:00"
         },
         {
             "name": "saade/filament-fullcalendar",

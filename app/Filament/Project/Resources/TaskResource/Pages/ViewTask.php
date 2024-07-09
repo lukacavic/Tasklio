@@ -2,7 +2,6 @@
 
 namespace App\Filament\Project\Resources\TaskResource\Pages;
 
-use App\Filament\App\Resources\ClientResource\Pages\EditClient;
 use App\Filament\Project\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
@@ -13,11 +12,12 @@ use Filament\Actions;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions\Action;
+use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section;
-use Filament\Infolists\Components\SpatieMediaLibraryImageEntry;
 use Filament\Infolists\Components\SpatieTagsEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
@@ -31,12 +31,83 @@ use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;
 use JaOcero\ActivityTimeline\Components\ActivitySection;
 use JaOcero\ActivityTimeline\Components\ActivityTitle;
-use Livewire\Component;
+use RyanChandler\Comments\Models\Comment;
 use Spatie\MediaLibrary\Support\MediaStream;
 
-class ViewTask extends ViewRecord
+class ViewTask extends ViewRecord implements HasForms
 {
+
     protected static string $resource = TaskResource::class;
+
+    protected static string $view = 'filament.resources.task-resource.view';
+
+    public $selectedCommentId;
+
+    protected $listeners = ['doDeleteComment'];
+
+    public function editComment(int $commentId): void
+    {
+        $this->form->fill([
+            'comment' => $this->record->comments->where('id', $commentId)->first()?->content
+        ]);
+        $this->selectedCommentId = $commentId;
+    }
+
+    public function submitComment(): void
+    {
+        $data = $this->form->getState();
+        if ($this->selectedCommentId) {
+            Comment::where('id', $this->selectedCommentId)
+                ->update([
+                    'content' => $data['comment']
+                ]);
+        } else {
+            $this->getRecord()->comment($data['comment']);
+        }
+
+        $this->record->refresh();
+        $this->cancelEditComment();
+    }
+
+    public function cancelEditComment(): void
+    {
+        $this->form->fill();
+        $this->selectedCommentId = null;
+    }
+
+    public function doDeleteComment(int $commentId): void
+    {
+        Comment::where('id', $commentId)->delete();
+
+        $this->record->refresh();
+    }
+
+    public function deleteComment(int $commentId): void
+    {
+        Notification::make()
+            ->warning()
+            ->title(__('Delete confirmation'))
+            ->body(__('Are you sure you want to delete this comment?'))
+            ->actions([
+                \Filament\Notifications\Actions\Action::make('confirm')
+                    ->label(__('Confirm'))
+                    ->color('danger')
+                    ->button()
+                    ->close()
+                    ->dispatch('doDeleteComment', compact('commentId')),
+                \Filament\Notifications\Actions\Action::make('cancel')
+                    ->label(__('Cancel'))
+                    ->close()
+            ])
+            ->persistent()
+            ->send();
+    }
+
+    public function mount($record): void
+    {
+        parent::mount($record);
+        $this->form->fill();
+    }
 
     public function getRecordTitle(): string|Htmlable
     {
@@ -46,7 +117,6 @@ class ViewTask extends ViewRecord
     protected function getActions(): array
     {
         return [
-
             $this->getMarkAsCompletedAction(),
             $this->getSwitchStatusActions(),
             ActionGroup::make([
@@ -56,19 +126,135 @@ class ViewTask extends ViewRecord
                     ->icon('heroicon-o-pencil')
                     ->hiddenLabel(),
                 Actions\DeleteAction::make()
-                ->icon('heroicon-o-trash')
-                ->hiddenLabel(),
+                    ->icon('heroicon-o-trash')
+                    ->hiddenLabel(),
             ])
-            ->hiddenLabel()
-            ->button()
+                ->hiddenLabel()
+                ->button()
 
         ];
+    }
+
+    public function getMarkAsCompletedAction(): Actions\Action
+    {
+        return Actions\Action::make('mark-completed')
+            ->visible(function (Task $record) {
+                return $record->status_id != TaskStatus::Completed->value;
+            })
+            ->hiddenLabel()
+            ->tooltip('Označi zadatak završenim')
+            ->requiresConfirmation()
+            ->modalHeading('Označiti zadatak završenim?')
+            ->color(Color::Green)
+            ->icon('heroicon-o-check')
+            ->action(function (Task $record) {
+                $record->update([
+                    'status_id' => TaskStatus::Completed,
+                    'completed_at' => now()
+                ]);
+
+                $record->addLog('Označio zadatak riješenim');
+
+                \Illuminate\Support\Facades\Notification::send($record->usersToNotify(), new TaskCompleted($record));
+
+                $this->getRecord()->refresh();
+            });
+    }
+
+    private function getSwitchStatusActions(): ActionGroup
+    {
+        return ActionGroup::make($this->getDynamicStatusActions())
+            ->tooltip('Promjena statusa zadatka')
+            ->label(function () {
+                return TaskStatus::from($this->getRecord()->status_id)->getLabel();
+            })->color(function () {
+                return TaskStatus::from($this->getRecord()->status_id)->getColor();
+            })->icon(TaskStatus::from($this->record->status_id)->getIcon())
+            ->button();
+    }
+
+    private function getDynamicStatusActions(): array
+    {
+        $actions = [];
+
+        foreach (TaskStatus::cases() as $taskStatus) {
+            if ($taskStatus->value == $this->record->status_id) continue;
+
+            $action = new Actions\Action($taskStatus->getLabel());
+            $action->label($taskStatus->getLabel());
+            $action->color($taskStatus->getColor());
+            $action->action(function ($data) use ($taskStatus) {
+                $this->record->updateTaskStatus($taskStatus->value);
+            });
+            $action->icon($taskStatus->getIcon());
+
+            $actions[$taskStatus->getLabel()] = $action;
+        }
+
+        return $actions;
+    }
+
+    private function getActivityLogActions()
+    {
+        return Actions\Action::make('activity_log')
+            ->hiddenLabel()
+            ->label('Log aktivnosti')
+            ->icon('heroicon-o-information-circle')
+            ->modalSubmitAction(false)
+            ->color(Color::Cyan)
+            ->tooltip('Povijest aktivnosti')
+            ->modalCancelAction(false)
+            ->modalHeading('Povijest aktivnosti')
+            ->slideOver()
+            ->infolist(function (Infolist $infolist) {
+                return $infolist
+                    ->state([
+                        'activities' => $this->getRecord()->activities()->with('causer')->latest()->get()
+                    ])
+                    ->schema([
+                        ActivitySection::make('activities')
+                            ->schema([
+                                ActivityTitle::make('causer.fullName')
+                                    ->placeholder('No title is set')
+                                    ->allowHtml(),
+                                ActivityDescription::make('description')
+                                    ->placeholder('No description is set')
+                                    ->allowHtml(),
+                                ActivityDate::make('created_at')
+                                    ->date('F j, Y g:i A', 'Asia/Manila'),
+                                ActivityIcon::make('status')
+                                    ->icon(fn(string|null $state): string|null => match ($state) {
+                                        'ideation' => 'heroicon-m-light-bulb',
+                                        'drafting' => 'heroicon-m-bolt',
+                                        'reviewing' => 'heroicon-m-document-magnifying-glass',
+                                        'published' => 'heroicon-m-rocket-launch',
+                                        default => null,
+                                    })
+                                    ->color(fn(string|null $state): string|null => match ($state) {
+                                        'ideation' => 'purple',
+                                        'drafting' => 'info',
+                                        'reviewing' => 'warning',
+                                        'published' => 'success',
+                                        default => 'gray',
+                                    }),
+                            ])
+                            ->showItemsCount(10)
+                            ->emptyStateHeading('Nema aktivnosti.')
+                            ->emptyStateDescription('Trenutno nema aktivnosti na zadatku, provjerite kasnije :)')
+                            ->emptyStateIcon('heroicon-o-bolt-slash')
+                            ->showItemsLabel('Prikaži starije')
+                            ->showItemsIcon('heroicon-m-chevron-down')
+                            ->showItemsColor('gray')
+                            ->aside(true)
+                            ->headingVisible(false)
+                    ]);
+            });
     }
 
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Section::make('Osnovne informacije')
+            Fieldset::make('Osnovne informacije')
                 ->schema([
                     TextEntry::make('title')
                         ->label('Naziv'),
@@ -110,9 +296,8 @@ class ViewTask extends ViewRecord
                         ->columnSpanFull()
                 ])->columns(4),
 
-            Section::make('Privitci')
+            Fieldset::make('Privitci')
                 ->key(Str::random())
-                ->heading(false)
                 ->visible($this->record->media()->exists())
                 ->columnSpanFull()
                 ->label(function () {
@@ -173,53 +358,6 @@ class ViewTask extends ViewRecord
         ]);
     }
 
-    private function getDynamicStatusActions(): array
-    {
-        $actions = [];
-
-        foreach (TaskStatus::cases() as $taskStatus) {
-            if ($taskStatus->value == $this->record->status_id) continue;
-
-            $action = new Actions\Action($taskStatus->getLabel());
-            $action->label($taskStatus->getLabel());
-            $action->color($taskStatus->getColor());
-            $action->action(function ($data) use ($taskStatus) {
-                $this->record->updateTaskStatus($taskStatus->value);
-            });
-            $action->icon($taskStatus->getIcon());
-
-            $actions[$taskStatus->getLabel()] = $action;
-        }
-
-        return $actions;
-    }
-
-    public function getMarkAsCompletedAction(): Actions\Action
-    {
-        return Actions\Action::make('mark-completed')
-            ->visible(function (Task $record) {
-                return $record->status_id != TaskStatus::Completed->value;
-            })
-            ->hiddenLabel()
-            ->tooltip('Označi zadatak završenim')
-            ->requiresConfirmation()
-            ->modalHeading('Označiti zadatak završenim?')
-            ->color(Color::Green)
-            ->icon('heroicon-o-check')
-            ->action(function (Task $record) {
-                $record->update([
-                    'status_id' => TaskStatus::Completed,
-                    'completed_at' => now()
-                ]);
-
-                $record->addLog('Označio zadatak riješenim');
-
-                \Illuminate\Support\Facades\Notification::send($record->usersToNotify(), new TaskCompleted($record));
-
-                $this->getRecord()->refresh();
-            });
-    }
-
     private function getChangeAssignedUsersAction(): Actions\Action
     {
         return Actions\Action::make('updatTaskUsers')
@@ -254,72 +392,12 @@ class ViewTask extends ViewRecord
             ->icon('heroicon-o-user');
     }
 
-    private function getSwitchStatusActions(): ActionGroup
+    public function form(Form $form): Form
     {
-        return ActionGroup::make($this->getDynamicStatusActions())
-            ->tooltip('Promjena statusa zadatka')
-            ->label(function () {
-                return TaskStatus::from($this->getRecord()->status_id)->getLabel();
-            })->color(function () {
-                return TaskStatus::from($this->getRecord()->status_id)->getColor();
-            })->icon(TaskStatus::from($this->record->status_id)->getIcon())
-            ->button();
-    }
-
-    private function getActivityLogActions()
-    {
-        return Actions\Action::make('activity_log')
-            ->hiddenLabel()
-            ->label('Log aktivnosti')
-            ->icon('heroicon-o-information-circle')
-            ->modalSubmitAction(false)
-            ->color(Color::Cyan)
-            ->tooltip('Povijest aktivnosti')
-            ->modalCancelAction(false)
-            ->modalHeading('Povijest aktivnosti')
-            ->slideOver()
-            ->infolist(function (Infolist $infolist) {
-                return $infolist
-                    ->state([
-                        'activities' => $this->getRecord()->activities()->with('causer')->latest()->get()
-                    ])
-                    ->schema([
-                        ActivitySection::make('activities')
-                            ->schema([
-                                ActivityTitle::make('causer.fullName')
-                                    ->placeholder('No title is set')
-                                    ->allowHtml(),
-                                ActivityDescription::make('description')
-                                    ->placeholder('No description is set')
-                                    ->allowHtml(),
-                                ActivityDate::make('created_at')
-                                    ->date('F j, Y g:i A', 'Asia/Manila'),
-                                ActivityIcon::make('status')
-                                    ->icon(fn(string|null $state): string|null => match ($state) {
-                                        'ideation' => 'heroicon-m-light-bulb',
-                                        'drafting' => 'heroicon-m-bolt',
-                                        'reviewing' => 'heroicon-m-document-magnifying-glass',
-                                        'published' => 'heroicon-m-rocket-launch',
-                                        default => null,
-                                    })
-                                    ->color(fn(string|null $state): string|null => match ($state) {
-                                        'ideation' => 'purple',
-                                        'drafting' => 'info',
-                                        'reviewing' => 'warning',
-                                        'published' => 'success',
-                                        default => 'gray',
-                                    }),
-                            ])
-                            ->showItemsCount(10)
-                            ->emptyStateHeading('Nema aktivnosti.')
-                            ->emptyStateDescription('Trenutno nema aktivnosti na zadatku, provjerite kasnije :)')
-                            ->emptyStateIcon('heroicon-o-bolt-slash')
-                            ->showItemsLabel('Prikaži starije')
-                            ->showItemsIcon('heroicon-m-chevron-down')
-                            ->showItemsColor('gray')
-                            ->aside(true)
-                            ->headingVisible(false)
-                    ]);
-            });
+        return $form->disabled(false)->schema([
+            Textarea::make('comment')
+                ->label('Dodaj komentar')
+                ->columnSpanFull()
+        ]);
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use RyanChandler\Comments\Concerns\HasComments;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
@@ -17,7 +18,7 @@ use Spatie\Tags\HasTags;
 
 class Task extends BaseModel implements HasMedia
 {
-    use HasTags, LogsActivity, InteractsWithMedia;
+    use HasTags, LogsActivity, InteractsWithMedia, HasComments;
 
     protected static function booted(): void
     {

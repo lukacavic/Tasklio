@@ -24,6 +24,7 @@
         "mokhosh/filament-kanban": "^2.8",
         "parfaitementweb/filament-country-field": "^2.1",
         "rickdbcn/filament-email": "^1.4",
+        "ryangjchandler/laravel-comments": "^1.0",
         "saade/filament-fullcalendar": "^3.0",
         "spatie/laravel-activitylog": "^4.8",
         "spatie/laravel-medialibrary": "^11.5",
