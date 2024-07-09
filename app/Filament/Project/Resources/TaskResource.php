@@ -120,6 +120,18 @@ class TaskResource extends Resource
 
                 Select::make('project_milestone_id')
                     ->label('Prekretnica')
+                    ->createOptionForm(fn(Form $form) => ProjectMilestoneResource::form($form))
+                    ->createOptionUsing(function (array $data) {
+                        $record = Filament::getTenant()->projectMilestones()->create([
+                            'name' => $data['name'],
+                            'project_id' => Filament::getTenant()->id,
+                            'start_date' => $data['start_date'],
+                            'due_date' => $data['due_date'],
+                            'description' => $data['description'],
+                        ]);
+
+                        return $record->getKey(); //like this
+                    })
                     ->native(false)
                     ->options(Filament::getTenant()->projectMilestones()->current()->orWhere(function ($query) {
                         $query->future();
@@ -272,6 +284,7 @@ class TaskResource extends Resource
                     ->label('Prekretnica (Milestone)')
                     ->native(false)
                     ->multiple()
+
                     ->options(Filament::getTenant()->projectMilestones()->get()->pluck('name', 'id')),
 
                 SelectFilter::make('user_id')
