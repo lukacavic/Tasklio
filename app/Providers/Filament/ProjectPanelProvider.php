@@ -39,6 +39,7 @@ class ProjectPanelProvider extends PanelProvider
             ->id('project')
             ->path('project')
             ->tenantMenu()
+            ->tenant(Project::class)
             ->font('Poppins')
             ->spa()
             ->colors([

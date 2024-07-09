@@ -5,6 +5,7 @@ namespace App\Filament\Project\Pages;
 use App\Filament\Project\Resources\LeadResource;
 use App\Filament\Project\Resources\ProjectMilestoneResource;
 use App\Filament\Project\Resources\TaskResource;
+use App\Models\Project;
 use App\Models\ProjectMilestone;
 use App\Models\Task;
 use Filament\Actions\Action;
@@ -50,9 +51,7 @@ class ProjectMilestoneKanBan extends KanbanBoard
 
     protected function statuses(): \Illuminate\Support\Collection
     {
-        return Filament::getTenant()
-            ->projectMilestones()
-            ->get(['id', 'name'])->map(function ($projectMilestone) {
+        return ProjectMilestone::all(['id', 'name'])->map(function ($projectMilestone) {
                 return [
                     'id' => $projectMilestone->id,
                     'title' => $projectMilestone->name,

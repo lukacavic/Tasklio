@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('user_id');
-            $table->morphs('related');
+            $table->nullableMorphs('related');
+            $table->integer('project_id')->nullable();
             $table->integer('organisation_id');
             $table->softDeletes();
             $table->timestamps();
