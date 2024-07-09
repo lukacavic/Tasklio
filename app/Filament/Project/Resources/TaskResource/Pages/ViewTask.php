@@ -86,17 +86,17 @@ class ViewTask extends ViewRecord implements HasForms
     {
         Notification::make()
             ->warning()
-            ->title(__('Delete confirmation'))
-            ->body(__('Are you sure you want to delete this comment?'))
+            ->title('Potvrda brisanja?')
+            ->body('Jeste li sigurni da želite izbrisati komentar?')
             ->actions([
                 \Filament\Notifications\Actions\Action::make('confirm')
-                    ->label(__('Confirm'))
+                    ->label('Da, izbriši')
                     ->color('danger')
                     ->button()
                     ->close()
                     ->dispatch('doDeleteComment', compact('commentId')),
                 \Filament\Notifications\Actions\Action::make('cancel')
-                    ->label(__('Cancel'))
+                    ->label('Odustani')
                     ->close()
             ])
             ->persistent()

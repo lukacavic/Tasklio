@@ -27,6 +27,7 @@
                 <div class="w-full flex justify-between">
                             <span class="flex items-center gap-1 text-gray-500 text-sm">
                                 <span class="font-medium flex items-center gap-1">
+                                    <x-user-avatar :user="$comment->user"/>
                                     {{ $comment->user->name }}
                                 </span>
                                 <span class="text-gray-400 px-2">|</span>
