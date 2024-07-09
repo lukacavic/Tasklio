@@ -214,6 +214,7 @@ class TaskResource extends Resource
             ->recordTitleAttribute('name')
             ->emptyStateHeading('Trenutno nema upisanih zadataka')
             ->columns([
+
                 TextColumn::make('title')
                     ->description(function (Task $record) {
                         return strip_tags(Str::limit($record->description, 40));

@@ -6,13 +6,13 @@
         {{ $this->infolist }}
     @endif
 
-
     <form wire:submit.prevent="submitComment" class="pb-5">
         {{ $this->form }}
-        <button type="submit"
-                class="px-3 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded mt-3">
+
+        <x-filament::button type="submit" @class('mt-4')>
             {{ __($selectedCommentId ? 'Izmjena' : 'Dodaj komentar') }}
-        </button>
+        </x-filament::button>
+
         @if($selectedCommentId)
             <button type="button" wire:click="cancelEditComment"
                     class="px-3 py-2 bg-warning-500 hover:bg-warning-600 text-white rounded mt-3">
@@ -31,7 +31,7 @@
                                     {{ $comment->user->name }}
                                 </span>
                                 <span class="text-gray-400 px-2">|</span>
-                                {{ $comment->created_at->format('Y-m-d g:i A') }}
+                                {{ $comment->created_at->format('d.m.Y g:i') }}
                                 ({{ $comment->created_at->diffForHumans() }})
                             </span>
                     @if($comment->user_id === auth()->user()->id)
@@ -41,6 +41,8 @@
                                 Uredi
                             </button>
                             <span class="text-gray-300">|</span>
+
+
                             <button type="button" wire:click="deleteComment({{ $comment->id }})"
                                     class="text-danger-500 text-xs hover:text-danger-600 hover:underline">
                                 Izbriši
@@ -53,4 +55,5 @@
                 </div>
             </div>
         @endforeach
+
 </x-filament::page>

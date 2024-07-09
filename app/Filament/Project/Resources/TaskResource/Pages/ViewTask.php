@@ -36,12 +36,11 @@ use Spatie\MediaLibrary\Support\MediaStream;
 
 class ViewTask extends ViewRecord implements HasForms
 {
-
     protected static string $resource = TaskResource::class;
 
     protected static string $view = 'filament.resources.task-resource.view';
 
-    public $selectedCommentId;
+    public  $selectedCommentId;
 
     protected $listeners = ['doDeleteComment'];
 
@@ -50,12 +49,14 @@ class ViewTask extends ViewRecord implements HasForms
         $this->form->fill([
             'comment' => $this->record->comments->where('id', $commentId)->first()?->content
         ]);
+
         $this->selectedCommentId = $commentId;
     }
 
     public function submitComment(): void
     {
         $data = $this->form->getState();
+
         if ($this->selectedCommentId) {
             Comment::where('id', $this->selectedCommentId)
                 ->update([
@@ -67,6 +68,11 @@ class ViewTask extends ViewRecord implements HasForms
 
         $this->record->refresh();
         $this->cancelEditComment();
+
+        Notification::make()
+            ->title('Spremljeno')
+            ->success()
+            ->send();
     }
 
     public function cancelEditComment(): void
