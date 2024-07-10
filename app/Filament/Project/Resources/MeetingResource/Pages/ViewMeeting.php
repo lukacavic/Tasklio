@@ -6,9 +6,13 @@ use App\Filament\Project\Resources\MeetingsResource;
 use App\Models\KnowledgeArticle;
 use App\Models\Meeting;
 use App\Models\Task;
+use App\Models\User;
+use App\Notifications\JitsiMeetingInvitation;
 use Awcodes\Shout\Components\Shout;
 use Filament\Actions;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
 use Filament\Infolists\Components\Card;
@@ -20,7 +24,11 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\MaxWidth;
+use Firebase\JWT\JWT;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Spatie\MediaLibrary\Support\MediaStream;
 
@@ -36,6 +44,26 @@ class ViewMeeting extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('jitsi')
+                ->label('Novi video poziv')
+                ->visible(function (Meeting $record) {
+                    return $record->finished_at == null;
+                })
+                ->icon('heroicon-o-video-camera')
+                ->form([
+                    Select::make('participants')
+                        ->label('Sudionici')
+                        ->required()
+                        ->native(false),
+                ])
+                ->action(function () {
+                    $roomName = Str::random(10);
+
+                    Notification::send([], new JitsiMeetingInvitation($roomName));
+                })
+                ->url(function () {
+                    //return URL::route('jitsi.view-room', ['room' => 'mojasoba'], false);
+                })->openUrlInNewTab(true),
             Actions\Action::make('edit-remarks')
                 ->label('Uredi zapažanja')
                 ->form([
