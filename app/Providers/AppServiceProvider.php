@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use BezhanSalleh\PanelSwitch\PanelSwitch;
 use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
+use Filament\Facades\Filament;
 use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -45,9 +45,9 @@ class AppServiceProvider extends ServiceProvider
 
             $panelSwitch->excludes([
                 'admin'
-            ]);
-
-            // $panelSwitch->visible(false);
+            ])->visible(function(){
+                return Filament::getCurrentPanel()->getId() != 'admin';
+            });
 
             $panelSwitch->modalHeading('Način pregleda');
         });
