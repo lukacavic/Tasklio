@@ -23,6 +23,11 @@ class ListTasks extends ListRecords
 {
     protected static string $resource = TaskResource::class;
 
+    public function getDefaultActiveTab(): string|int|null
+    {
+        return 'my-tasks';
+    }
+
     public function getTabs(): array
     {
         $tabs = [

@@ -117,6 +117,7 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('avatar_url')
                     ->circular()
+                    ->label('')
                     ->defaultImageUrl(function (User $record) {
                         return 'http://ui-avatars.com/api?name=' . $record->fullName;
                     }),
