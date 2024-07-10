@@ -165,9 +165,9 @@ class ViewMeeting extends ViewRecord
                 ->form([
                     TinyEditor::make('remarks')
                         ->label('Zapažanja')
+                        ->minHeight(600)
                         ->required()
                 ])
-                ->modalHeading('Pošalji email')
                 ->fillForm(fn(Meeting $record): array => [
                     'remarks' => $record->remarks,
                 ])
@@ -215,14 +215,16 @@ class ViewMeeting extends ViewRecord
                 })
                 ->color(Color::Green),
 
-            Actions\EditAction::make()
-                ->hiddenLabel()
-                ->slideOver()
-                ->icon('heroicon-o-pencil'),
+            Actions\ActionGroup::make([
+                Actions\EditAction::make()
+                    ->hiddenLabel()
+                    ->slideOver()
+                    ->icon('heroicon-o-pencil'),
 
-            Actions\DeleteAction::make()
-                ->hiddenLabel()
-                ->icon('heroicon-o-trash')
+                Actions\DeleteAction::make()
+                    ->hiddenLabel()
+                    ->icon('heroicon-o-trash')
+            ]),
         ];
     }
 }
