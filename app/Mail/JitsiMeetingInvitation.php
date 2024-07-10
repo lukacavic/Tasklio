@@ -20,12 +20,15 @@ class JitsiMeetingInvitation extends Mailable
 
     private string $meetingUrl;
 
-    public function __construct(string $email, string $roomName)
+    private string $message;
+
+    public function __construct(string $email, string $roomName, $message)
     {
         $this->roomName = $roomName;
         $this->email = $email;
 
         $this->createJitsiUrl();
+        $this->message = $message;
     }
 
     private function createJitsiUrl(): void
@@ -34,10 +37,9 @@ class JitsiMeetingInvitation extends Mailable
         $user = new User();
         $user->email = $this->email;
         $user->name = $this->email;
+        $roomName = $this->roomName;
 
         $token = $jitsi->generateJwt($user, $this->roomName);
-
-        $roomName = $this->roomName;
 
         $this->meetingUrl = url()->query("https://meet.rinels.hr/{$roomName}", ['jwt' => $token]);
     }
@@ -55,6 +57,7 @@ class JitsiMeetingInvitation extends Mailable
             markdown: 'mail.jitsi-meeting-invitation',
             with: [
                 'meetingUrl' => $this->meetingUrl,
+                'message' => $this->message,
             ]
         );
     }

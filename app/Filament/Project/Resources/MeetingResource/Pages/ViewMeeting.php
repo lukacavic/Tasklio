@@ -148,18 +148,16 @@ class ViewMeeting extends ViewRecord
                         ->label('Poruka')
                         ->required(),
                 ])
+                ->openUrlInNewTab()
                 ->action(function (array $data) {
                     $roomName = Str::random(10);
 
                     foreach ($data['participants'] as $key => $participant) {
-                        Mail::to($participant)->send(new JitsiMeetingInvitation($participant, $roomName));
+                        Mail::to($participant)->send(new JitsiMeetingInvitation($participant, $roomName, $data['message']));
                     }
 
                     self::redirectRoute('jitsi.view-room', ['room' => $roomName]);
-                })
-                ->url(function () {
-                    //return URL::route('jitsi.view-room', ['room' => 'mojasoba'], false);
-                })->openUrlInNewTab(true),
+                }),
             Actions\Action::make('edit-remarks')
                 ->label('Uredi zapažanja')
                 ->form([

@@ -1,5 +1,6 @@
 <?php
 
+use App\Mail\JitsiMeetingInvitation;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
