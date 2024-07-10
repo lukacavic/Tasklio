@@ -7,10 +7,14 @@ use App\Mail\JitsiMeetingInvitation;
 use App\Models\Meeting;
 use Awcodes\Shout\Components\Shout;
 use Filament\Actions;
-use Filament\Forms\Components\Select;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -19,7 +23,6 @@ use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Colors\Color;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Spatie\MediaLibrary\Support\MediaStream;
@@ -36,16 +39,12 @@ class ViewMeeting extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Section::make()->schema([
+            Fieldset::make('Informacije sastanka')->schema([
                 TextEntry::make('name')
                     ->label('Naslov'),
 
                 TextEntry::make('meeting_from')
                     ->label('Datum i vrijeme sastanka')
-                    ->dateTime(),
-
-                TextEntry::make('finished_at')
-                    ->label('Sastanak završio')
                     ->dateTime(),
 
                 TextEntry::make('userCreated.fullName')
@@ -58,7 +57,7 @@ class ViewMeeting extends ViewRecord
                 TextEntry::make('description')
                     ->label('Opis sastanka')
                     ->columnSpanFull()
-            ])->columns(3),
+            ])->columns(4),
 
             Section::make('Zapažanja na sastanku')
                 ->schema([
@@ -109,21 +108,45 @@ class ViewMeeting extends ViewRecord
     {
         return [
             Actions\Action::make('jitsi')
-                ->label('Novi video poziv')
+                ->label('Video poziv')
+                ->modalHeading('Slanje pozivnice ')
+                ->fillForm(function (array $data, Meeting $record) {
+                    $data['message'] = "Molimo pridružite se sastanku: {$record->name}. Razlog sastanka: {$record->description}";
+
+                    return $data;
+                })
                 ->visible(function (Meeting $record) {
                     return $record->finished_at == null;
                 })
                 ->icon('heroicon-o-video-camera')
                 ->form([
-                    Select::make('participants')
-                        ->label('Sudionici')
-                        ->multiple()
-                        ->required()
-                        ->options([
-                            'luka.cavic@rinels.hr'=> 'luka.cavic@rinels.hr',
-                            'nikolina.cavic@rinels.hr'=> 'nikolina.cavic@rinels.hr'
+                    Shout::make('so-important')
+                        ->content('Unesite email adrese osoba koje želite da sudjeluju na sastanku. Svatko naveden će dobiti email pozivnicu i video poziv će započeti.')
+                        ->color(Color::Gray),
+                    TagsInput::make('participants')
+                        ->prefixIcon('heroicon-o-at-symbol')
+                        ->placeholder('Unesite email..')
+                        ->nestedRecursiveRules([
+                            'email',
                         ])
-                        ->native(false),
+                        ->splitKeys(['Tab', ' '])
+                        ->hintAction(function () {
+                            return Action::make('include-project-users')
+                                ->label('Dodaj djelatnike projekta')
+                                ->icon('heroicon-o-user-plus')
+                                ->action(function (Set $set) {
+                                    $users = Filament::getTenant()->users()->get(['email'])->pluck(['email'])->toArray();
+
+                                    $set('participants', $users);
+                                });
+                        })
+                        ->label('Sudionici')
+                        ->required(),
+
+                    Textarea::make('message')
+                        ->rows(10)
+                        ->label('Poruka')
+                        ->required(),
                 ])
                 ->action(function (array $data) {
                     $roomName = Str::random(10);
