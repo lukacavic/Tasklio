@@ -19,7 +19,7 @@ class ViewRoomController extends Controller
 
     public function __invoke(Request $request, $room = null)
     {
-        return $this->jitsi->viewRoom($room, $request->user());
+        return $this->jitsi->viewRoom($room, $request->user(), true);
     }
 
 
