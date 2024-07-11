@@ -139,7 +139,11 @@ class TaskResource extends Resource
 
                 Select::make('members')
                     ->label('Djelatnici')
-                    ->relationship('members')
+                    ->relationship(name:'members', modifyQueryUsing: function(Builder $query) {
+                        return $query->orderBy('first_name');
+                    })
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->first_name} {$record->last_name}")
+                    ->searchable(['first_name', 'last_name'])
                     ->options(function () {
                         $projectId = Filament::getTenant()->id;
                         return User::whereHas('projects', function ($query) use ($projectId) {
@@ -206,7 +210,6 @@ class TaskResource extends Resource
                             ->default(false),
 
                     ]),
-
 
                 RichEditor::make('description')
                     ->label('Opis')
