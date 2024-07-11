@@ -89,9 +89,6 @@ class AppPanelProvider extends PanelProvider
                         navigationGroup: 'Settings'
                     ),
                 FilamentFullCalendarPlugin::make()
-                    ->plugins([
-                        'resourceTimeGrid', 'resourceTimeline', 'resourceDayGrid', 'scrollGrid'
-                    ])
                     ->selectable(true),
                 FilamentApexChartsPlugin::make(),
                 FilamentEmail::make(),
