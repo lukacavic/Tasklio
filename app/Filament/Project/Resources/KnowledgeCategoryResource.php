@@ -18,8 +18,6 @@ class KnowledgeCategoryResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $cluster = KnowledgeBase::class;
-
     protected static ?string $label = 'Kategorija';
 
     protected static ?string $pluralLabel = 'Kategorije';

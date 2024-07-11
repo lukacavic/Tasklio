@@ -2,14 +2,10 @@
 
 namespace App\Filament\Project\Resources;
 
-use App\Filament\Project\Clusters\KnowledgeBase;
 use App\Filament\Project\Resources\KnowledgeArticleResource\Pages;
 use App\Filament\Project\Resources\KnowledgeCategoryResource\Pages\ViewKnowledgeArticle;
 use App\Models\KnowledgeArticle;
-use App\Models\KnowledgeCategory;
-use Filament\Actions\DeleteAction;
 use Filament\Facades\Filament;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -21,7 +17,6 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
 class KnowledgeArticleResource extends Resource
@@ -34,9 +29,11 @@ class KnowledgeArticleResource extends Resource
 
     protected static ?string $pluralLabel = 'Članci';
 
-    protected static ?string $cluster = KnowledgeBase::class;
-
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static bool $shouldRegisterNavigation = true;
+
+    protected static ?string $navigationLabel = 'Baza znanja';
 
     public static function getGlobalSearchResultUrl(Model $record): string
     {
