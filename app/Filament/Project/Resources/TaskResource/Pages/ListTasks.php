@@ -4,20 +4,13 @@ namespace App\Filament\Project\Resources\TaskResource\Pages;
 
 use App\Filament\Project\Pages\TasksKanbanBoard;
 use App\Filament\Project\Resources\TaskResource;
-use App\Models\Lead;
-use App\Models\Project;
 use App\Models\Task;
 use App\TaskStatus;
 use Filament\Actions;
 use Filament\Facades\Filament;
-use Filament\Forms\Get;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Support\Colors\Color;
 use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Builder;
-use Livewire\Component;
-use Livewire\Livewire;
 
 class ListTasks extends ListRecords
 {
@@ -32,7 +25,13 @@ class ListTasks extends ListRecords
     {
         $tabs = [
             'all' => Tab::make('Svi')
-                ->badge(Filament::getTenant()->tasks()->count())
+                ->badge(Filament::getTenant()->tasks()->count()),
+
+            'not-assigned' => Tab::make('Nedodojeljeni')
+                ->badge(Filament::getTenant()->tasks()->whereDoesntHave('members')->count())
+                ->modifyQueryUsing(function ($query) {
+                    $query->whereDoesntHave('members');
+                })
         ];
 
         $tabs['my-tasks'] = Tab::make('Moji zadaci')
