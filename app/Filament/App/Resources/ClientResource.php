@@ -53,6 +53,10 @@ class ClientResource extends Resource
                     ->maxLength(255),
                 Country::make('country')
                     ->label('Država'),
+                Forms\Components\Select::make('project')
+                    ->label('Projekt')
+                    ->multiple()
+                    ->relationship('projects', 'name')
             ]);
     }
 
@@ -60,7 +64,7 @@ class ClientResource extends Resource
     {
         return $table
             ->recordUrl(
-                fn (Model $record): string => ClientOverview::getUrl([$record->id]),
+                fn(Model $record): string => ClientOverview::getUrl([$record->id]),
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')

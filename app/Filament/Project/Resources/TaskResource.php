@@ -242,14 +242,6 @@ class TaskResource extends Resource
                     ->label('Naziv')
                     ->searchable(),
 
-                ImageColumn::make('creator.avatar')
-                    ->label('Dodao')
-                    ->circular()
-                    ->tooltip(function(Task $record) {
-                        return $record->creator->fullName;
-                    })
-                    ->sortable(),
-
                 ImageColumn::make('members.avatar_url')
                     ->circular()
                     ->stacked()
