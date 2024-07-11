@@ -31,6 +31,13 @@ class ProjectMilestoneKanBan extends KanbanBoard
 
     protected static string $recordView = 'project-milestone-kanban.kanban-record';
 
+    public function recordClicked(int $recordId, array $data): void
+    {
+        $record = Task::find($recordId);
+
+        $this->redirect(TaskResource::getUrl('view', ['record' => $record]));
+    }
+
     public function form(Form $form): Form
     {
         return TaskResource::form($form)

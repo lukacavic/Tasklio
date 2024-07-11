@@ -71,12 +71,8 @@ class CalendarWidget extends FullCalendarWidget
         Notification::make()
             ->title('Promjena vremena događaja: ' . $this->record->title . '. Novo vrijeme: ' . Carbon::parse($event['start'])->toFormattedDateString())
             ->success()
+            ->send()
             ->sendToDatabase($this->record->users);
-
-        Notification::make()
-            ->title('Vrijeme događaja promjenjeno')
-            ->success()
-            ->send();
 
         return false;
     }

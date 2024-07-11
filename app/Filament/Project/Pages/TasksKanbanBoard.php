@@ -29,6 +29,13 @@ class TasksKanbanBoard extends KanbanBoard
 
     protected static bool $shouldRegisterNavigation = false;
 
+    public function recordClicked(int $recordId, array $data): void
+    {
+        $record = Task::find($recordId);
+
+        $this->redirect(TaskResource::getUrl('view', ['record' => $record]));
+    }
+
     protected function statuses(): \Illuminate\Support\Collection
     {
         return collect([
