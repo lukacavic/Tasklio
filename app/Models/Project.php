@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Filament\Models\Contracts\HasCurrentTenantLabel;
+use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model implements HasCurrentTenantLabel
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasSettingsField;
 
     protected $guarded = ['id'];
 
