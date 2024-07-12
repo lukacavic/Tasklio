@@ -154,7 +154,7 @@ class TaskResource extends Resource
 
                 ToggleButtons::make('priority_id')
                     ->label('Prioritet')
-                    ->default(1)
+                    ->default(TaskPriority::Normal->value)
                     ->grouped()
                     ->options(TaskPriority::class)
                     ->inline(),
