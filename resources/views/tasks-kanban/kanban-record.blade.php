@@ -33,7 +33,7 @@
     <div class="flex hover:-space-x-1 -space-x-3">
         @foreach($record->members as $member)
             <x-filament::avatar
-                src="{{asset($member->getFilamentAvatarUrl())}}"
+                src="{{asset($member->avatar)}}"
             />
         @endforeach
     </div>

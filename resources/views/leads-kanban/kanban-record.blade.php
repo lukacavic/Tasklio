@@ -37,18 +37,11 @@
 
     @if($record->assignedUser)
         <div class="flex hover:-space-x-1 -space-x-3">
-            @if($record->assignedUser->avatar_url)
+            @if($record->assignedUser)
                 <x-filament::avatar
-                    src="{{asset($record->assignedUser->avatar_url)}}"
+                    src="{{asset($record->assignedUser->avatar)}}"
                 />
-            @else
-                <div class="w-8 h-8 transition-all rounded-full bg-gray-200 border-2 border-white"></div>
             @endif
         </div>
     @endif
-
-    <div class="mt-2 relative">
-        <div class="absolute h-1 bg-primary-500 rounded-full" style="width: 56%"></div>
-        <div class="h-1 bg-gray-200 rounded-full"></div>
-    </div>
 </div>
