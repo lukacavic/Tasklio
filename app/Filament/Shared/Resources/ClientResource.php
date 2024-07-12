@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Filament\App\Resources;
+namespace App\Filament\Shared\Resources;
 
-use App\Filament\App\Resources\ClientResource\Pages\ClientContacts;
-use App\Filament\App\Resources\ClientResource\Pages\ClientDocuments;
-use App\Filament\App\Resources\ClientResource\Pages\ClientNotes;
-use App\Filament\App\Resources\ClientResource\Pages\ClientOverview;
+use App\Filament\Shared\Resources\ClientResource\Pages\ClientContacts;
+use App\Filament\Shared\Resources\ClientResource\Pages\ClientDocuments;
+use App\Filament\Shared\Resources\ClientResource\Pages\ClientNotes;
+use App\Filament\Shared\Resources\ClientResource\Pages\ClientOverview;
+use App\Filament\Shared\Resources\ClientResource\Pages\ClientVault;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
 use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -54,6 +56,16 @@ class ClientResource extends Resource
                 Country::make('country')
                     ->label('Država'),
                 Forms\Components\Select::make('project')
+                    ->disabled(function() {
+                        return Filament::getCurrentPanel()->getId() == 'project';
+                    })
+                    ->default(function() {
+                        if(Filament::getCurrentPanel()->getId() == 'project') {
+                            return [Filament::getTenant()->id];
+                        }
+
+                        return null;
+                    })
                     ->label('Projekt')
                     ->multiple()
                     ->relationship('projects', 'name')
@@ -66,6 +78,15 @@ class ClientResource extends Resource
             ->recordUrl(
                 fn(Model $record): string => ClientOverview::getUrl([$record->id]),
             )
+            ->modifyQueryUsing(function ($query) {
+                if (Filament::getCurrentPanel()->getId() == 'project') {
+                    return Client::query()->whereHas('projects', function ($query) {
+                        return $query->where('project_id', Filament::getTenant()->id);
+                    });
+                }
+
+                return Client::query();
+            })
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Klijent')
@@ -173,7 +194,7 @@ class ClientResource extends Resource
                         return $record->vaults->count();
                     })
                     ->isActiveWhen(function () {
-                        return request()->routeIs(\App\Filament\App\Resources\ClientResource\Pages\ClientVault::getRouteName());
+                        return request()->routeIs(ClientVault::getRouteName());
                     })
                     ->url(function () use ($record) {
                         return static::getUrl('vaults', ['record' => $record->id]);
@@ -184,13 +205,13 @@ class ClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\App\Resources\ClientResource\Pages\ListClients::route('/'),
+            'index' => \App\Filament\Shared\Resources\ClientResource\Pages\ListClients::route('/'),
             'contacts' => ClientContacts::route('/{record}/contacts}'),
             // 'create' => Pages\CreateClient::route('/create'),
-            'overview' => \App\Filament\App\Resources\ClientResource\Pages\ClientOverview::route('/{record}/overview'),
-            'documents' => \App\Filament\App\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
-            'edit' => \App\Filament\App\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
-            'vaults' => \App\Filament\App\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
+            'overview' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientOverview::route('/{record}/overview'),
+            'documents' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
+            'edit' => \App\Filament\Shared\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
+            'vaults' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
             'notes' => ClientNotes::route('/{record}/notes'),
         ];
     }

@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Filament\App\Resources\ClientResource\Pages;
+namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
-use App\Filament\App\Widgets\CalendarWidget;
+use App\Filament\Shared\Resources\ClientResource;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Filament\Actions;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Form;
-use Filament\Actions;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Support\Colors\Color;
-use Illuminate\Database\Eloquent\Model;
 use JaOcero\ActivityTimeline\Components\ActivityDate;
 use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;

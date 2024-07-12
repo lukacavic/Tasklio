@@ -55,6 +55,7 @@ class AppPanelProvider extends PanelProvider
             ->tenant(Organisation::class)
             ->tenantMenu(false)
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
+            ->discoverResources(in: app_path('Filament/Shared/Resources'), for: 'App\\Filament\\Shared\\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
                 //Pages\Dashboard::class,

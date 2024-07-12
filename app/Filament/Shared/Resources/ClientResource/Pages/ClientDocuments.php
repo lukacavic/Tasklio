@@ -1,38 +1,33 @@
 <?php
 
-namespace App\Filament\App\Resources\ClientResource\Pages;
+namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
-use App\Models\Client;
+use App\Filament\Shared\Resources\ClientResource;
 use App\Models\Document;
-use App\Models\Note;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+use Spatie\MediaLibrary\Support\MediaStream;
 
-class ClientNotes extends ManageRelatedRecords
+class ClientDocuments extends ManageRelatedRecords
 {
     use HasPageSidebar;
 
     protected static string $resource = ClientResource::class;
 
-    protected static string $relationship = 'notes';
+    protected static string $relationship = 'documents';
 
-    protected static ?string $navigationIcon = 'heroicon-o-pencil';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $title = 'Napomene';
+    protected static ?string $title = 'Dokumenti';
+
+    public static function getNavigationLabel(): string
+    {
+        return 'Media';
+    }
 
     public function form(Form $form): Form
     {
@@ -42,16 +37,9 @@ class ClientNotes extends ManageRelatedRecords
                     ->label('Naslov')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Toggle::make('priority')
-                    ->label('Bitna napomena')
-                    ->inline()
-                    ->default(false)
-                    ->columns(1),
-                TinyEditor::make('content')
-                    ->label('Sadržaj')
-                    ->required(),
                 Forms\Components\SpatieMediaLibraryFileUpload::make('attachments')
                     ->multiple()
+                    ->required()
                     ->label('Privitci')
                     ->downloadable()
             ])->columns(1);
@@ -60,20 +48,13 @@ class ClientNotes extends ManageRelatedRecords
     public function table(Table $table): Table
     {
         return $table
-            ->emptyStateHeading('Nema učitanih napomena')
-            ->emptyStateDescription('Učitajte novu za početak')
+            ->emptyStateHeading('Nema učitanih dokumenata')
+            ->emptyStateDescription('Učitajte novi dokument za projekt')
             ->recordTitleAttribute('name')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->icon(function (Note $record) {
-                        if ($record->media()->exists()) {
-                            return 'heroicon-o-paper-clip';
-                        }
-
-                        return null;
-                    })
-                    ->description(function (Model $record) {
-                        return Str::limit(strip_tags($record->content), 40);
+                    ->description(function (Document $record) {
+                        return 'Ukupno ' . $record->media()->count() . ' dokumenata';
                     })
                     ->label('Naslov'),
                 Tables\Columns\TextColumn::make('user.fullName')
@@ -84,13 +65,23 @@ class ClientNotes extends ManageRelatedRecords
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->modalHeading('Nova napomena'),
+                    ->modalHeading('Učitaj dokument')
+                    ->label('Učitaj dokument')
+                    ->icon('heroicon-o-paper-clip'),
             ])
             ->actions([
+                Tables\Actions\Action::make('download')
+                    ->hiddenLabel()
+                    ->icon('heroicon-o-arrow-down-tray')
+                ->action(function(Document $record, $data) {
+                    $downloads = $record->getMedia();
+
+                    return MediaStream::create('attachments.zip')->addMedia($downloads);
+                }),
                 Tables\Actions\EditAction::make()
-                    ->modalHeading('Izmjena napomene'),
+                    ->modalHeading('Izmjena dokumenta')
+                    ->hiddenLabel(),
                 Tables\Actions\DeleteAction::make()
-                    ->modalHeading('Brisanje napomene')
                     ->hiddenLabel(),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),

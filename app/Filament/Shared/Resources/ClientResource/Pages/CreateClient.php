@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\App\Resources\ClientResource\Pages;
+namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
+use App\Filament\Shared\Resources\ClientResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateClient extends CreateRecord

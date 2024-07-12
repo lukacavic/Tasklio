@@ -2,35 +2,26 @@
 
 namespace App\Filament\Project\Resources\LeadResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
-use App\Filament\App\Resources\ProjectResource;
 use App\Filament\Project\Resources\LeadResource;
-use App\Models\Document;
 use App\Models\Lead;
-use App\Models\Note;
 use App\Models\Task;
 use App\Models\User;
 use App\TaskStatus;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Facades\Filament;
-use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
-use Spatie\MediaLibrary\Support\MediaStream;
 
 class LeadTasks extends ManageRelatedRecords
 {

@@ -1,18 +1,13 @@
 <?php
 
-namespace App\Filament\App\Resources\ClientResource\Pages;
+namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
-use App\Filament\App\Resources\ClientResource;
-use App\Filament\App\Resources\ProjectResource;
+use App\Filament\Shared\Resources\ClientResource;
 use App\Filament\Shared\Vaults;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
-use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ClientVault extends ManageRelatedRecords
 {

@@ -56,6 +56,7 @@ class ProjectPanelProvider extends PanelProvider
             ->globalSearchDebounce('750ms')
             ->globalSearchFieldKeyBindingSuffix()
             ->discoverResources(in: app_path('Filament/Project/Resources'), for: 'App\\Filament\\Project\\Resources')
+            ->discoverResources(in: app_path('Filament/Shared/Resources'), for: 'App\\Filament\\Shared\\Resources')
             ->discoverPages(in: app_path('Filament/Project/Pages'), for: 'App\\Filament\\Project\\Pages')
             ->discoverClusters(in: app_path('Filament/Project/Clusters'), for: 'App\\Filament\\Project\\Clusters')
             ->pages([
