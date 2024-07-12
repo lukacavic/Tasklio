@@ -1,7 +1,7 @@
 @if($user)
     <div>
         @php($uniqid = uniqid())
-        <img src="{{ $user->getFilamentAvatarUrl() }}"
+        <img src="{{ $user->avatar }}"
              alt="{{ $user->name }}"
              data-popover-target="popover-user-{{ $user->id }}-{{ $uniqid }}"
              class="w-6 h-6 rounded-full bg-gray-200 bg-cover bg-center"/>
@@ -14,7 +14,7 @@
             <div class="p-3">
                 <div class="flex justify-between items-center mb-2">
                     <img class="w-10 h-10 rounded-full"
-                         src="{{ $user->getFilamentAvatarUrl() }}" alt="{{ $user->name }}">
+                         src="{{ $user->avatar }}" alt="{{ $user->name }}">
                 </div>
                 <p class="text-base font-semibold leading-none text-gray-900 dark:text-white">
                     <a>{{ $user->name }}</a>

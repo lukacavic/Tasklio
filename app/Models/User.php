@@ -66,7 +66,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url ? Storage::url($this->avatar_url) : 'https://innostudio.de/fileuploader/images/default-avatar.png';
+        return $this->avatar_url ? Storage::url($this->avatar_url) : $this->avatar;
     }
 
     public function canAccessPanel(Panel $panel): bool

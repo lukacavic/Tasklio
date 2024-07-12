@@ -79,6 +79,7 @@ class ClientNotes extends ManageRelatedRecords
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->label('Dodaj')
                     ->modalHeading('Nova napomena'),
             ])
             ->actions([

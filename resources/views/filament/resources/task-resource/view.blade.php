@@ -21,10 +21,10 @@
         @endif
     </form>
 
-        @foreach($record->comments->sortByDesc('created_at') as $comment)
-            <div
-                class="w-full flex flex-col gap-2 @if(!$loop->last) pb-5 mb-5 border-b border-gray-200 @endif ticket-comment">
-                <div class="w-full flex justify-between">
+    @foreach($record->comments->sortByDesc('created_at') as $comment)
+        <div
+            class="w-full flex flex-col gap-2 @if(!$loop->last) pb-5 mb-5 border-b border-gray-200 @endif ticket-comment">
+            <div class="w-full flex justify-between">
                             <span class="flex items-center gap-1 text-gray-500 text-sm">
                                 <span class="font-medium flex items-center gap-1">
                                     <x-user-avatar :user="$comment->user"/>
@@ -34,26 +34,26 @@
                                 {{ $comment->created_at->format('d.m.Y g:i') }}
                                 ({{ $comment->created_at->diffForHumans() }})
                             </span>
-                    @if($comment->user_id === auth()->user()->id)
-                        <div class="actions flex items-center gap-2">
-                            <button type="button" wire:click="editComment({{ $comment->id }})"
-                                    class="text-primary-500 text-xs hover:text-primary-600 hover:underline">
-                                Uredi
-                            </button>
-                            <span class="text-gray-300">|</span>
+                @if($comment->user_id === auth()->user()->id)
+                    <div class="actions flex items-center gap-2">
+                        <button type="button" wire:click="editComment({{ $comment->id }})"
+                                class="text-primary-500 text-xs hover:text-primary-600 hover:underline">
+                            Uredi
+                        </button>
+                        <span class="text-gray-300">|</span>
 
 
-                            <button type="button" wire:click="deleteComment({{ $comment->id }})"
-                                    class="text-danger-500 text-xs hover:text-danger-600 hover:underline">
-                                Izbriši
-                            </button>
-                        </div>
-                    @endif
-                </div>
-                <div class="w-full prose">
-                    {!! $comment->content !!}
-                </div>
+                        <button type="button" wire:click="deleteComment({{ $comment->id }})"
+                                class="text-danger-500 text-xs hover:text-danger-600 hover:underline">
+                            Izbriši
+                        </button>
+                    </div>
+                @endif
             </div>
-        @endforeach
+            <div class="w-full prose">
+                {!! $comment->content !!}
+            </div>
+        </div>
+    @endforeach
 
 </x-filament::page>

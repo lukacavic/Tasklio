@@ -72,8 +72,7 @@ class ClientDocuments extends ManageRelatedRecords
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->modalHeading('Učitaj dokument')
-                    ->label('Učitaj dokument')
-                    ->icon('heroicon-o-paper-clip'),
+                    ->label('Dodaj'),
             ])
             ->actions([
                 Tables\Actions\Action::make('download')

@@ -13,7 +13,7 @@ class LeadsByStatusChart extends ApexChartWidget
 
     public static function canView(): bool
     {
-        return Filament::getTenant()->settings()->get('leads-managements-enabled');
+        return Filament::getTenant()->settings()->get('leads-managements-enabled', false);
     }
 
     protected function getOptions(): array

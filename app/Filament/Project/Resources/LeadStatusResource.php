@@ -35,7 +35,7 @@ class LeadStatusResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Filament::getTenant()->settings()->get('leads-managements-enabled');
+        return Filament::getTenant()->settings()->get('leads-managements-enabled', false);
     }
 
     public static function form(Form $form): Form
