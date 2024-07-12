@@ -17,7 +17,7 @@ class ProjectMilestoneKanBan extends KanbanBoard
 {
     protected static ?string $slug = 'project-milestone-kanban';
 
-    protected static ?string $title = 'Prekretnice (Milestones)';
+    protected static ?string $title = 'Planovi (Milestones)';
 
     protected static string $model = Task::class;
 

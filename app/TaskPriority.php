@@ -26,8 +26,8 @@ enum TaskPriority: int implements HasLabel, HasColor
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Low => Color::Green,
-            self::Normal => Color::Gray,
+            self::Low => Color::Yellow,
+            self::Normal => Color::Green,
             self::High => Color::Orange,
             self::Urgent => Color::Red,
         };

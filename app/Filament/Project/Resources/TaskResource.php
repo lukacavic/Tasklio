@@ -275,7 +275,7 @@ class TaskResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('project_milestone_id')
-                    ->label('Prekretnica (Milestone)')
+                    ->label('Plan (Milestone)')
                     ->native(false)
                     ->multiple()
 

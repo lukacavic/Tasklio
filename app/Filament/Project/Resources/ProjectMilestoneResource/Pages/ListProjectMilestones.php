@@ -37,7 +37,7 @@ class ListProjectMilestones extends ListRecords
                     $query->past();
                 }),
 
-            'future' => Tab::make('U planu')
+            'future' => Tab::make('Nadolazeći')
                 ->badge(Filament::getTenant()->projectMilestones()->future()->count())
                 ->modifyQueryUsing(function ($query) {
                     $query->future();
