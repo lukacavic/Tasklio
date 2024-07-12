@@ -42,7 +42,6 @@ use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -139,10 +138,10 @@ class TaskResource extends Resource
 
                 Select::make('members')
                     ->label('Djelatnici')
-                    ->relationship(name:'members', modifyQueryUsing: function(Builder $query) {
+                    ->relationship(name: 'members', modifyQueryUsing: function (Builder $query) {
                         return $query->orderBy('first_name');
                     })
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->first_name} {$record->last_name}")
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
                     ->searchable(['first_name', 'last_name'])
                     ->options(function () {
                         $projectId = Filament::getTenant()->id;
@@ -231,7 +230,6 @@ class TaskResource extends Resource
             ->recordTitleAttribute('name')
             ->emptyStateHeading('Trenutno nema upisanih zadataka')
             ->columns([
-
                 TextColumn::make('title')
                     ->description(function (Task $record) {
                         return strip_tags(Str::limit($record->description, 40));
@@ -278,7 +276,6 @@ class TaskResource extends Resource
                     ->label('Plan (Milestone)')
                     ->native(false)
                     ->multiple()
-
                     ->options(Filament::getTenant()->projectMilestones()->get()->pluck('name', 'id')),
 
                 SelectFilter::make('user_id')
@@ -289,7 +286,7 @@ class TaskResource extends Resource
 
                 Filter::make('has_media')
                     ->label('Sadrži privitak')
-                    ->baseQuery(function($query) {
+                    ->baseQuery(function ($query) {
                         return $query->whereHas('media');
                     })
                     ->toggle()

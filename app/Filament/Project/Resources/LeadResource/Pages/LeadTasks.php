@@ -4,6 +4,7 @@ namespace App\Filament\Project\Resources\LeadResource\Pages;
 
 use App\Filament\Project\Resources\LeadResource;
 use App\Filament\Project\Resources\TaskResource;
+use App\Filament\Shared\Tasks;
 use App\Models\Lead;
 use App\TaskPriority;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
@@ -27,12 +28,12 @@ class LeadTasks extends ManageRelatedRecords
 
     public function form(Form $form): Form
     {
-        return TaskResource::form($form);
+        return Tasks::getForm($form);
     }
 
     public function table(Table $table): Table
     {
-        return TaskResource::table($table)
+        return Tasks::getTable($table)
             ->headerActions([
                 CreateAction::make()
                     ->label('Dodaj')
