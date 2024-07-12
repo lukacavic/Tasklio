@@ -5,9 +5,12 @@ namespace App\Filament\Shared\Resources\ClientResource\Pages;
 use App\Filament\Shared\Resources\ClientResource;
 use App\Models\Contact;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Filament\Forms\Components\Livewire;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
@@ -19,6 +22,8 @@ use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class ClientContacts extends ManageRelatedRecords
 {
@@ -31,31 +36,6 @@ class ClientContacts extends ManageRelatedRecords
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $title = 'Kontakti';
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                TextInput::make('full_name')
-                    ->label('Ime i prezime')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('position')
-                    ->label('Pozicija/Titula')
-                    ->maxLength(255),
-                TextInput::make('email')
-                    ->unique(Contact::class, 'email', ignoreRecord: true)
-                    ->prefixIcon('heroicon-o-at-symbol')
-                    ->label('Email')
-                    ->email()
-                    ->maxLength(255),
-                TextInput::make('phone')
-                    ->prefixIcon('heroicon-o-phone')
-                    ->label('Telefon')
-                    ->maxLength(255),
-
-            ])->columns(2);
-    }
 
     public function table(Table $table): Table
     {
@@ -87,6 +67,7 @@ class ClientContacts extends ManageRelatedRecords
                     ->modalHeading('Novi kontakt'),
             ])
             ->actions([
+                //$this->getSendEmailAction(),
                 EditAction::make()
                     ->modalHeading('Izmjena kontakta'),
                 DeleteAction::make()
@@ -102,5 +83,65 @@ class ClientContacts extends ManageRelatedRecords
                     ForceDeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    /**
+     * @return \Filament\Actions\Action|Action|null
+     */
+    public function getSendEmailAction(): Action
+    {
+        return Action::make('send-mail')
+            ->modalHeading('Pošalji email')
+            ->form([
+                TagsInput::make('receiver')
+                    ->required()
+
+                    ->hintActions([
+                        \Filament\Forms\Components\Actions\Action::make('show-cc')
+                        ->label('CC primatelji')
+                        ->link()
+                    ])
+                    ->placeholder('Unesite email primatelja')
+                    ->label('Primatelj/i'),
+
+                TextInput::make('subject')
+                    ->required()
+                    ->placeholder('Naslov email-a')
+                    ->label('Naslov'),
+
+                TinyEditor::make('content')
+                    ->label('Sadržaj')
+                    ->required()
+                    ->placeholder('Unesite poruku za slanje')
+                    ->minHeight(400)
+            ])
+            ->action(function (array $data) {
+
+            })
+            ->hiddenLabel()
+            ->icon('heroicon-o-at-symbol');
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                TextInput::make('full_name')
+                    ->label('Ime i prezime')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('position')
+                    ->label('Pozicija/Titula')
+                    ->maxLength(255),
+                TextInput::make('email')
+                    ->unique(Contact::class, 'email', ignoreRecord: true)
+                    ->prefixIcon('heroicon-o-at-symbol')
+                    ->label('Email')
+                    ->email()
+                    ->maxLength(255),
+                PhoneInput::make('phone')
+                    ->label('GSM'),
+
+            ])->columns(2);
     }
 }

@@ -18,6 +18,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class ClientResource extends Resource
 {
@@ -37,30 +38,36 @@ class ClientResource extends Resource
                     ->label('Klijent')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('phone')
-                    ->label('Telefon')
-                    ->tel()
-                    ->maxLength(255),
+
+                PhoneInput::make('phone')
+                    ->label('Telefon'),
+
                 Forms\Components\TextInput::make('website')
                     ->label('Web stranica')
+                    ->prefix('https://')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('address')
                     ->label('Adresa')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('city')
                     ->label('Mjesto/Grad')
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('zip_code')
                     ->label('Poštanski broj')
                     ->maxLength(255),
+
                 Country::make('country')
                     ->label('Država'),
+
                 Forms\Components\Select::make('project')
-                    ->disabled(function() {
+                    ->disabled(function () {
                         return Filament::getCurrentPanel()->getId() == 'project';
                     })
-                    ->default(function() {
-                        if(Filament::getCurrentPanel()->getId() == 'project') {
+                    ->default(function () {
+                        if (Filament::getCurrentPanel()->getId() == 'project') {
                             return [Filament::getTenant()->id];
                         }
 
