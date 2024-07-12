@@ -9,6 +9,7 @@ use Filament\Support\Colors\Color;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
 
         TinyEditor::configureUsing(function (TinyEditor $tinyEditor) {
             $tinyEditor->profile('default');
+        });
+
+        PhoneInput::configureUsing(function(PhoneInput $phoneInput) {
+            $phoneInput->defaultCountry('HR');
         });
 
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
