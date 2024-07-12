@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Pages;
 
 use App\Filament\Project\Resources\TaskResource;
+use App\Filament\Shared\Tasks;
 use App\Models\Task;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
@@ -57,10 +58,9 @@ class TasksKanbanBoard extends KanbanBoard
                 ->url(fn (): string => TaskResource::getUrl()),
             \Filament\Actions\CreateAction::make()
                 ->model(Task::class)
-                ->form([
-                    TextInput::make('title'),
-                    Textarea::make('description'),
-                ])
+                ->form(function($form) {
+                    return Tasks::getForm($form);
+                })
                 ->mutateFormDataUsing(function ($data) {
                     $data['user_id'] = auth()->id();
 
