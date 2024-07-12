@@ -26,6 +26,11 @@ class Client extends BaseModel implements HasMedia
         });
     }
 
+    public function tasks(): MorphMany
+    {
+        return $this->morphMany(Task::class, 'related');
+    }
+
     public function project()
     {
         return $this->projects();

@@ -2,10 +2,12 @@
 
 namespace App\Filament\Shared\Resources;
 
+use App\Filament\Project\Resources\LeadResource\Pages\LeadTasks;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientContacts;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientDocuments;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientNotes;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientOverview;
+use App\Filament\Shared\Resources\ClientResource\Pages\ClientTasks;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientVault;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
@@ -195,6 +197,19 @@ class ClientResource extends Resource
                     ->url(function () use ($record) {
                         return static::getUrl('notes', ['record' => $record->id]);
                     }),
+
+                PageNavigationItem::make('Zadaci')
+                    ->icon('heroicon-o-check-circle')
+                    ->badge(function () use ($record) {
+                        return $record->tasks->count();
+                    })
+                    ->isActiveWhen(function () {
+                        return request()->routeIs(ClientTasks::getRouteName());
+                    })
+                    ->url(function () use ($record) {
+                        return static::getUrl('tasks', ['record' => $record->id]);
+                    }),
+
                 PageNavigationItem::make('Trezor')
                     ->icon('heroicon-o-lock-open')
                     ->badge(function () use ($record) {
@@ -220,6 +235,7 @@ class ClientResource extends Resource
             'edit' => \App\Filament\Shared\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
             'vaults' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
             'notes' => ClientNotes::route('/{record}/notes'),
+            'tasks' => ClientTasks::route('/{record}/tasks'),
         ];
     }
 }

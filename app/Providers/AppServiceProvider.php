@@ -34,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
 
         PhoneInput::configureUsing(function(PhoneInput $phoneInput) {
             $phoneInput->defaultCountry('HR');
+            $phoneInput->initialCountry('HR');
+            $phoneInput->disableIpLookUp();
         });
 
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
