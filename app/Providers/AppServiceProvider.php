@@ -63,7 +63,6 @@ class AppServiceProvider extends ServiceProvider
             $action->icon('heroicon-o-plus');
             $action->label('Dodaj');
             $action->slideOver();
-            $action->color(Color::Green);
         });
 
         //Table actions
@@ -80,7 +79,6 @@ class AppServiceProvider extends ServiceProvider
 
         \Filament\Tables\Actions\CreateAction::configureUsing(function (\Filament\Tables\Actions\CreateAction $action) {
             $action->icon('heroicon-o-plus');
-            $action->color(Color::Green);
             $action->label('Dodaj');
             $action->slideOver();
         });
