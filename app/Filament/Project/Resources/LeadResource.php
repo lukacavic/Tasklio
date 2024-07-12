@@ -302,9 +302,9 @@ class LeadResource extends Resource
                     ->searchable()
                     ->label('Telefon'),
 
-                Tables\Columns\TextColumn::make('assignedUser.fullName')
+                Tables\Columns\ImageColumn::make('assignedUser.avatar')
                     ->label('Djelatnik')
-                    ->searchable(),
+                    ->circular(),
 
                 Tables\Columns\TextColumn::make('source.name')
                     ->label('Izvor')

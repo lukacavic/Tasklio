@@ -5,15 +5,11 @@ namespace App\Filament\Project\Resources;
 use App\Filament\Project\Resources\DocumentResource\Pages;
 use App\Filament\Project\Resources\DocumentResource\RelationManagers;
 use App\Models\Document;
-use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Spatie\MediaLibrary\Support\MediaStream;
 
 class DocumentResource extends Resource
@@ -62,15 +58,19 @@ class DocumentResource extends Resource
                     })
                     ->label('Naslov'),
 
-                Tables\Columns\TextColumn::make('user.fullName')
-                    ->label('Dodao'),
+                Tables\Columns\ImageColumn::make('user.avatar')
+                    ->label('Dodao')
+                    ->circular(),
 
                 Tables\Columns\SpatieTagsColumn::make('tags')
                     ->label('Oznake'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
-                    ->since(),
+                    ->dateTime()
+                    ->description(function (Document $record) {
+                        return $record->created_at->diffForHumans();
+                    }),
             ])
             ->actions([
                 Tables\Actions\Action::make('download')

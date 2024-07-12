@@ -57,11 +57,17 @@ class ClientDocuments extends ManageRelatedRecords
                         return 'Ukupno ' . $record->media()->count() . ' dokumenata';
                     })
                     ->label('Naslov'),
-                Tables\Columns\TextColumn::make('user.fullName')
-                    ->label('Dodao'),
+
+                Tables\Columns\ImageColumn::make('user.avatar')
+                    ->label('Dodao')
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
-                    ->since(),
+                    ->dateTime()
+                    ->description(function(Document $record) {
+                        return $record->created_at->diffForHumans();
+                    }),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
@@ -73,11 +79,11 @@ class ClientDocuments extends ManageRelatedRecords
                 Tables\Actions\Action::make('download')
                     ->hiddenLabel()
                     ->icon('heroicon-o-arrow-down-tray')
-                ->action(function(Document $record, $data) {
-                    $downloads = $record->getMedia();
+                    ->action(function (Document $record, $data) {
+                        $downloads = $record->getMedia();
 
-                    return MediaStream::create('attachments.zip')->addMedia($downloads);
-                }),
+                        return MediaStream::create('attachments.zip')->addMedia($downloads);
+                    }),
                 Tables\Actions\EditAction::make()
                     ->modalHeading('Izmjena dokumenta')
                     ->hiddenLabel(),

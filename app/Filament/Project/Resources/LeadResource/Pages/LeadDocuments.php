@@ -57,8 +57,11 @@ class LeadDocuments extends ManageRelatedRecords
                         return 'Ukupno ' . $record->media()->count() . ' dokumenata';
                     })
                     ->label('Naslov'),
-                Tables\Columns\TextColumn::make('user.fullName')
-                    ->label('Dodao'),
+
+                Tables\Columns\ImageColumn::make('user.avatar')
+                    ->label('Dodao')
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
                     ->since(),

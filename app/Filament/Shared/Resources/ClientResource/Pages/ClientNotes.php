@@ -68,8 +68,11 @@ class ClientNotes extends ManageRelatedRecords
                         return Str::limit(strip_tags($record->content), 40);
                     })
                     ->label('Naslov'),
-                Tables\Columns\TextColumn::make('user.fullName')
-                    ->label('Dodao'),
+
+                Tables\Columns\ImageColumn::make('user.avatar')
+                    ->label('Dodao')
+                    ->circular(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
                     ->since(),

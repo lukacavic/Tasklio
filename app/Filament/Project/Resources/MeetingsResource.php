@@ -106,17 +106,17 @@ class MeetingsResource extends Resource
                         return Str::limit($record->description, 40);
                     }),
 
-                Tables\Columns\TextColumn::make('userCreated.first_name')
+                Tables\Columns\ImageColumn::make('userCreated.avatar')
                     ->label('Kreirao')
-                    ->description(function (Meeting $record) {
-                        return $record->created_at->diffForHumans();
-                    }),
+                    ->circular(),
 
                 Tables\Columns\TextColumn::make('meeting_from')
                     ->label('Vrijeme sastanka')
                     ->dateTime(),
 
-                Tables\Columns\TextColumn::make('userParticipants.first_name')
+                Tables\Columns\ImageColumn::make('userParticipants.avatar')
+                    ->stacked()
+                    ->circular()
                     ->label('Djelatnici'),
 
                 Tables\Columns\SpatieTagsColumn::make('tags')
