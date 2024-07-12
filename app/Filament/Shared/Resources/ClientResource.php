@@ -10,6 +10,7 @@ use App\Filament\Shared\Resources\ClientResource\Pages\ClientOverview;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientTasks;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientVault;
 use App\Models\Client;
+use App\Models\Contact;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
 use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
 use Filament\Facades\Filament;
@@ -99,30 +100,45 @@ class ClientResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Klijent')
+                    ->description(function(Client $record) {
+                        return $record->fullAddress;
+                    })
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('primaryContact.full_name')
                     ->label('Primarni kontakt')
+                    ->description(function(Client $record) {
+                        return $record->primaryContact?->position;
+                    })
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->label('Email')
+
+                Tables\Columns\TextColumn::make('primaryContact.email')
+                    ->label('Primarni email')
+                    ->copyable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('phone')
+
+                Tables\Columns\TextColumn::make('primaryContact.phone')
                     ->label('Telefon')
+                    ->copyable()
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('website')
                     ->label('Web stranica')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('fullAddress')
-                    ->label('Adresa')
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
-                    ->dateTime()
+                    ->description(function(Client $record){
+                        return $record->created_at->diffForHumans();
+                    })
+                    ->date()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

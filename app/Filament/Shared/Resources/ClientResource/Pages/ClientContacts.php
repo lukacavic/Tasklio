@@ -5,7 +5,6 @@ namespace App\Filament\Shared\Resources\ClientResource\Pages;
 use App\Filament\Shared\Resources\ClientResource;
 use App\Models\Contact;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Filament\Forms\Components\Livewire;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -21,6 +20,7 @@ use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
@@ -54,6 +54,17 @@ class ClientContacts extends ManageRelatedRecords
                     ->label('Email')
                     ->copyable()
                     ->copyMessage('Email adresa kopirana'),
+
+                ToggleColumn::make('primaryContactForClient')
+                    ->label('Primarni kontakt')
+                    ->disabled(function ($state) {
+                        if($state != null) {
+                            return $state->primary_contact_id != null;
+                        }
+
+                        return false;
+                    }),
+
                 TextColumn::make('phone')
                     ->label('Telefon'),
 
@@ -67,7 +78,6 @@ class ClientContacts extends ManageRelatedRecords
                     ->modalHeading('Novi kontakt'),
             ])
             ->actions([
-                //$this->getSendEmailAction(),
                 EditAction::make()
                     ->modalHeading('Izmjena kontakta'),
                 DeleteAction::make()
@@ -95,11 +105,10 @@ class ClientContacts extends ManageRelatedRecords
             ->form([
                 TagsInput::make('receiver')
                     ->required()
-
                     ->hintActions([
                         \Filament\Forms\Components\Actions\Action::make('show-cc')
-                        ->label('CC primatelji')
-                        ->link()
+                            ->label('CC primatelji')
+                            ->link()
                     ])
                     ->placeholder('Unesite email primatelja')
                     ->label('Primatelj/i'),
