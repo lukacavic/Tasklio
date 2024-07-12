@@ -242,11 +242,10 @@ class TaskResource extends Resource
                     ->label('Naziv')
                     ->searchable(),
 
-                ImageColumn::make('members.avatar_url')
+                ImageColumn::make('members.avatar')
                     ->circular()
                     ->stacked()
-                    ->label('Djelatnici')
-                    ->sortable(),
+                    ->label('Djelatnici'),
 
                 SelectColumn::make('status_id')
                     ->label('Status')

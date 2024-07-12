@@ -27,6 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     protected $guarded = ['id'];
 
+    protected $appends = ['avatar'];
 
     protected $hidden = [
         'password',
@@ -59,7 +60,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     protected function avatar(): Attribute
     {
         return Attribute::make(function(){
-            return $this->avatar_url == null ? 'https://innostudio.de/fileuploader/images/default-avatar.png' : $this->avatar_url;
+            return $this->avatar_url == null ? "https://ui-avatars.com/api/?name={$this->name}" : $this->avatar_url;
         });
     }
 
