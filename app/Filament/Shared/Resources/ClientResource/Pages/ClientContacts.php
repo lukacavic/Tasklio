@@ -19,9 +19,11 @@ use Filament\Tables\Actions\ForceDeleteAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use http\Client;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -55,14 +57,13 @@ class ClientContacts extends ManageRelatedRecords
                     ->copyable()
                     ->copyMessage('Email adresa kopirana'),
 
-                ToggleColumn::make('primaryContactForClient')
+                TextColumn::make('primaryContactForClient')
                     ->label('Primarni kontakt')
-                    ->disabled(function ($state) {
-                        if($state != null) {
-                            return $state->primary_contact_id != null;
-                        }
-
-                        return false;
+                    ->formatStateUsing(function($state, $record) {
+                        return $record ? 'Primarni' : null;
+                    })
+                    ->badge(function ($state, $record) {
+                        return $record ? 'heroicon-o-check' : null;
                     }),
 
                 TextColumn::make('phone')
@@ -78,6 +79,15 @@ class ClientContacts extends ManageRelatedRecords
                     ->modalHeading('Novi kontakt'),
             ])
             ->actions([
+                Action::make('make-primary')
+                    ->hiddenLabel()
+                    ->icon('heroicon-o-user-circle')
+                    ->tooltip('Postavi kao primarni kontakt')
+                    ->action(function ($record) {
+                        $client = \App\Models\Client::find($record->client_id);
+
+                        $client->update(['primary_contact_id' => $record->id]);
+                    }),
                 EditAction::make()
                     ->modalHeading('Izmjena kontakta'),
                 DeleteAction::make()
@@ -95,9 +105,6 @@ class ClientContacts extends ManageRelatedRecords
             ]);
     }
 
-    /**
-     * @return \Filament\Actions\Action|Action|null
-     */
     public function getSendEmailAction(): Action
     {
         return Action::make('send-mail')
