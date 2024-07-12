@@ -6,6 +6,7 @@ use App\Filament\Project\Clusters\SettingsCluster;
 use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource\Pages;
 use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource\RelationManagers;
 use App\Models\LeadSource;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,6 +28,11 @@ class LeadSourceResource extends Resource
     protected static ?string $label = 'Lead izvor';
 
     protected static ?string $pluralLabel = 'Lead izvori';
+
+    public static function canAccess(): bool
+    {
+        return Filament::getTenant()->settings()->get('leads-managements-enabled');
+    }
 
     public static function form(Form $form): Form
     {

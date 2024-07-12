@@ -43,6 +43,11 @@ class LeadResource extends Resource
 
     protected static ?string $navigationGroup = 'CRM';
 
+    public static function canAccess(): bool
+    {
+        return Filament::getTenant()->settings()->get('leads-managements-enabled');
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['company', 'first_name', 'last_name', 'email'];

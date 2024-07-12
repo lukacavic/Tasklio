@@ -27,7 +27,7 @@ class ListTasks extends ListRecords
             'all' => Tab::make('Svi')
                 ->badge(Filament::getTenant()->tasks()->count()),
 
-            'not-assigned' => Tab::make('Nedodojeljeni')
+            'not-assigned' => Tab::make('Nedodjeljeni')
                 ->badge(Filament::getTenant()->tasks()->whereDoesntHave('members')->count())
                 ->modifyQueryUsing(function ($query) {
                     $query->whereDoesntHave('members');

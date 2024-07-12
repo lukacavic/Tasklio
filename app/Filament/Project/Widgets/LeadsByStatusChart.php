@@ -11,6 +11,11 @@ class LeadsByStatusChart extends ApexChartWidget
 {
     protected static ?string $heading = 'Pot. klijenti po statusu';
 
+    public static function canView(): bool
+    {
+        return Filament::getTenant()->settings()->get('leads-managements-enabled');
+    }
+
     protected function getOptions(): array
     {
         $leadCounts = LeadStatus::withCount('leads')

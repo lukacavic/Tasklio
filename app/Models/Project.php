@@ -19,6 +19,10 @@ class Project extends Model implements HasCurrentTenantLabel
 
     protected $guarded = ['id'];
 
+    public $defaultSettings = [
+        'leads-management-enabled' => true
+    ];
+
     protected static function booted(): void
     {
         static::addGlobalScope('organisation', function (Builder $builder) {
@@ -74,6 +78,11 @@ class Project extends Model implements HasCurrentTenantLabel
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function projectLeader(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'leader_id');
     }
 
     public function vaults(): MorphMany

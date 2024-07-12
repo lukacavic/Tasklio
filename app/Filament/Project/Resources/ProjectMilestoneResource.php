@@ -17,11 +17,11 @@ class ProjectMilestoneResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Prekretnice (Milestones)';
+    protected static ?string $navigationLabel = 'Planovi (Milestones)';
 
-    protected static ?string $label = 'Prekretnica';
+    protected static ?string $label = 'Plan';
 
-    protected static ?string $pluralLabel = 'Prekretnice';
+    protected static ?string $pluralLabel = 'Planovi';
 
     protected static ?string $recordTitleAttribute = 'name';
 

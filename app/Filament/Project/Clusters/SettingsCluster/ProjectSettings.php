@@ -3,9 +3,9 @@
 namespace App\Filament\Project\Clusters\SettingsCluster;
 
 use App\Filament\Project\Clusters\SettingsCluster;
-use Filament\Actions\Action;
 use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
 use Quadrubo\FilamentModelSettings\Pages\Contracts\HasModelSettings;
 use Quadrubo\FilamentModelSettings\Pages\ModelSettingsPage;
@@ -29,8 +29,26 @@ class ProjectSettings extends ModelSettingsPage implements HasModelSettings
     {
         return $form
             ->schema([
-                Forms\Components\Toggle::make('send-notifications')
-                    ->label('Šalji notifikacije')
+
+                Tabs::make('Tabs')
+                    ->columnSpanFull()
+                    ->tabs([
+                        Tabs\Tab::make('Potencijalni klijenti')
+                            ->schema([
+                                Forms\Components\Toggle::make('leads-managements-enabled')
+                                    ->label('Upravljanje potencijalnim klijenta')
+                            ]),
+                        Tabs\Tab::make('Tab 2')
+                            ->schema([
+                                // ...
+                            ]),
+                        Tabs\Tab::make('Tab 3')
+                            ->schema([
+                                // ...
+                            ]),
+                    ])
+
+
             ]);
     }
 }
