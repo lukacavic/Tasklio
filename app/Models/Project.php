@@ -13,12 +13,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Project extends Model implements HasCurrentTenantLabel
 {
     use HasFactory, SoftDeletes, HasSettingsField;
 
     protected $guarded = ['id'];
+
+
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public $defaultSettings = [
         ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value => true
@@ -38,6 +46,10 @@ class Project extends Model implements HasCurrentTenantLabel
             } else {
                 $model->clients()->detach();
             }
+        });
+
+        static::creating(function (Model $model) {
+            $model->slug = Str::slug($model->name);
         });
     }
 
@@ -90,6 +102,7 @@ class Project extends Model implements HasCurrentTenantLabel
     {
         return $this->morphMany(Vault::class, 'related');
     }
+
     public function knowledgeArticles(): HasMany
     {
         return $this->hasMany(KnowledgeArticle::class);
