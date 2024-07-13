@@ -74,7 +74,7 @@ class ViewMilestone extends ViewRecord
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
-            Fieldset::make('Osnovne informacije')->schema([
+            Section::make('Osnovne informacije')->schema([
 
                 TextEntry::make('name')
                     ->label('Naziv'),
