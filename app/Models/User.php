@@ -27,7 +27,7 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
 
     protected $guarded = ['id'];
 
-    protected $appends = ['avatar'];
+    protected $appends = ['avatar', 'fullName'];
 
     protected $hidden = [
         'password',
@@ -61,6 +61,13 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
     {
         return Attribute::make(function(){
             return $this->avatar_url == null ? "https://ui-avatars.com/api/?name={$this->name}" : $this->avatar_url;
+        });
+    }
+
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(function(){
+            return $this->first_name . ' ' . $this->last_name;
         });
     }
 

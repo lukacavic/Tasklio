@@ -4,6 +4,7 @@ namespace App\Filament\Project\Resources\ProjectMilestoneResource\RelationManage
 
 use App\Filament\Project\Resources\TaskResource;
 use App\TaskPriority;
+use App\TaskStatus;
 use Filament\Actions\CreateAction;
 use Filament\Facades\Filament;
 use Filament\Forms;
@@ -54,6 +55,19 @@ class TasksRelationManager extends RelationManager
                     }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
+            ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('status_id')
+                ->label('Status')
+                ->options(TaskStatus::class)
+                ->searchable(),
+
+                Tables\Filters\SelectFilter::make('members')
+                    ->label('Djelatnici')
+                    ->relationship('members', 'first_name')
+                    ->multiple()
+                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id'))
+                    ->searchable()
             ])
             ->headerActions([
                 \Filament\Tables\Actions\CreateAction::make()
