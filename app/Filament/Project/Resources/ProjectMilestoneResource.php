@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Resources;
 
 use App\Filament\Project\Resources\ProjectMilestoneResource\Pages;
+use App\Filament\Project\Resources\ProjectMilestoneResource\RelationManagers\TasksRelationManager;
 use App\Models\ProjectMilestone;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -113,7 +114,7 @@ class ProjectMilestoneResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            TasksRelationManager::make()
         ];
     }
 
@@ -123,6 +124,7 @@ class ProjectMilestoneResource extends Resource
             'index' => Pages\ListProjectMilestones::route('/'),
             //'create' => Pages\CreateProjectMilestone::route('/create'),
             //'edit' => Pages\EditProjectMilestone::route('/{record}/edit'),
+            'view' => Pages\ViewMilestone::route('/{record}'),
         ];
     }
 }

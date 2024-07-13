@@ -118,7 +118,7 @@ class TaskResource extends Resource
                     }),
 
                 Select::make('project_milestone_id')
-                    ->label('Prekretnica')
+                    ->label('Plan (Milestone)')
                     ->createOptionForm(fn(Form $form) => ProjectMilestoneResource::form($form))
                     ->createOptionUsing(function (array $data) {
                         $record = Filament::getTenant()->projectMilestones()->create([
