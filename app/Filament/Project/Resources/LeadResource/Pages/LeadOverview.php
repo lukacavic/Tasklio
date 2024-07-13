@@ -17,6 +17,11 @@ use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
+use JaOcero\ActivityTimeline\Components\ActivityDate;
+use JaOcero\ActivityTimeline\Components\ActivityDescription;
+use JaOcero\ActivityTimeline\Components\ActivityIcon;
+use JaOcero\ActivityTimeline\Components\ActivitySection;
+use JaOcero\ActivityTimeline\Components\ActivityTitle;
 
 class LeadOverview extends Page implements HasForms, HasInfolists
 {
@@ -27,16 +32,16 @@ class LeadOverview extends Page implements HasForms, HasInfolists
 
     protected static ?string $title = 'Pregled';
 
+    protected static string $resource = LeadResource::class;
+
+    protected static string $view = 'filament.project.resources.lead-resource.pages.lead-overview';
+
     public function mount(int|string $record): void
     {
         $this->record = $this->resolveRecord($record);
     }
 
-    protected static string $resource = LeadResource::class;
-
-    protected static string $view = 'filament.project.resources.lead-resource.pages.lead-overview';
-
-    protected function getFooterWidgets(): array
+    protected function getHeaderWidgets(): array
     {
         return [
             LeadStatsOverview::make()
@@ -47,6 +52,9 @@ class LeadOverview extends Page implements HasForms, HasInfolists
     {
         return $infolist
             ->record($this->record)
+            ->state([
+                'activities' => $this->record->activities()->with('causer')->latest()->get()
+            ])
             ->schema([
                 ShoutEntry::make('alert-is-converted')
                     ->visible(function ($record) {
@@ -57,7 +65,35 @@ class LeadOverview extends Page implements HasForms, HasInfolists
                     ->hintAction(function () {
                         Action::make('goto-client')
                             ->label('Prikaži klijenta');
-                    })
+                    }),
+                ActivitySection::make('activities')
+                    ->label('Povijest aktivnosti')
+                    ->description('Prikaz zadnjih aktivnosti za lead.')
+                    ->schema([
+                        ActivityTitle::make('causer.fullName')
+                            ->placeholder('No title is set')
+                            ->allowHtml(),
+                        ActivityDescription::make('description')
+                            ->placeholder('No description is set')
+                            ->allowHtml(),
+                        ActivityDate::make('created_at')
+                            ->date('F j, Y', 'Asia/Manila')
+                            ->placeholder('No date is set.'),
+                        ActivityIcon::make('status')
+                            ->color(fn (string | null $state): string | null => match ($state) {
+                                'ideation' => 'purple',
+                                'drafting' => 'info',
+                                'reviewing' => 'warning',
+                                'published' => 'success',
+                                default => 'gray',
+                            }),
+                    ])
+                    ->showItemsCount(10)
+                    ->showItemsLabel('Prikaži starije')
+                    ->showItemsIcon('heroicon-m-chevron-down')
+                    ->showItemsColor('gray')
+                    ->headingVisible(true)
+                    ->extraAttributes(['class'=>'my-new-class'])
             ]);
     }
 
