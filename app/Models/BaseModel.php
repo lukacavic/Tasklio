@@ -44,7 +44,7 @@ class BaseModel extends Model
 
     public function addLog($logMessage): void
     {
-        activity()->performedOn($this)->by(auth()->user())->log($logMessage);
+        activity()->performedOn($this)->by(auth()->user())->withProperty('system', false)->log($logMessage);
     }
 
     public function organisation(): BelongsTo

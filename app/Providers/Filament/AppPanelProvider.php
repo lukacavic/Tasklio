@@ -41,6 +41,9 @@ class AppPanelProvider extends PanelProvider
             ->tenantMenu()
             ->databaseNotifications()
             ->path('app')
+            ->colors([
+                'primary' => '#24517a'
+            ])
             ->spa()
             ->login()
             ->viteTheme('resources/css/filament/app/theme.css')

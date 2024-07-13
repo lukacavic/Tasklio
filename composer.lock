@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7689340112e6ade0531e5f141b7b72bb",
+    "content-hash": "a00565ad612f02f9b80dbb9a1fbae9b9",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -71,71 +71,6 @@
                 "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.2.23"
             },
             "time": "2024-07-12T10:52:26+00:00"
-        },
-        {
-            "name": "awcodes/filament-quick-create",
-            "version": "v3.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/awcodes/filament-quick-create.git",
-                "reference": "327ce232dcdb64448e1239d1a4ab48589e5fe6da"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/awcodes/filament-quick-create/zipball/327ce232dcdb64448e1239d1a4ab48589e5fe6da",
-                "reference": "327ce232dcdb64448e1239d1a4ab48589e5fe6da",
-                "shasum": ""
-            },
-            "require": {
-                "filament/filament": "^v3.2.23",
-                "php": "^8.1",
-                "spatie/laravel-package-tools": "^1.15.0"
-            },
-            "require-dev": {
-                "laravel/pint": "^1.0",
-                "spatie/laravel-ray": "^1.26"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Awcodes\\FilamentQuickCreate\\QuickCreateServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Awcodes\\FilamentQuickCreate\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adam Weston",
-                    "email": "awcodes1@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Plugin for Filament Admin that adds a dropdown menu to the header to quickly create new items.",
-            "keywords": [
-                "filament",
-                "framework",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/awcodes/filament-quick-create/issues",
-                "source": "https://github.com/awcodes/filament-quick-create/tree/v3.4.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/awcodes",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-06-15T19:42:44+00:00"
         },
         {
             "name": "awcodes/filament-table-repeater",

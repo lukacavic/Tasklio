@@ -24,6 +24,7 @@ use JaOcero\ActivityTimeline\Components\ActivityDescription;
 use JaOcero\ActivityTimeline\Components\ActivityIcon;
 use JaOcero\ActivityTimeline\Components\ActivitySection;
 use JaOcero\ActivityTimeline\Components\ActivityTitle;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -109,7 +110,7 @@ class HeaderActions
                 ->form(function (Form $form) {
                     return $form
                         ->schema([
-                            RichEditor::make('activity')
+                            TinyEditor::make('activity')
                                 ->required()
                                 ->columnSpanFull()
                                 ->grow(true)
@@ -117,10 +118,7 @@ class HeaderActions
                         ]);
                 })
                 ->action(function (array $data, Lead $record): void {
-                    activity()
-                        ->causedBy(auth()->user())
-                        ->performedOn($record)
-                        ->log($data['activity']);
+                    $record->addLog($data['activity']);
                 }),
 
             Action::make('activity_log')

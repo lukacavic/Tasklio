@@ -95,7 +95,6 @@ class ProjectPanelProvider extends PanelProvider
                     ->selectable(),
 
                 FilamentApexChartsPlugin::make(),
-                QuickCreatePlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

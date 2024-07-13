@@ -53,7 +53,10 @@ class LeadOverview extends Page implements HasForms, HasInfolists
         return $infolist
             ->record($this->record)
             ->state([
-                'activities' => $this->record->activities()->with('causer')->latest()->get()
+                'activities' => $this->record->activities()
+                    ->with('causer')
+                    ->where('properties->system', false)
+                    ->latest()->get()
             ])
             ->schema([
                 ShoutEntry::make('alert-is-converted')
@@ -77,10 +80,10 @@ class LeadOverview extends Page implements HasForms, HasInfolists
                             ->placeholder('No description is set')
                             ->allowHtml(),
                         ActivityDate::make('created_at')
-                            ->date('F j, Y', 'Asia/Manila')
+                            ->date('F j, Y', 'Europe/Zagreb')
                             ->placeholder('No date is set.'),
                         ActivityIcon::make('status')
-                            ->color(fn (string | null $state): string | null => match ($state) {
+                            ->color(fn(string|null $state): string|null => match ($state) {
                                 'ideation' => 'purple',
                                 'drafting' => 'info',
                                 'reviewing' => 'warning',
@@ -93,7 +96,7 @@ class LeadOverview extends Page implements HasForms, HasInfolists
                     ->showItemsIcon('heroicon-m-chevron-down')
                     ->showItemsColor('gray')
                     ->headingVisible(true)
-                    ->extraAttributes(['class'=>'my-new-class'])
+                    ->extraAttributes(['class' => 'my-new-class'])
             ]);
     }
 
