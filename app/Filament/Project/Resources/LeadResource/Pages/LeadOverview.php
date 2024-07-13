@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Resources\LeadResource\Pages;
 
 use App\Filament\Project\Resources\LeadResource;
+use App\Filament\Project\Resources\LeadsResource\Widgets\LeadStatsOverview;
 use Awcodes\Shout\Components\ShoutEntry;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use CodeWithDennis\SimpleAlert\SimpleAlert;
@@ -17,7 +18,7 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 
-class LeadOverview extends Page implements  HasForms, HasInfolists
+class LeadOverview extends Page implements HasForms, HasInfolists
 {
     use HasPageSidebar, InteractsWithRecord;
 
@@ -35,21 +36,28 @@ class LeadOverview extends Page implements  HasForms, HasInfolists
 
     protected static string $view = 'filament.project.resources.lead-resource.pages.lead-overview';
 
+    protected function getFooterWidgets(): array
+    {
+        return [
+            LeadStatsOverview::make()
+        ];
+    }
+
     public function leadInfolist(Infolist $infolist): Infolist
     {
         return $infolist
             ->record($this->record)
             ->schema([
                 ShoutEntry::make('alert-is-converted')
-                    ->visible(function($record){
+                    ->visible(function ($record) {
                         return $record->client_id != null;
                     })
-                ->color('warning')
-                ->content("Lead je pretvoren u klijenta.")
-                ->hintAction(function(){
-                    Action::make('goto-client')
-                        ->label('Prikaži klijenta');
-                })
+                    ->color('warning')
+                    ->content("Lead je pretvoren u klijenta.")
+                    ->hintAction(function () {
+                        Action::make('goto-client')
+                            ->label('Prikaži klijenta');
+                    })
             ]);
     }
 

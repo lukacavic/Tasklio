@@ -8,6 +8,7 @@ use App\Filament\Project\Resources\LeadResource\Pages\LeadNotes;
 use App\Filament\Project\Resources\LeadResource\Pages\LeadOverview;
 use App\Filament\Project\Resources\LeadResource\Pages\LeadTasks;
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
+use App\Filament\Project\Resources\LeadsResource\Widgets\LeadStatsOverview;
 use App\Models\Lead;
 use App\Models\LeadSource;
 use App\ProjectSettingsItems;
@@ -45,6 +46,13 @@ class LeadResource extends Resource
     protected static ?string $recordTitleAttribute = 'company';
 
     protected static ?string $navigationGroup = 'CRM';
+
+    public static function getWidgets(): array
+    {
+        return [
+            LeadStatsOverview::make()
+        ];
+    }
 
     public static function canAccess(): bool
     {

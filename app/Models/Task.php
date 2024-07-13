@@ -49,6 +49,12 @@ class Task extends BaseModel implements HasMedia
     {
         $query->whereNot('status_id', TaskStatus::Completed->value);
     }
+
+    public function scopeCompleted(Builder $query): void
+    {
+        $query->where('status_id', TaskStatus::Completed->value);
+    }
+
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'link_task_users');
