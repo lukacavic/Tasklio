@@ -6,6 +6,7 @@ use App\Filament\Project\Clusters\SettingsCluster;
 use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource\Pages;
 use App\Filament\Project\Clusters\SettingsCluster\Resources\LeadSourceResource\RelationManagers;
 use App\Models\LeadSource;
+use App\ProjectSettingsItems;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -31,7 +32,7 @@ class LeadSourceResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Filament::getTenant()->settings()->get('leads-managements-enabled', false);
+        return Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value, false);
     }
 
     public static function form(Form $form): Form

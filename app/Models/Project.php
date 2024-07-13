@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\ProjectSettingsItems;
 use Filament\Models\Contracts\HasCurrentTenantLabel;
 use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,7 +21,7 @@ class Project extends Model implements HasCurrentTenantLabel
     protected $guarded = ['id'];
 
     public $defaultSettings = [
-        'leads-management-enabled' => true
+        ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value => true
     ];
 
     protected static function booted(): void

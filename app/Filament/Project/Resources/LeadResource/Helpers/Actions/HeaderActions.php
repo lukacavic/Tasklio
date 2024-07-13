@@ -177,11 +177,6 @@ class HeaderActions
                 }),
 
             ActionGroup::make([
-                SendEmailAction::make('send-email')->mutateFormDataUsing(function($data){
-                    $data['receivers'] = ['marko'];
-
-                    return $data;
-                }),
                 Action::make('mark-as-lost')
                     ->label(function (Lead $record) {
                         return $record->lost ? 'Nije izgubljen' : 'Označi kao izgubljen';

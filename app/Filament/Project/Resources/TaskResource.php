@@ -247,8 +247,10 @@ class TaskResource extends Resource
 
                 SelectColumn::make('status_id')
                     ->label('Status')
+                    ->selectablePlaceholder(false)
                     ->options(TaskStatus::class)
                     ->sortable(),
+
                 SpatieTagsColumn::make('tags')->label('Oznake'),
 
                 TextColumn::make('deadline_at')

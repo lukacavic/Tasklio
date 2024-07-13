@@ -10,6 +10,7 @@ use App\Filament\Project\Resources\LeadResource\Pages\LeadTasks;
 use App\Filament\Project\Resources\LeadResource\Pages\ListLeads;
 use App\Models\Lead;
 use App\Models\LeadSource;
+use App\ProjectSettingsItems;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
 use AymanAlhattami\FilamentPageWithSidebar\PageNavigationItem;
 use Filament\Facades\Filament;
@@ -21,6 +22,8 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieTagsColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Parfaitementweb\FilamentCountryField\Forms\Components\Country;
@@ -45,7 +48,7 @@ class LeadResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Filament::getTenant()->settings()->get('leads-managements-enabled', false);
+        return Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value, false);
     }
 
     public static function getGloballySearchableAttributes(): array
@@ -352,7 +355,14 @@ class LeadResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\TernaryFilter::make('lost')
+                    ->label('Izgubljen'),
+
+                SelectFilter::make('assigned_user_id')
+                    ->label('Djelatnik')
+                    ->native(false)
+                    ->searchable()
+                    ->options(Filament::getTenant()->users()->get()->pluck('fullName', 'id')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

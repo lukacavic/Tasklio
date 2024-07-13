@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Widgets;
 
 use App\Models\LeadStatus;
+use App\ProjectSettingsItems;
 use Filament\Facades\Filament;
 use Filament\Widgets\Widget;
 use Leandrocfe\FilamentApexCharts\Widgets\ApexChartWidget;
@@ -13,7 +14,7 @@ class LeadsByStatusChart extends ApexChartWidget
 
     public static function canView(): bool
     {
-        return Filament::getTenant()->settings()->get('leads-managements-enabled', false);
+        return Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value, false);
     }
 
     protected function getOptions(): array

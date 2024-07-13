@@ -6,6 +6,7 @@ use App\Filament\Project\Clusters\SettingsCluster;
 use App\Filament\Project\Resources\LeadStatusResource\Pages\ManageLeadStatuses;
 use App\Models\Lead;
 use App\Models\LeadStatus;
+use App\ProjectSettingsItems;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\ColorPicker;
@@ -35,7 +36,7 @@ class LeadStatusResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Filament::getTenant()->settings()->get('leads-managements-enabled', false);
+        return Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value, false);
     }
 
     public static function form(Form $form): Form

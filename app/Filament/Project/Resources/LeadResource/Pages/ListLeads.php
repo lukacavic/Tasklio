@@ -52,16 +52,11 @@ class ListLeads extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
-            /*ImportAction::make()
-                ->importer(LeadsImporter::class),
-            Actions\ExportAction::make()
-                ->hiddenLabel()
-                ->icon('heroicon-o-arrow-down-tray')
-                ->tooltip('Izvoz u Excel')
-                ->exporter(LeadsExporter::class),*/
+            Actions\CreateAction::make()
+            ->label('Dodaj'),
             Actions\Action::make('kanban')
                 ->hiddenLabel()
+                ->color('info')
                 ->icon('heroicon-o-rectangle-group')
                 ->tooltip('Kanban prikaz')
                 ->url(fn(): string => LeadsKanbanBoard::getUrl()),
