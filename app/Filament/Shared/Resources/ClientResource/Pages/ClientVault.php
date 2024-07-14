@@ -8,10 +8,11 @@ use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Table;
+use JulioMotol\FilamentPasswordConfirmation\RequiresPasswordConfirmation;
 
 class ClientVault extends ManageRelatedRecords
 {
-    use HasPageSidebar;
+    use HasPageSidebar, RequiresPasswordConfirmation;
 
     protected static string $resource = ClientResource::class;
 

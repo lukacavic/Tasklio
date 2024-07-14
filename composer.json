@@ -17,6 +17,7 @@
         "ibrahimbougaoua/filament-sort-order": "^1.1",
         "jaocero/activity-timeline": "^1.2",
         "jeffgreco13/filament-breezy": "^2.4",
+        "juliomotol/filament-password-confirmation": "^1.1",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
         "leandrocfe/filament-apex-charts": "^3.1",

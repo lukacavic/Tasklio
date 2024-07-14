@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a00565ad612f02f9b80dbb9a1fbae9b9",
+    "content-hash": "9bc272cc8d88cd4d4b17e32f92d9fe6f",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3113,6 +3113,84 @@
                 "source": "https://github.com/jeffgreco13/filament-breezy/tree/v2.4.2"
             },
             "time": "2024-06-09T18:50:11+00:00"
+        },
+        {
+            "name": "juliomotol/filament-password-confirmation",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/juliomotol/filament-password-confirmation.git",
+                "reference": "f3dc9065e0e72ff3a3d2ef2c306a2df7e78d6a71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/juliomotol/filament-password-confirmation/zipball/f3dc9065e0e72ff3a3d2ef2c306a2df7e78d6a71",
+                "reference": "f3dc9065e0e72ff3a3d2ef2c306a2df7e78d6a71",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^7.9",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^8.0",
+                "pestphp/pest": "^2.1",
+                "pestphp/pest-plugin-arch": "^2.0",
+                "pestphp/pest-plugin-laravel": "^2.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "JulioMotol\\FilamentPasswordConfirmation\\FilamentPasswordConfirmationServiceProvider"
+                    ],
+                    "aliases": {
+                        "FilamentPasswordConfirmation": "JulioMotol\\FilamentPasswordConfirmation\\Facades\\FilamentPasswordConfirmation"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "JulioMotol\\FilamentPasswordConfirmation\\": "src/",
+                    "JulioMotol\\FilamentPasswordConfirmation\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Julio Motol",
+                    "email": "julio.motol89@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Prompt users to re-enter their password before performing sensitive actions.",
+            "homepage": "https://github.com/juliomotol/filament-password-confirmation",
+            "keywords": [
+                "filament-password-confirmation",
+                "juliomotol",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/juliomotol/filament-password-confirmation/issues",
+                "source": "https://github.com/juliomotol/filament-password-confirmation"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/juliomotol",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-05-05T13:25:45+00:00"
         },
         {
             "name": "kirschbaum-development/eloquent-power-joins",

@@ -4,6 +4,7 @@ namespace App\Filament\Shared;
 
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Tables\Actions\BulkActionGroup;
@@ -15,6 +16,7 @@ use Filament\Tables\Actions\ForceDeleteAction;
 use Filament\Tables\Actions\ForceDeleteBulkAction;
 use Filament\Tables\Actions\RestoreAction;
 use Filament\Tables\Actions\RestoreBulkAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -31,12 +33,20 @@ class Vaults
                     ->label('Naziv')
                     ->required()
                     ->maxLength(255),
+
                 RichEditor::make('content')
                     ->label('Sadržaj')
                     ->required()
                     ->maxLength(255),
+
+                SpatieMediaLibraryFileUpload::make('vaults')
+                    ->label('Privitci')
+                    ->downloadable()
+                    ->multiple(),
+
                 Radio::make('visibility')
                     ->label('Vidljivost')
+                    ->default(1)
                     ->options([
                         1 => 'Djelatnik koji je kreirao',
                         2 => 'Svi djelatnici projekta'
@@ -50,12 +60,27 @@ class Vaults
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->icon(function($record){
+                        return $record->media()->exists() ? 'heroicon-o-paper-clip' : null;
+                    })
                     ->label('Naslov'),
+
+                ImageColumn::make('userCreated.avatar')
+                    ->label('Kreirao')
+                    ->circular(),
+
                 TextColumn::make('content')
-                    ->formatStateUsing(function($record) {
+                    ->formatStateUsing(function ($record) {
                         return strip_tags($record->content);
                     })
-                    ->label('Sadržaj')
+                    ->label('Sadržaj'),
+
+                TextColumn::make('created_at')
+                    ->dateTime()
+                    ->description(function($record) {
+                        return $record->created_at->diffForHumans();
+                    })
+                    ->label('Vrijeme kreiranja')
             ])
             ->filters([
                 TrashedFilter::make()

@@ -27,6 +27,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
+use JulioMotol\FilamentPasswordConfirmation\FilamentPasswordConfirmationPlugin;
 use Leandrocfe\FilamentApexCharts\FilamentApexChartsPlugin;
 use RickDBCN\FilamentEmail\FilamentEmail;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
@@ -94,6 +95,7 @@ class AppPanelProvider extends PanelProvider
                     ),
                 FilamentFullCalendarPlugin::make()
                     ->selectable(true),
+                FilamentPasswordConfirmationPlugin::make(),
                 FilamentApexChartsPlugin::make(),
                 FilamentEmail::make(),
             ]);
