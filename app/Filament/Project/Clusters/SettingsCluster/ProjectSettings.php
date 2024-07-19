@@ -3,6 +3,7 @@
 namespace App\Filament\Project\Clusters\SettingsCluster;
 
 use App\Filament\Project\Clusters\SettingsCluster;
+use App\ProjectSettingsItems;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Tabs;
@@ -29,26 +30,15 @@ class ProjectSettings extends ModelSettingsPage implements HasModelSettings
     {
         return $form
             ->schema([
-
                 Tabs::make('Tabs')
                     ->columnSpanFull()
                     ->tabs([
                         Tabs\Tab::make('Potencijalni klijenti')
                             ->schema([
-                                Forms\Components\Toggle::make('leads-managements-enabled')
+                                Forms\Components\Toggle::make(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value)
                                     ->label('Upravljanje potencijalnim klijenta')
                             ]),
-                        Tabs\Tab::make('Tab 2')
-                            ->schema([
-                                // ...
-                            ]),
-                        Tabs\Tab::make('Tab 3')
-                            ->schema([
-                                // ...
-                            ]),
                     ])
-
-
             ]);
     }
 }
