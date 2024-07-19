@@ -13,12 +13,4 @@ class SettingsCluster extends Cluster
 
     protected static ?int $navigationSort = 9999;
 
-    public static function canAccess(): bool
-    {
-        $projectLeader = Filament::getTenant()->projectLeader;
-
-        if($projectLeader == null) return true;
-
-        return auth()->id() === $projectLeader->id;
-    }
 }
