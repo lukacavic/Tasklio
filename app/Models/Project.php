@@ -21,8 +21,6 @@ class Project extends Model implements HasCurrentTenantLabel
 
     protected $guarded = ['id'];
 
-
-
     public function getRouteKeyName()
     {
         return 'slug';
@@ -63,9 +61,19 @@ class Project extends Model implements HasCurrentTenantLabel
         return $this->hasMany(Task::class);
     }
 
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     public function projectMilestones(): HasMany
     {
         return $this->hasMany(ProjectMilestone::class);
+    }
+
+    public function ticketDepartments(): HasMany
+    {
+        return $this->hasMany(TicketDepartment::class);
     }
 
     public function clients(): BelongsToMany
