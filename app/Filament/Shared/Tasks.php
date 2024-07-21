@@ -227,6 +227,7 @@ class Tasks
                 SelectColumn::make('status_id')
                     ->label('Status')
                     ->options(TaskStatus::class)
+                    ->selectablePlaceholder(false)
                     ->sortable(),
                 SpatieTagsColumn::make('tags')->label('Oznake'),
 

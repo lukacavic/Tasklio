@@ -103,6 +103,7 @@ class ClientResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Klijent')
+                    ->sortable()
                     ->description(function(Client $record) {
                         return $record->fullAddress;
                     })
@@ -110,6 +111,7 @@ class ClientResource extends Resource
 
                 Tables\Columns\TextColumn::make('primaryContact.full_name')
                     ->label('Primarni kontakt')
+                    ->sortable()
                     ->description(function(Client $record) {
                         return $record->primaryContact?->position;
                     })
@@ -118,15 +120,18 @@ class ClientResource extends Resource
                 Tables\Columns\TextColumn::make('primaryContact.email')
                     ->label('Primarni email')
                     ->copyable()
+                    ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('primaryContact.phone')
                     ->label('Telefon')
+                    ->sortable()
                     ->copyable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('website')
                     ->label('Web stranica')
+                    ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('deleted_at')

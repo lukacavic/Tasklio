@@ -299,6 +299,7 @@ class LeadResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('fullName')
                     ->label('Kontakt')
+                    ->sortable()
                     ->description(function (Lead $record) {
                         return $record->company;
                     })
@@ -306,19 +307,23 @@ class LeadResource extends Resource
 
                 Tables\Columns\TextColumn::make('email')
                     ->copyable()
+                    ->sortable()
                     ->copyMessage('Email adresa je kopirana')
                     ->searchable(),
 
                 PhoneColumn::make('phone')
                     ->searchable()
+                    ->sortable()
                     ->label('Telefon'),
 
                 Tables\Columns\ImageColumn::make('assignedUser.avatar')
                     ->label('Djelatnik')
+                    ->sortable()
                     ->circular(),
 
                 Tables\Columns\TextColumn::make('source.name')
                     ->label('Izvor')
+                    ->sortable()
                     ->badge()
                     ->searchable(),
 
@@ -329,10 +334,13 @@ class LeadResource extends Resource
                         return $record->client_id != null;
                     })
                     ->rules(['required'])
+                    ->sortable()
+                    ->selectablePlaceholder(false)
                     ->label('Status'),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
+                    ->sortable()
                     ->label('Vrijeme dodavanja')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
