@@ -49,7 +49,8 @@ class Vaults
                     ->default(1)
                     ->options([
                         1 => 'Djelatnik koji je kreirao',
-                        2 => 'Svi djelatnici projekta'
+                        3 => 'Samo administratori',
+                        4 => 'Svi djelatnici'
                     ])
             ])->columns(1);
     }

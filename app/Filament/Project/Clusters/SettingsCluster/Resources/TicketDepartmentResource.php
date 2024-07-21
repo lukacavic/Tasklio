@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class TicketDepartmentResource extends Resource
 {
@@ -25,6 +26,16 @@ class TicketDepartmentResource extends Resource
     protected static ?string $navigationLabel = 'Odjeli';
 
     protected static ?string $cluster = SettingsCluster::class;
+
+    public static function canAccess(): bool
+    {
+        return false;
+    }
+
+    public static function canView(Model $record): bool
+    {
+        return false;
+    }
 
     public static function form(Form $form): Form
     {
@@ -69,10 +80,10 @@ class TicketDepartmentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->label('Naziv'),
+                    ->label('Naziv'),
 
                 Tables\Columns\TextColumn::make('email')
-                ->label('Email'),
+                    ->label('Email'),
             ])
             ->filters([
                 //

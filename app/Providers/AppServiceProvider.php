@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
             $tinyEditor->profile('default');
         });
 
-        PhoneInput::configureUsing(function(PhoneInput $phoneInput) {
+        PhoneInput::configureUsing(function (PhoneInput $phoneInput) {
             $phoneInput->defaultCountry('HR');
             $phoneInput->initialCountry('HR');
             $phoneInput->disableIpLookUp();
@@ -51,8 +51,8 @@ class AppServiceProvider extends ServiceProvider
             ]);
 
             $panelSwitch->excludes([
-                'admin'
-            ])->visible(function(){
+                'admin', 'app'
+            ])->visible(function () {
                 return Filament::getCurrentPanel()->getId() != 'admin';
             });
 

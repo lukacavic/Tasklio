@@ -16,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
 class TicketResource extends Resource
@@ -24,11 +25,15 @@ class TicketResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canAccess(): bool
+    {
+        return false;
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
                 Section::make('Podaci o upitu')
                     ->schema([
                         Grid::make(2)->schema([
@@ -70,6 +75,9 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->description(function(Ticket $record) {
+                        return strip_tags(\Str::limit($record->content, 40));
+                    })
                     ->label('Naslov'),
 
                 Tables\Columns\SpatieTagsColumn::make('tags')
@@ -81,10 +89,9 @@ class TicketResource extends Resource
                 Tables\Columns\TextColumn::make('contact.full_name')
                     ->label('Kontakt'),
 
-                Tables\Columns\TextColumn::make('status_id')
+                Tables\Columns\TextColumn::make('status')
                     ->label('Status')
-                    ->badge()
-                    ->color(TicketStatus::class),
+                    ->badge(),
 
                 Tables\Columns\TextColumn::make('last_reply_at')
                     ->label('Zadnji odgovor')

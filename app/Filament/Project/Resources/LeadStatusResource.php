@@ -53,8 +53,8 @@ class LeadStatusResource extends Resource
                             ->required(),
                         TextInput::make('sort_order')
                             ->label('Poredak')
-                            ->visible(function ( $record) {
-                                return $record == null  || !$record->is_client;
+                            ->visible(function ($record) {
+                                return $record == null || !$record->is_client;
                             })
                             ->numeric()
                             ->required(),
@@ -65,6 +65,7 @@ class LeadStatusResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->reorderable('sort_order')
             ->defaultSort('sort_order', 'asc')
             ->columns([
                 TextColumn::make('name')->label('Naziv')
@@ -77,13 +78,6 @@ class LeadStatusResource extends Resource
                 //
             ])
             ->actions([
-                DownStepAction::make()->hiddenLabel()
-                    ->visible(function (LeadStatus $record) {
-                        return !$record->is_client;
-                    }),
-                UpStepAction::make()->hiddenLabel()->visible(function (LeadStatus $record) {
-                    return !$record->is_client;
-                }),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make()
                     ->visible(function (LeadStatus $record) {

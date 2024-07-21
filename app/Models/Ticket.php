@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\TicketStatus;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,9 @@ class Ticket extends BaseModel implements HasMedia
 {
     use HasTags, InteractsWithMedia;
 
+    protected $casts = [
+        'status' =>  TicketStatus::class,
+    ];
     protected static function booted(): void
     {
         parent::booted();

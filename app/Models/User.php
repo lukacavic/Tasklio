@@ -86,6 +86,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         return $this->belongsToMany(Project::class, 'link_project_users');
     }
 
+    public function isProjectMember(Model|Project $project): bool
+    {
+        return $project->users()->where('user_id', $this->id)->exists();
+    }
+
     public function canAccessTenant(Model $tenant): bool
     {
         return $tenant->users->contains($this);

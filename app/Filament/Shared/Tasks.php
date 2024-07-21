@@ -257,6 +257,12 @@ class Tasks
                     ->multiple()
                     ->options(Filament::getTenant()->projectMilestones()->get()->pluck('name', 'id')),
 
+                SelectFilter::make('status_id')
+                    ->label('Status')
+                    ->native(false)
+                    ->multiple()
+                    ->options(TaskStatus::class),
+
                 SelectFilter::make('user_id')
                     ->label('Kreirao')
                     ->native(false)

@@ -4,7 +4,11 @@ namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
 use App\Filament\Shared\Resources\ClientResource;
 use App\Filament\Shared\Vaults;
+use App\Models\Client;
+use App\Models\Project;
+use App\Models\Vault;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Filament\Facades\Filament;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Table;
@@ -34,6 +38,30 @@ class ClientVault extends ManageRelatedRecords
 
     public function table(Table $table): Table
     {
-        return Vaults::getTable($table);
+        return Vaults::getTable($table)
+            ->query($this->getQuery());
+    }
+
+    private function getQuery()
+    {
+        $user = auth()->user();
+
+        $query = Vault::query()
+            ->where('related_type', Client::class)
+            ->where('related_id', $this->getRecord()->id);
+
+        if ($user->administrator) {
+            $query->where(function ($q) use ($user) {
+                $q->where('visibility', 3);
+                $q->orWhere('user_id', auth()->user()->id);
+            });
+        } else {
+            $query->where(function ($q) use ($user) {
+                $q->where('visibility', 4);
+                $q->orWhere('user_id', auth()->user()->id);
+            });
+        }
+
+        return $query;
     }
 }
