@@ -63,6 +63,9 @@ class ClientResource extends Resource
                     ->maxLength(255),
 
                 Country::make('country')
+                    ->native(false)
+                    ->default('HR')
+                    ->searchable()
                     ->label('Država'),
 
                 Forms\Components\Select::make('project')

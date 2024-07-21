@@ -40,6 +40,11 @@ class BaseModel extends Model
                 $query->where('organisation_id', auth()->user()->organisation_id);
             }
         });
+
+        //Filter all queries by latest.
+        static::addGlobalScope('latest', function (Builder $query)  {
+            $query->latest();
+        });
     }
 
     public function addLog($logMessage): void
