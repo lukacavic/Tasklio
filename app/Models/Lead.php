@@ -17,13 +17,7 @@ class Lead extends BaseModel implements HasMedia
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->setDescriptionForEvent(function ($name) {
-            if ($name === 'created') {
-                return "Kreirano";
-            }
-
-            return $name;
-        });
+        return LogOptions::defaults();
     }
 
     public function getDates()

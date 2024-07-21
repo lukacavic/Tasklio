@@ -2,6 +2,8 @@
 
 namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
+use App\Filament\Project\Resources\ClientsResource\Widgets\ClientStatsOverview;
+use App\Filament\Project\Resources\LeadsResource\Widgets\LeadStatsOverview;
 use App\Filament\Shared\Resources\ClientResource;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
@@ -33,6 +35,12 @@ class ClientOverview extends Page
         $this->record = $this->resolveRecord($record);
     }
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            ClientStatsOverview::make()
+        ];
+    }
     protected function getHeaderActions(): array
     {
         return [
