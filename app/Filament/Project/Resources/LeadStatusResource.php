@@ -18,8 +18,6 @@ use Filament\Tables;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use IbrahimBougaoua\FilamentSortOrder\Actions\DownStepAction;
-use IbrahimBougaoua\FilamentSortOrder\Actions\UpStepAction;
 use Illuminate\Database\Eloquent\Model;
 
 class LeadStatusResource extends Resource

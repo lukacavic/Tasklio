@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Filament\Enums\PropertyStatus;
+use App\TaskStatus;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Models\Contracts\HasDefaultTenant;
@@ -62,6 +63,11 @@ class User extends Authenticatable implements FilamentUser, HasDefaultTenant, Ha
         return Attribute::make(function(){
             return $this->avatar_url == null ? "https://ui-avatars.com/api/?name={$this->name}" : $this->avatar_url;
         });
+    }
+
+    public function scopeWithoutMe(\Illuminate\Database\Eloquent\Builder $query): void
+    {
+        $query->whereNot('users.id', auth()->id());
     }
 
     protected function fullName(): Attribute

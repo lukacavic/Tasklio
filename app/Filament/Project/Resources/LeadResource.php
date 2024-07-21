@@ -249,6 +249,7 @@ class LeadResource extends Resource
                                 Forms\Components\ToggleButtons::make('important')
                                     ->label('Bitan klijent')
                                     ->boolean()
+                                    ->visible(false)
                                     ->options([
                                         true => 'Da',
                                         false => 'Ne'
@@ -259,6 +260,14 @@ class LeadResource extends Resource
                                     ])
                                     ->default(false)
                                     ->inline(),
+
+                                Forms\Components\Select::make('followers')
+                                    ->multiple()
+                                    ->relationship('followers')
+                                    ->hintIcon('heroicon-o-information-circle', 'Odabrani djelatnici će dobivati sve obavijesti o promjeni s navedenim pot. klijentom')
+                                    ->label('Pratitelji')
+                                    ->native(false)
+                                    ->options(Filament::getTenant()->users()->withoutMe()->get()->pluck('fullName', 'id')),
 
                                 Forms\Components\Textarea::make('description')
                                     ->maxLength(65535)
