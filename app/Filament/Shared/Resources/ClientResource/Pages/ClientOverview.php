@@ -2,9 +2,8 @@
 
 namespace App\Filament\Shared\Resources\ClientResource\Pages;
 
-use App\Filament\Project\Resources\ClientsResource\Widgets\ClientStatsOverview;
-use App\Filament\Project\Resources\LeadsResource\Widgets\LeadStatsOverview;
 use App\Filament\Shared\Resources\ClientResource;
+use App\Filament\Shared\Resources\ClientResource\Widgets\ClientStatsOverview;
 use App\Models\Client;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Actions;

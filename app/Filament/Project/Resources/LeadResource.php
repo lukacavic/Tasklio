@@ -56,7 +56,9 @@ class LeadResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value, false);
+        $isForClient = !Filament::getTenant()->internal;
+
+        return !$isForClient && Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value, false);
     }
 
     public static function getGloballySearchableAttributes(): array

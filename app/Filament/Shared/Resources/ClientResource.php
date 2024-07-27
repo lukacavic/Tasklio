@@ -2,13 +2,14 @@
 
 namespace App\Filament\Shared\Resources;
 
-use App\Filament\Project\Resources\LeadResource\Pages\LeadTasks;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientContacts;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientDocuments;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientNotes;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientOverview;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientTasks;
 use App\Filament\Shared\Resources\ClientResource\Pages\ClientVault;
+use App\Filament\Shared\Resources\ClientResource\Pages\EditClient;
+use App\Filament\Shared\Resources\ClientResource\Pages\ListClients;
 use App\Models\Client;
 use App\Models\Contact;
 use AymanAlhattami\FilamentPageWithSidebar\FilamentPageSidebar;
@@ -32,6 +33,15 @@ class ClientResource extends Resource
     protected static ?string $navigationLabel = 'Klijenti';
 
     protected static ?string $navigationGroup = 'CRM';
+
+    public static function canViewAny(): bool
+    {
+        if (Filament::getCurrentPanel()->getId() == 'project') {
+            return Filament::getTenant()->internal;
+        }
+
+        return true;
+    }
 
     public static function form(Form $form): Form
     {
@@ -104,7 +114,7 @@ class ClientResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Klijent')
                     ->sortable()
-                    ->description(function(Client $record) {
+                    ->description(function (Client $record) {
                         return $record->fullAddress;
                     })
                     ->searchable(),
@@ -112,7 +122,7 @@ class ClientResource extends Resource
                 Tables\Columns\TextColumn::make('primaryContact.full_name')
                     ->label('Primarni kontakt')
                     ->sortable()
-                    ->description(function(Client $record) {
+                    ->description(function (Client $record) {
                         return $record->primaryContact?->position;
                     })
                     ->searchable(),
@@ -141,7 +151,7 @@ class ClientResource extends Resource
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Vrijeme kreiranja')
-                    ->description(function(Client $record){
+                    ->description(function (Client $record) {
                         return $record->created_at->diffForHumans();
                     })
                     ->date()
@@ -251,13 +261,12 @@ class ClientResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Shared\Resources\ClientResource\Pages\ListClients::route('/'),
+            'index' => ListClients::route('/'),
             'contacts' => ClientContacts::route('/{record}/contacts}'),
-            // 'create' => Pages\CreateClient::route('/create'),
-            'overview' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientOverview::route('/{record}/overview'),
-            'documents' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientDocuments::route('/{record}/documents'),
-            'edit' => \App\Filament\Shared\Resources\ClientResource\Pages\EditClient::route('/{record}/edit'),
-            'vaults' => \App\Filament\Shared\Resources\ClientResource\Pages\ClientVault::route('/{record}/vaults'),
+            'overview' => ClientOverview::route('/{record}/overview'),
+            'documents' => ClientDocuments::route('/{record}/documents'),
+            'edit' => EditClient::route('/{record}/edit'),
+            'vaults' => ClientVault::route('/{record}/vaults'),
             'notes' => ClientNotes::route('/{record}/notes'),
             'tasks' => ClientTasks::route('/{record}/tasks'),
         ];

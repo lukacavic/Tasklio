@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Lead;
 use App\Models\Task;
 use App\Models\User;
+use App\ProjectSettingsItems;
 use App\TaskPriority;
 use App\TaskStatus;
 use Awcodes\TableRepeater\Components\TableRepeater;
@@ -93,11 +94,7 @@ class TaskResource extends Resource
                     ->label('Vezan za')
                     ->live()
                     ->native(false)
-                    ->options([
-                        Client::class => 'Klijent',
-                        Lead::class => 'Potencijalni klijent',
-                        User::class => 'Djelatnik'
-                    ]),
+                    ->options(self::getRelatedTypeOptions()),
 
                 Select::make('related_id')
                     ->label('Vezani modul')
@@ -324,5 +321,18 @@ class TaskResource extends Resource
             //'create' =>CreateTask::route('/create'),
             //'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
+    }
+
+    private static function getRelatedTypeOptions(): array
+    {
+        $related = [];
+
+        $related[Client::class] = 'Klijent';
+
+        if (Filament::getTenant()->settings()->get(ProjectSettingsItems::LEADS_MANAGEMENT_ENABLED->value)) {
+            $related[Lead::class] = 'Potencijalni klijent';
+        }
+
+        return $related;
     }
 }

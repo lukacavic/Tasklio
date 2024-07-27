@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Project\Resources\ClientsResource\Widgets;
+namespace App\Filament\Shared\Resources\ClientResource\Widgets;
 
 use App\Models\Client;
-use App\Models\Lead;
 use App\TaskStatus;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;

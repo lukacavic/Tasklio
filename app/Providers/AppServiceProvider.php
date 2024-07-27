@@ -51,7 +51,7 @@ class AppServiceProvider extends ServiceProvider
             ]);
 
             $panelSwitch->excludes([
-                'admin', 'app'
+                'admin'
             ])->visible(function () {
                 return Filament::getCurrentPanel()->getId() != 'admin';
             });
