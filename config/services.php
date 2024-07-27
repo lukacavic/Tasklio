@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'jitsi' => [
+        'appId' => env('JITSI_APP_ID'),
+        'secret' => env('JITSI_SECRET'),
+        'domain' => env('JITSI_DOMAIN'),
+    ]
+
 ];

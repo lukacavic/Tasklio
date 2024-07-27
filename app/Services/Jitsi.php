@@ -11,9 +11,16 @@ use Illuminate\Support\Str;
 
 class Jitsi
 {
-    private $secret = "Nematajnijegodovogdagajebes1.";
-    private $domain = "meet.rinels.hr";
-    private $appId = "007kk";
+    private string $secret;
+    private string $domain;
+    private string $appId;
+
+    public function __construct()
+    {
+        $this->secret = config('services.jitsi.secret');
+        $this->appId = config('services.jitsi.app_id');
+        $this->domain = config('services.jitsi.domain');
+    }
 
     public function viewRoom($room = null, $user = null, $moderator = false): View|Factory|Application
     {
